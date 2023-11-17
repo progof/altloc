@@ -1,20 +1,20 @@
 {
-    "name": "your-client",
-    "version": "1.0.0",
-    "description": "Your Vue.js client for authentication and registration",
-    "main": "main.js",
-    "scripts": {
-      "serve": "vue-cli-service serve",
-      "build": "vue-cli-service build"
-    },
-    "dependencies": {
-      "axios": "^0.21.1",
-      "vue": "^2.6.12",
-      "vue-router": "^3.2.0"
-    },
-    "devDependencies": {
-      "@vue/cli-service": "^4.5.0",
-      "vue-template-compiler": "^2.6.12"
-    }
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.3.8"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0",
+    "vue-tsc": "^1.8.22"
   }
-  
+}
