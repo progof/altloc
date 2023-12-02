@@ -1,0 +1,18 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "Node",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"removeComments": true,
+		"noFallthroughCasesInSwitch": true,
+		"useDefineForClassFields": true,
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"lib": ["esnext"]
+	}
+}
