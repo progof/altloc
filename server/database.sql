@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS user_sessions (
-  user_id SERIAL PRIMARY KEY,
-  token TEXT
+  session_id BIGSERIAL PRIMARY KEY NOT NULL,
+  user_id INTEGER NOT NULL
 );    

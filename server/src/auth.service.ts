@@ -1,15 +1,16 @@
 import { pool } from "./database";
-import { User, getUserByEmail } from "./user.service";
 import { config } from "./config";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 // Helper functions to generate tokens
 export const generateAccessToken = (payload: { userId: number }) => {
-	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "30s" });
 };
 
-export function generateRefreshToken(payload: { userId: number }) {
+export function generateRefreshToken(payload: {
+	userId: number;
+	sessionId: number;
+}) {
 	return jwt.sign(payload, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 }
 
@@ -27,21 +28,22 @@ export const getRefreshToken = async (userId: number) => {
 	}
 };
 
-// Function to save a new refresh token for a user
-export const saveRefreshToken = async (
-	userId: number,
-	refreshToken: string
-) => {
-	try {
-		const result = await pool.query(
-			`INSERT INTO refresh_tokens (user_id, token)
-      VALUES ($1, $2)
-      ON CONFLICT (user_id)
-      DO UPDATE SET token = $2;`,
-			[userId, refreshToken]
-		);
-		console.log("Refresh token saved successfully:", result);
-	} catch (error) {
-		console.error("Error saving refresh token:", error);
-	}
+export const createSession = async (userId: number) => {
+	const result = await pool.query(
+		`INSERT INTO user_sessions (user_id) VALUES ($1) RETURNING session_id;`,
+		[userId]
+	);
+	return result.rows[0] as { session_id: number };
+};
+export const deleteSession = async (sessionId: number) => {
+	await pool.query(`DELETE FROM user_sessions WHERE session_id = $1;`, [
+		sessionId,
+	]);
+};
+export const getSessionById = async (sessionId: number) => {
+	const result = await pool.query(
+		`SELECT * from user_sessions WHERE session_id = $1;`,
+		[sessionId]
+	);
+	return result.rows[0] as { session_id: number; user_id: number };
 };

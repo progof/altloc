@@ -3,6 +3,7 @@
 	"private": "true",
 	"type": "module",
 	"scripts": {
+		"start": "node ./dist/main.js",
 		"dev": "nodemon ./src/main.ts",
 		"dev2": "tsx watch ./src/main.ts",
 		"docker:up": "docker compose -f docker-compose.dev.yml up -d"

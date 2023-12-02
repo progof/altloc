@@ -3,15 +3,17 @@ import session from "express-session";
 import cookieParser from "cookie-parser";
 import { config } from "./config";
 import type { Request, Response, NextFunction } from "express";
-import { pool } from "./database";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { createUser, getUserByEmail } from "./user.service";
+import { createUser, getUserByEmail, getUserById } from "./user.service";
 import {
+	createSession,
+	deleteSession,
 	generateAccessToken,
 	generateRefreshToken,
-	saveRefreshToken,
+	getSessionById,
 } from "./auth.service";
+import jwt from "jsonwebtoken";
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -27,22 +29,55 @@ app.use(
 	})
 );
 
-function checkAuthenticated(req: Request, res: Response, next: NextFunction) {
-	if (req.session && (req.session.user || req.cookies.access_token)) {
-		return res.redirect("/users/dashboard");
-	}
-	next();
-}
-
-function checkNotAuthenticated(
+async function blockNotAuthenticated(
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) {
-	if (req.session.user || req.cookies.access_token) {
+	try {
+		if (!("access_token" in req.cookies) || !req.cookies.access_token) {
+			throw new Error("Token not found");
+		}
+
+		const payload = jwt.verify(
+			req.cookies.access_token,
+			config.ACCESS_TOKEN_SECRET
+		) as { userId: string };
+
+		const user = await getUserById(+payload.userId);
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		req.session.user = user;
 		return next();
+	} catch (error) {
+		if (!("refresh_token" in req.cookies) || !req.cookies.refresh_token) {
+			return res.redirect("/users/login");
+		}
+
+		try {
+			const payload = jwt.verify(
+				req.cookies.refresh_token,
+				config.REFRESH_TOKEN_SECRET
+			) as { userId: string; sessionId: string };
+
+			const session = await getSessionById(+payload.sessionId);
+
+			const accessToken = generateAccessToken({ userId: session.user_id });
+			res.cookie("access_token", accessToken, { httpOnly: true });
+
+			const user = await getUserById(session.user_id);
+			if (!user) {
+				return res.redirect("/users/login");
+			}
+
+			req.session.user = user!;
+			return next();
+		} catch (error) {
+			return res.redirect("/users/login");
+		}
 	}
-	res.redirect("/users/login");
 }
 
 app.get("/", async (req, res) => {
@@ -53,58 +88,17 @@ app.listen(config.APP_PORT, () => {
 	console.log(`Server running on port ${config.APP_PORT}`);
 });
 
-app.get("/users/register", checkAuthenticated, (req, res) => {
+app.get("/users/register", (req, res) => {
 	res.render("register.ejs");
 });
 
-app.get("/users/login", checkAuthenticated, (req, res) => {
+app.get("/users/login", (req, res) => {
 	res.render("login.ejs");
 });
 
-// app.get("/users/dashboard", checkNotAuthenticated, async (req, res) => {
-// 	const accessToken = req.cookies.access_token;
-// 	const refreshToken = req.cookies.refresh_token;
-
-// 	if (accessToken) {
-// 		jwt.verify(
-// 			accessToken,
-// 			env.ACCESS_TOKEN_SECRET,
-// 			async (err, decodedToken) => {
-// 				if (err) {
-// 					console.error(err);
-// 					// Try using the refresh token on access token verification failure
-// 					if (refreshToken) {
-// 						const userId = decodedToken ? decodedToken.userId : null;
-// 						const storedRefreshToken = await getRefreshToken(userId);
-// 						if (refreshToken === storedRefreshToken) {
-// 							// If refresh token matches, create a new access token
-// 							const newAccessToken = generateAccessToken({ userId });
-// 							res.cookie("access_token", newAccessToken, {
-// 								httpOnly: true,
-// 								path: "/",
-// 							});
-// 							// Continue with rendering the dashboard
-// 							const user = await getUserById(userId);
-// 							res.render("dashboard", { user: user ? user.username : null });
-// 						} else {
-// 							// If refresh token does not match, redirect the user to the login page
-// 							res.redirect("/users/login");
-// 						}
-// 					} else {
-// 						// Handle the case when refreshToken is not defined
-// 						res.redirect("/users/login");
-// 					}
-// 				} else {
-// 					// Everything is fine with the access token, continue with rendering the dashboard
-// 					const user = await getUserById(decodedToken.userId);
-// 					res.render("dashboard", { user: user ? user.username : null });
-// 				}
-// 			}
-// 		);
-// 	} else {
-// 		res.redirect("/users/login");
-// 	}
-// });
+app.get("/users/dashboard", blockNotAuthenticated, async (req, res) => {
+	res.render("dashboard", { user: req.session.user?.username });
+});
 
 app.post("/users/register", async (req, res) => {
 	const bodySchema = z
@@ -167,43 +161,39 @@ app.post("/users/login", async (req, res) => {
 		return res.render("login", { errors: [{ message: "Invalid password" }] });
 	}
 
+	const { session_id } = await createSession(user.user_id);
+
 	const accessToken = generateAccessToken({ userId: user.user_id });
-	const refreshToken = generateRefreshToken({ userId: user.user_id });
+	const refreshToken = generateRefreshToken({
+		userId: user.user_id,
+		sessionId: session_id,
+	});
 
-	await saveRefreshToken(user.user_id, refreshToken);
-
-	res.cookie("access_token", accessToken, { httpOnly: true, path: "/" });
-	res.cookie("refresh_token", refreshToken, { httpOnly: true, path: "/" });
+	res.cookie("access_token", accessToken, { httpOnly: true });
+	res.cookie("refresh_token", refreshToken, { httpOnly: true });
 
 	req.session.user = user;
 	res.redirect("/users/dashboard");
 });
 
 app.get("/users/logout", async (req, res) => {
-	try {
-		if (req.session && req.session.user) {
-			const userId = req.session.user.user_id;
-			console.log("Debun logout [userId]:", userId);
-
-			// Remove refresh token from the database on logout
-			await saveRefreshToken(userId, null);
-
-			res.clearCookie("access_token", { path: "/" });
-			res.clearCookie("refresh_token", { path: "/" });
-
-			req.session.destroy((err) => {
-				if (err) {
-					console.error("Error destroying session:", err);
-					res.redirect("/");
-				} else {
-					res.redirect("/");
-				}
-			});
-		} else {
-			res.redirect("/");
-		}
-	} catch (error) {
-		console.error("Error during logout:", error);
-		res.redirect("/");
+	if (!req.session.user) {
+		return res.redirect("/users/login");
 	}
+
+	const userId = req.session.user.user_id;
+
+	await deleteSession(userId);
+
+	res.clearCookie("access_token", { httpOnly: true });
+	res.clearCookie("refresh_token", { httpOnly: true });
+
+	req.session.destroy((err) => {
+		if (err) {
+			console.error("Error destroying session:", err);
+			res.redirect("/users/login");
+		} else {
+			res.redirect("/users/login");
+		}
+	});
 });

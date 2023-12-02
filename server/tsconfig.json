@@ -8,6 +8,7 @@
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
+		"outDir": "dist",
 		"removeComments": true,
 		"noFallthroughCasesInSwitch": true,
 		"useDefineForClassFields": true,
