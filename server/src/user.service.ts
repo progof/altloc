@@ -1,3 +1,4 @@
+import { isValid } from "zod";
 import { pool } from "./database";
 
 export type User = {
@@ -5,6 +6,7 @@ export type User = {
 	username: string;
 	email: string;
 	password: string;
+	isVerified: boolean;
 };
 
 export const getUserById = async (userId: number) => {
@@ -25,6 +27,17 @@ export const getUserByEmail = async (email: string) => {
 	return result.rows.length ? (result.rows[0] as User) : null;
 };
 
+// getUserByIsVerified ?? 
+export const getUserByIsVerified = async (user_id: number) => {
+	const result = await pool.query(`SELECT isVerified FROM users WHERE user_id = $1`, [
+		user_id,
+	]);
+
+	return result.rows.length ? (result.rows[0] as User) : null;
+	// return result.rows[0] as { isVerified: boolean, user_id: number };
+	// return result.rows.length ? (result.rows[0] as { isVerified: boolean; user_id: number }) : null;
+};
+
 export const createUser = async (data: {
 	username: string;
 	email: string;
@@ -38,4 +51,13 @@ export const createUser = async (data: {
 		[username, email, hashedPassword]
 	);
 	return result.rows[0] as { user_id: number };
+};
+
+
+export const changeVerifyEmail = async (user_id: number, isVerified: boolean) => {
+	const result = await pool.query(
+		`UPDATE users SET isVerified = $2 WHERE user_id = $1 RETURNING isVerified;`,
+		[user_id, isVerified], 
+	);
+	return result.rows[0] as { isVerified: boolean, user_id: number };
 };

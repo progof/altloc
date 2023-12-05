@@ -12,6 +12,8 @@ const envSchema = z.object({
 	DB_DATABASE: z.string(),
 	SESSION_SECRET: z.string(),
 	APP_PORT: z.string(),
+	APP_EMAILL_ADDRESS: z.string(),
+	APP_EMAILL_PASSWORD: z.string(),
 });
 
 export const config = envSchema.parse(loadEnv().parsed);

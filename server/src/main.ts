@@ -5,15 +5,21 @@ import { config } from "./config";
 import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { createUser, getUserByEmail, getUserById } from "./user.service";
+import { createUser, getUserByEmail, getUserById, getUserByIsVerified, changeVerifyEmail } from "./user.service";
 import {
 	createSession,
 	deleteSession,
 	generateAccessToken,
 	generateRefreshToken,
 	getSessionById,
+	getUserActivationById,
+	setActivationToken
 } from "./auth.service";
 import jwt from "jsonwebtoken";
+import crypto from "node:crypto";
+import { sendEmail } from "./mailer";
+
+
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -29,6 +35,7 @@ app.use(
 	})
 );
 
+// Function that blocks access for users who do not have a token or the user does not exist in the database
 async function blockNotAuthenticated(
 	req: Request,
 	res: Response,
@@ -80,12 +87,53 @@ async function blockNotAuthenticated(
 	}
 }
 
+// Function that verifies the user's email
+
+async function verifyEmail(
+	req: Request,
+	res: Response,
+	next: NextFunction
+){
+	const bodySchema = z.object({
+		activation_token: z.string(),
+		user_id: z.string(),
+	});
+
+	const parsedResult = bodySchema.safeParse(req.params);
+	const { activation_token, user_id } = parsedResult.data || {};
+	
+	if (!parsedResult.success) {
+		console.log("Validation failed:", parsedResult.error.issues);
+		return res.status(400).json({ errors: parsedResult.error.issues });
+		// return res.render("login", { errors: parsedResult.error.issues });
+	}
+
+	if (!activation_token || !user_id) {
+		console.log("Activation token or user ID is missing");
+		return res.status(400).json({ error: "Activation token or user ID is missing" });
+	  }
+	console.log("verifyEmail() -> activation_token: ", activation_token, "user_id: ", user_id);
+	try{
+		const getActivationToken = await getUserActivationById(user_id);
+		console.log("getUserActivationById: ", getActivationToken);
+		console.log("Token from DB", getActivationToken.activation_token);
+		console.log("Token from URL", activation_token);
+		if(getActivationToken.activation_token == activation_token){
+			const updateUserVerifyEmail = await changeVerifyEmail(user_id, true);
+			console.log("updateUserVerifyEmail", updateUserVerifyEmail);
+		}
+		// res.send({
+		// 	errors: [{ message: "Your account is activated, go to login" }],
+		// });
+		res.redirect("/users/login");
+	} catch (error){
+		console.error("verifyEmail: ", error);
+	}
+}
+
+// The basis of the routes in the application
 app.get("/", async (req, res) => {
 	res.render("index");
-});
-
-app.listen(config.APP_PORT, () => {
-	console.log(`Server running on port ${config.APP_PORT}`);
 });
 
 app.get("/users/register", (req, res) => {
@@ -100,6 +148,14 @@ app.get("/users/dashboard", blockNotAuthenticated, async (req, res) => {
 	res.render("dashboard", { user: req.session.user?.username });
 });
 
+app.get("/users/verify-email/:user_id/:activation_token", verifyEmail);
+
+// The application is listening on the port
+app.listen(config.APP_PORT, () => {
+	console.log(`Server running on port ${config.APP_PORT}`);
+});
+
+// New user registration function, data validated with zod
 app.post("/users/register", async (req, res) => {
 	const bodySchema = z
 		.object({
@@ -159,6 +215,26 @@ app.post("/users/login", async (req, res) => {
 	const isMatch = await bcrypt.compare(password, user.password);
 	if (!isMatch) {
 		return res.render("login", { errors: [{ message: "Invalid password" }] });
+	}
+
+	const userVerifiedEmail = await getUserByIsVerified(user.user_id);
+	console.log("userVerifiedEmail: ", userVerifiedEmail, "user_id: ", user.user_id);
+	if(!userVerifiedEmail){
+		const generationActivationToken = crypto.randomBytes(16).toString("hex");
+		await setActivationToken(user.user_id, generationActivationToken);
+		
+		await sendEmail({
+			from: config.APP_EMAILL_ADDRESS,
+			to: `${email}`,
+			subject: "[CyberLive] Account Verification Link",
+			text: `Hello, ${user.username}, 
+		  Please verify your email by clicking this link :
+		  http://localhost:${config.APP_PORT}/users/verify-email/${user.user_id}/${generationActivationToken} `,
+		  });
+		console.log("Successfully sent email with activation token ->", generationActivationToken, "user email ->", email);   
+		return res.render("login", { errors: [{ message: "Unactivated account, check your email" }] });
+	}else {
+		console.log("User is already verified.");
 	}
 
 	const { session_id } = await createSession(user.user_id);

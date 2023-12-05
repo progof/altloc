@@ -6,7 +6,7 @@ async function register(event: Event) {
     const formData = new FormData(event.target as HTMLFormElement);
     const json = Object.fromEntries(formData);
 
-    const res = await fetch("http://localhost:3000/register", {
+    const res = await fetch("http://localhost:3000/users/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ async function register(event: Event) {
     console.log("Registration successful");
     console.log(await res.text());
   } catch (error) {
-    console.error("Registration error:", error.message);
+    console.error("Registration error:", error);
   }
 }
 
@@ -30,7 +30,7 @@ async function login(event: Event) {
     const formData = new FormData(event.target as HTMLFormElement);
     const json = Object.fromEntries(formData);
 
-    const res = await fetch("http://localhost:3000/login", {
+    const res = await fetch("http://localhost:3000/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ async function login(event: Event) {
     console.log("Login successful");
     console.log(await res.text());
   } catch (error) {
-    console.error("Login error:", error.message);
+    console.error("Login error:", error);
   }
 }
 </script>

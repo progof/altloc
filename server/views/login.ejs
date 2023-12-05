@@ -11,8 +11,8 @@
     <h1>Login</h1>
 
     <ul>
-        <% if(typeof loginErrors != 'undefined') { %> 
-            <% loginErrors.forEach(error=>{ %>
+        <% if(typeof errors != 'undefined') { %> 
+            <% errors.forEach(error=>{ %>
             <li><%= error.message %></li>
         <% }) %>  <% } %>      
     </ul>

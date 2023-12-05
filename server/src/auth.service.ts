@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 // Helper functions to generate tokens
 export const generateAccessToken = (payload: { userId: number }) => {
-	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "30s" });
+	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 };
 
 export function generateRefreshToken(payload: {
@@ -47,3 +47,20 @@ export const getSessionById = async (sessionId: number) => {
 	);
 	return result.rows[0] as { session_id: number; user_id: number };
 };
+
+export const getUserActivationById = async (user_id: number) => {
+	const result = await pool.query(
+		`SELECT * FROM user_activation WHERE user_id = $1 ORDER BY activation_id DESC LIMIT 1;`,
+		[user_id]
+	);
+	return result.rows[0] as { activation_id: number; user_id: number; activation_token: string };
+};
+
+export const setActivationToken = async (user_id: number, activation_token: string) => {
+	const result = await pool.query(
+		`INSERT INTO user_activation (user_id, activation_token) VALUES ($1, $2) RETURNING activation_id;`,
+		[user_id, activation_token], 
+	);
+	return result.rows[0] as { activation_id: number };
+};
+
