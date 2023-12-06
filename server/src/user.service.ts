@@ -33,9 +33,9 @@ export const getUserByIsVerified = async (user_id: number) => {
 		user_id,
 	]);
 
-	return result.rows.length ? (result.rows[0] as User) : null;
+	// return result.rows.length ? (result.rows[0] as User) : null;
 	// return result.rows[0] as { isVerified: boolean, user_id: number };
-	// return result.rows.length ? (result.rows[0] as { isVerified: boolean; user_id: number }) : null;
+	return result.rows.length ? (result.rows[0] as { isVerified: boolean; user_id: number }) : null;
 };
 
 export const createUser = async (data: {

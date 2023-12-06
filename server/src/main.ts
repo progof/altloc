@@ -19,8 +19,7 @@ import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
 import { sendEmail } from "./mailer";
 
-
-
+// Settings express
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -34,6 +33,8 @@ app.use(
 		saveUninitialized: false,
 	})
 );
+
+// Middleware
 
 // Function that blocks access for users who do not have a token or the user does not exist in the database
 async function blockNotAuthenticated(
@@ -55,6 +56,30 @@ async function blockNotAuthenticated(
 		if (!user) {
 			throw new Error("User not found");
 		}
+
+		const userVerifiedEmail = await getUserByIsVerified(user.user_id);
+		if (!userVerifiedEmail) {
+			const generationActivationToken = crypto.randomBytes(16).toString("hex");
+			await setActivationToken(user.user_id, generationActivationToken);
+	  
+			await sendEmail({
+			  from: config.APP_EMAILL_ADDRESS,
+			  to: `${user.email}`,
+			  subject: "[CyberLive] Account Verification Link",
+			  text: `Hello, ${user.username}, 
+				Please verify your email by clicking this link :
+				http://localhost:${config.APP_PORT}/users/verify-email/${user.user_id}/${generationActivationToken} `,
+			});
+	  
+			console.log(
+			  "[MSG->blockNotAuthenticated()] Successfully sent email with activation token ->",
+			  generationActivationToken,
+			  "user email ->",
+			  user.email
+			);
+	  
+			return res.render("login", { errors: [{ message: "Your account is not activated. An activation letter has been sent to your mailbox." }] });
+		  }
 
 		req.session.user = user;
 		return next();
@@ -88,7 +113,6 @@ async function blockNotAuthenticated(
 }
 
 // Function that verifies the user's email
-
 async function verifyEmail(
 	req: Request,
 	res: Response,
@@ -101,6 +125,10 @@ async function verifyEmail(
 
 	const parsedResult = bodySchema.safeParse(req.params);
 	const { activation_token, user_id } = parsedResult.data || {};
+
+	console.log("Activation token from URL:", activation_token);
+	console.log("User ID from URL:", user_id);
+
 	
 	if (!parsedResult.success) {
 		console.log("Validation failed:", parsedResult.error.issues);
@@ -192,6 +220,7 @@ app.post("/users/register", async (req, res) => {
 	}
 });
 
+// User authorization
 app.post("/users/login", async (req, res) => {
 	const bodySchema = z.object({
 		email: z.string().email(),
@@ -218,8 +247,8 @@ app.post("/users/login", async (req, res) => {
 	}
 
 	const userVerifiedEmail = await getUserByIsVerified(user.user_id);
-	console.log("userVerifiedEmail: ", userVerifiedEmail, "user_id: ", user.user_id);
-	if(!userVerifiedEmail){
+	if(!userVerifiedEmail?.isVerified){
+		console.log("userVerifiedEmail: ", userVerifiedEmail, "user_id: ", user.user_id);
 		const generationActivationToken = crypto.randomBytes(16).toString("hex");
 		await setActivationToken(user.user_id, generationActivationToken);
 		
@@ -252,6 +281,7 @@ app.post("/users/login", async (req, res) => {
 	res.redirect("/users/dashboard");
 });
 
+// Account logout
 app.get("/users/logout", async (req, res) => {
 	if (!req.session.user) {
 		return res.redirect("/users/login");
