@@ -3,13 +3,13 @@ import { config } from "./config";
 import jwt from "jsonwebtoken";
 
 // Helper functions to generate tokens
-export const generateAccessToken = (payload: { userId: number }) => {
+export const generateAccessToken = (payload: { userId: string }) => {
 	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 };
 
 export function generateRefreshToken(payload: {
-	userId: number;
-	sessionId: number;
+	userId: string;
+	sessionId: string;
 }) {
 	return jwt.sign(payload, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 }
@@ -28,39 +28,46 @@ export const getRefreshToken = async (userId: number) => {
 	}
 };
 
-export const createSession = async (userId: number) => {
+export const createSession = async (userId: string) => {
 	const result = await pool.query(
 		`INSERT INTO user_sessions (user_id) VALUES ($1) RETURNING session_id;`,
 		[userId]
 	);
-	return result.rows[0] as { session_id: number };
+	return result.rows[0] as { session_id: string };
 };
-export const deleteSession = async (sessionId: number) => {
+export const deleteSession = async (sessionId: string) => {
 	await pool.query(`DELETE FROM user_sessions WHERE session_id = $1;`, [
 		sessionId,
 	]);
 };
-export const getSessionById = async (sessionId: number) => {
+export const getSessionById = async (sessionId: string) => {
 	const result = await pool.query(
 		`SELECT * from user_sessions WHERE session_id = $1;`,
 		[sessionId]
 	);
-	return result.rows[0] as { session_id: number; user_id: number };
+	return result.rows[0] as { session_id: string; user_id: string };
 };
 
-export const getUserActivationById = async (user_id: number) => {
+export const getUserActivationById = async (user_id: string) => {
 	const result = await pool.query(
-		`SELECT * FROM user_activation WHERE user_id = $1 ORDER BY activation_id DESC LIMIT 1;`,
+		`SELECT * FROM user_activation WHERE user_id = $1;`,
 		[user_id]
 	);
-	return result.rows[0] as { activation_id: number; user_id: number; activation_token: string };
+	return result.rows[0] as {
+		user_id: string;
+		activation_token: string;
+	};
 };
 
-export const setActivationToken = async (user_id: number, activation_token: string) => {
+export const getActivationTokenForUser = async (user_id: string) => {
 	const result = await pool.query(
-		`INSERT INTO user_activation (user_id, activation_token) VALUES ($1, $2) RETURNING activation_id;`,
-		[user_id, activation_token], 
+		`INSERT INTO user_activation (user_id) VALUES ($1)
+		ON CONFLICT (user_id) DO NOTHING RETURNING *;`,
+		[user_id]
 	);
-	return result.rows[0] as { activation_id: number };
+	return result.rows[0] as {
+		activation_token: string;
+		user_id: string;
+		created_at: string;
+	};
 };
-
