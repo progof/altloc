@@ -1,17 +1,17 @@
-import { pool } from "./database";
-import { config } from "./config";
+import { pool } from "../utils/database";
+import { config } from "../config";
 import jwt from "jsonwebtoken";
 
 // Helper functions to generate tokens
 export const generateAccessToken = (payload: { userId: string }) => {
-	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+	return jwt.sign(payload, config.ACCESS_TOKEN_SECRET, { expiresIn: "15min" });
 };
 
 export function generateRefreshToken(payload: {
 	userId: string;
 	sessionId: string;
 }) {
-	return jwt.sign(payload, config.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
+	return jwt.sign(payload, config.REFRESH_TOKEN_SECRET, { expiresIn: "30d" });
 }
 
 // Function to get the refresh token for a user

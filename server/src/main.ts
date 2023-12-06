@@ -2,13 +2,11 @@ import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { config } from "./config";
-import type { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import {
 	createUser,
 	getUserByEmail,
-	getUserById,
 	changeEmailVerificationStatus,
 } from "./user.service";
 import {
@@ -16,12 +14,11 @@ import {
 	deleteSession,
 	generateAccessToken,
 	generateRefreshToken,
-	getSessionById,
 	getUserActivationById,
 	getActivationTokenForUser,
-} from "./auth.service";
-import jwt from "jsonwebtoken";
-import { sendVerificationEmail } from "./mailer";
+} from "./Middlewares/auth.service";
+import { sendVerificationEmail } from "./Utils/mailer";
+import { blockNotVerifedUser, blockNotAuthenticated } from "./Middlewares/auth.blocks";
 
 // Settings express
 const app = express();
@@ -38,81 +35,6 @@ app.use(
 	})
 );
 
-// Middleware
-async function blockNotVerifedUser(
-	req: Request,
-	res: Response,
-	next: NextFunction
-) {
-	if (!req.session.user) {
-		throw new Error("Failed to get session");
-	}
-	if (!req.session.user.is_verified) {
-		return res.render("login", {
-			errors: [
-				{
-					message:
-						"Your account is not activated. An activation letter has been sent to your mailbox.",
-				},
-			],
-		});
-	}
-
-	next();
-}
-
-// Function that blocks access for users who do not have a token or the user does not exist in the database
-async function blockNotAuthenticated(
-	req: Request,
-	res: Response,
-	next: NextFunction
-) {
-	try {
-		if (!("access_token" in req.cookies) || !req.cookies.access_token) {
-			throw new Error("Token not found");
-		}
-
-		const payload = jwt.verify(
-			req.cookies.access_token,
-			config.ACCESS_TOKEN_SECRET
-		) as { userId: string };
-
-		const user = await getUserById(payload.userId);
-		if (!user) {
-			throw new Error("User not found");
-		}
-
-		req.session.user = user;
-		return next();
-	} catch (error) {
-		if (!("refresh_token" in req.cookies) || !req.cookies.refresh_token) {
-			return res.redirect("/users/login");
-		}
-
-		try {
-			const payload = jwt.verify(
-				req.cookies.refresh_token,
-				config.REFRESH_TOKEN_SECRET
-			) as { userId: string; sessionId: string };
-
-			const session = await getSessionById(payload.sessionId);
-
-			const accessToken = generateAccessToken({ userId: session.user_id });
-			res.cookie("access_token", accessToken, { httpOnly: true });
-
-			const user = await getUserById(session.user_id);
-			if (!user) {
-				return res.redirect("/users/login");
-			}
-
-			req.session.user = user!;
-			return next();
-		} catch (error) {
-			return res.redirect("/users/login");
-		}
-	}
-}
-
 // The basis of the routes in the application
 app.get("/", async (req, res) => {
 	res.render("index");
@@ -126,7 +48,7 @@ app.get("/users/login", (req, res) => {
 	res.render("login.ejs");
 });
 
-app.get("/users/dashboard", blockNotAuthenticated, async (req, res) => {
+app.get("/users/dashboard", blockNotAuthenticated, blockNotVerifedUser, async (req, res) => {
 	res.render("dashboard", { user: req.session.user });
 });
 
@@ -207,7 +129,7 @@ app.post("/users/register", async (req, res) => {
 			username,
 		});
 
-		res.redirect("/users/login");
+		res.redirect("/users/login" );
 	} catch (error) {
 		console.error(error);
 	}
