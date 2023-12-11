@@ -1,4 +1,4 @@
-<script>
+<script >
 import { ref, computed } from 'vue';
 import { z } from 'zod';
 
@@ -43,8 +43,7 @@ export default {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json', // или 'application/json
-    // Другие необходимые заголовки
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(json),
     });
@@ -105,7 +104,7 @@ export default {
 </template>
 
 <style scoped>
-/* Минималистические стили */
+
 form {
   max-width: 300px;
   margin: auto;
