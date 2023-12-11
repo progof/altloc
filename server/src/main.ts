@@ -1,6 +1,8 @@
 import express from "express";
 import session from "express-session";
+import cors from "cors";
 import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 import { config } from "./config";
 import { z } from "zod";
 import bcrypt from "bcrypt";
@@ -16,14 +18,16 @@ import {
 	generateRefreshToken,
 	getUserActivationById,
 	getActivationTokenForUser,
-} from "./Middlewares/auth.service";
-import { sendVerificationEmail } from "./Utils/mailer";
-import { blockNotVerifedUser, blockNotAuthenticated } from "./Middlewares/auth.blocks";
+} from "./middlewares/auth.service";
+import { sendVerificationEmail } from "./utils/mailer";
+import { blockNotVerifedUser, blockNotAuthenticated } from "./middlewares/auth.blocks";
 
 // Settings express
 const app = express();
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(bodyParser.json())
 
 app.set("view engine", "ejs");
 
@@ -91,6 +95,7 @@ app.listen(config.APP_PORT, () => {
 
 // New user registration function, data validated with zod
 app.post("/users/register", async (req, res) => {
+	console.log('Request Body:', req.body); // Debug req.body
 	const bodySchema = z
 		.object({
 			username: z.string(),

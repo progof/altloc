@@ -1,4 +1,4 @@
-import { pool } from "./Utils/database";
+import { pool } from "./utils/database";
 
 export type User = {
 	user_id: string;

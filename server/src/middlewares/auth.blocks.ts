@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { config } from "../config";
 import { getUserById } from "../user.service";
-import { generateAccessToken, getSessionById } from "../auth.service";
+import { generateAccessToken, getSessionById } from "./auth.service";
 import jwt from "jsonwebtoken";
 
 // Function that blocks access to the dashboard for unverified users
