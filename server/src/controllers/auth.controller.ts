@@ -12,7 +12,7 @@ import {
 	getActivationTokenForUser,
 } from "../middlewares/auth.service";
 import { sendVerificationEmail } from "../utils/mailer";
-
+import { Request, Response } from 'express';
 
 
 export async function userRegister(
@@ -66,6 +66,7 @@ export async function userRegister(
 export async function userLogin(
     req: Request,
 	res: Response) {
+        console.log('Request Body:', req.body); // Debug req.body
         const bodySchema = z.object({
             email: z.string().email(),
             password: z.string().min(6),
