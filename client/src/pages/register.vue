@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ZodIssue, z } from "zod";
+import { useRegisterMutation } from "@/services/auth.service";
 
 const validationSchema = z
 	.object({
@@ -12,37 +13,21 @@ const validationSchema = z
 	.refine((data) => data.password === data.password2, "Password doesn't match");
 
 const validationErrors = ref<ZodIssue[]>([]);
-const isFetching = ref(false);
-const error = ref<string | null>(null);
+
+const { mutate: register, isPending, error } = useRegisterMutation();
 
 const submitForm = async (event: Event) => {
-	try {
-		const rawData = Object.fromEntries(
-			new FormData(event.target as HTMLFormElement)
-		);
+	const rawData = Object.fromEntries(
+		new FormData(event.target as HTMLFormElement)
+	);
 
-		const result = validationSchema.safeParse(rawData);
-		if (!result.success) {
-			validationErrors.value = result.error.issues;
-			return;
-		}
-
-		isFetching.value = true;
-		const response = await fetch("http://localhost:3000/auth/register", {
-			method: "POST",
-			headers: {
-				Accept: "application/json",
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(result.data),
-		});
-
-		if (!response.ok) {
-			error.value = await response.text();
-		}
-	} finally {
-		isFetching.value = false;
+	const result = validationSchema.safeParse(rawData);
+	if (!result.success) {
+		validationErrors.value = result.error.issues;
+		return;
 	}
+
+	register(result.data);
 };
 </script>
 
@@ -73,8 +58,8 @@ const submitForm = async (event: Event) => {
 		</span>
 		<span v-if="error">{{ error }}</span>
 
-		<button type="submit" :disabled="validationErrors.length > 0 || isFetching">
-			{{ isFetching ? "Fetching..." : "Register" }}
+		<button type="submit" :disabled="validationErrors.length > 0 || isPending">
+			{{ isPending ? "Fetching..." : "Register" }}
 		</button>
 	</form>
 </template>

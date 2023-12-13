@@ -1,11 +1,13 @@
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+</script>
+
 <template>
 	<div class="navbar">
 		<div @click="$router.push('/')">Xnote</div>
 		<div class="navbar__btns">
-			<my-button @click="$router.push('/register')">Register</my-button>
-			<my-button style="margin-left: 20px" @click="$router.push('/login')"
-				>Login</my-button
-			>
+			<RouterLink to="/register">Register</RouterLink>
+			<RouterLink style="margin-left: 20px" to="/login">Login</RouterLink>
 		</div>
 	</div>
 </template>

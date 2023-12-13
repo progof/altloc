@@ -1,14 +1,6 @@
 import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router/router";
-import components from "@/components/UI";
+import App, { router } from "./App.vue";
+import { VueQueryPlugin } from "@tanstack/vue-query";
+import { queryClient } from "@/services/queryClient";
 
-const app = createApp(App)
-
-components.forEach(component => {
-    app.component(component.name, component)
-});
-
-app
-    .use(router)
-    .mount('#app');
+createApp(App).use(VueQueryPlugin, { queryClient }).use(router).mount("#app");
