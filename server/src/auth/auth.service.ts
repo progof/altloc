@@ -1,4 +1,4 @@
-import { pool } from "../utils/database";
+import { pool } from "../database";
 import { config } from "../config";
 import jwt from "jsonwebtoken";
 

@@ -1,27 +1,23 @@
-<script>
-import Navbar from "@/components/Navbar.vue"
-export default {
-    components: {
-      Navbar
-    }
-}
+<script setup lang="ts">
+import Navbar from "@/components/Navbar.vue";
+import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <navbar></navbar>
-  <div class="app">
-    <router-view></router-view>
-  </div>
+	<Navbar />
+	<div class="app">
+		<RouterView />
+	</div>
 </template>
 
 <style>
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 .app {
-  padding: 20px;
+	padding: 20px;
 }
 </style>

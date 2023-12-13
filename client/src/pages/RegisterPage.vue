@@ -1,136 +1,111 @@
-<script >
-import { ref, computed } from 'vue';
-import { z } from 'zod';
+<script setup lang="ts">
+import { ref } from "vue";
+import { ZodIssue, z } from "zod";
 
-const schema = z.object({
-  username: z.string(),
-  email: z.string().email(),
-  password: z.string().min(6),
-  password2: z.string().min(6),
-});
+const validationSchema = z
+	.object({
+		username: z.string(),
+		email: z.string().email(),
+		password: z.string().min(6),
+		password2: z.string().min(6),
+	})
+	.refine((data) => data.password === data.password2, "Password doesn't match");
 
-export default {
-  setup() {
-    const form = ref({
-      username: '',
-      email: '',
-      password: '',
-      password2: '',
-    });
+const validationErrors = ref<ZodIssue[]>([]);
+const isFetching = ref(false);
+const error = ref<string | null>(null);
 
-    const errors = ref({});
+const submitForm = async (event: Event) => {
+	try {
+		const rawData = Object.fromEntries(
+			new FormData(event.target as HTMLFormElement)
+		);
 
-    const passwordsMatchError = computed(() => {
-      return form.value.password !== form.value.password2;
-    });
+		const result = validationSchema.safeParse(rawData);
+		if (!result.success) {
+			validationErrors.value = result.error.issues;
+			return;
+		}
 
-    const submitForm = async () => {
-  try {
-    // Check if passwords match
-    if (passwordsMatchError.value) {
-      throw new Error('Passwords do not match');
-    }
+		isFetching.value = true;
+		const response = await fetch("http://localhost:3000/auth/register", {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(result.data),
+		});
 
-    // Create FormData object
-    const formData = new FormData();
-    formData.append('username', form.value.username);
-    formData.append('email', form.value.email);
-    formData.append('password', form.value.password);
-    formData.append('password2', form.value.password2);
-    const json = Object.fromEntries(formData);
-    // Perform the fetch request to the server
-    const response = await fetch('http://localhost:3000/users/register', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(json),
-    });
-    console.log(json);
-    // Handle the response from the server
-    if (response.ok) {
-      // Registration successful
-      console.log('Registration successful');
-    } else {
-      // Registration failed
-      console.error('Registration failed');
-    }
-  } catch (error) {
-    // Handle validation errors
-    errors.value = { ...error.errors, passwordsMatch: error.message };
-  }
-};
-
-    return { form, errors, passwordsMatchError, submitForm };
-  },
+		if (!response.ok) {
+			error.value = await response.text();
+		}
+	} finally {
+		isFetching.value = false;
+	}
 };
 </script>
 
-
-
 <template>
-  <form @submit.prevent="submitForm">
-    <div>
-      <label for="username">Username:</label>
-      <input v-model="form.username" type="text" id="username" />
-      <span v-if="errors.username">{{ errors.username }}</span>
-    </div>
+	<form @submit.prevent="submitForm">
+		<fieldset>
+			<label for="username">Username:</label>
+			<input type="text" id="username" name="username" />
+		</fieldset>
 
-    <div>
-      <label for="email">Email:</label>
-      <input v-model="form.email" type="email" id="email" />
-      <span v-if="errors.email">{{ errors.email }}</span>
-    </div>
+		<fieldset>
+			<label for="email">Email:</label>
+			<input type="email" id="email" name="email" />
+		</fieldset>
 
-    <div>
-      <label for="password">Password:</label>
-      <input v-model="form.password" type="password" id="password" />
-      <span v-if="errors.password">{{ errors.password }}</span>
-    </div>
+		<fieldset>
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" />
+		</fieldset>
 
-    <div>
-      <label for="password2">Confirm Password:</label>
-      <input v-model="form.password2" type="password" id="password2" />
-      <span v-if="errors.password2">{{ errors.password2 }}</span>
-    </div>
+		<fieldset>
+			<label for="password2">Confirm Password:</label>
+			<input type="password" id="password2" name="password2" />
+		</fieldset>
 
-    <div>
-      <span v-if="passwordsMatchError">Passwords do not match</span>
-    </div>
+		<span v-for="error in validationErrors">
+			{{ error.message }}
+		</span>
+		<span v-if="error">{{ error }}</span>
 
-    <button type="submit" :disabled="passwordsMatchError">Register</button>
-  </form>
+		<button type="submit" :disabled="validationErrors.length > 0 || isFetching">
+			{{ isFetching ? "Fetching..." : "Register" }}
+		</button>
+	</form>
 </template>
 
 <style scoped>
-
 form {
-  max-width: 300px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+	max-width: 300px;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 
 label {
-  display: block;
-  margin-bottom: 5px;
+	display: block;
+	margin-bottom: 5px;
 }
 
 input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
+	width: 100%;
+	padding: 8px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
 }
 
 button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+	background-color: #4caf50;
+	color: white;
+	padding: 10px 15px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
 }
-</style> 
+</style>

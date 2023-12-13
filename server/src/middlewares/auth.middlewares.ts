@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 import { config } from "../config";
 import { getUserById } from "../user.service";
-import { generateAccessToken, getSessionById } from "./auth.service";
+import { generateAccessToken, getSessionById } from "../auth/auth.service";
 import jwt from "jsonwebtoken";
 
 // Function that blocks access to the dashboard for unverified users
@@ -11,10 +11,10 @@ export async function blockNotVerifedUser(
 	next: NextFunction
 ) {
 	if (!req.session.user) {
-		throw new Error("Failed to get session");
+		return res.status(401).send();
 	}
 	if (!req.session.user.is_verified) {
-		return res.render("login", {
+		return res.status(401).send({
 			errors: [
 				{
 					message:
@@ -35,7 +35,7 @@ export async function blockNotAuthenticated(
 ) {
 	try {
 		if (!("access_token" in req.cookies) || !req.cookies.access_token) {
-			throw new Error("Token not found");
+			return res.status(401).send({ errors: [{ message: "Not authorized" }] });
 		}
 
 		const payload = jwt.verify(
@@ -45,14 +45,14 @@ export async function blockNotAuthenticated(
 
 		const user = await getUserById(payload.userId);
 		if (!user) {
-			throw new Error("User not found");
+			return res.status(401).send({ errors: [{ message: "User not found" }] });
 		}
 
 		req.session.user = user;
 		return next();
 	} catch (error) {
 		if (!("refresh_token" in req.cookies) || !req.cookies.refresh_token) {
-			return res.redirect("/users/login");
+			return res.status(401).send();
 		}
 
 		try {
@@ -68,13 +68,15 @@ export async function blockNotAuthenticated(
 
 			const user = await getUserById(session.user_id);
 			if (!user) {
-				return res.redirect("/users/login");
+				return res.status(401).send();
 			}
 
 			req.session.user = user!;
 			return next();
 		} catch (error) {
-			return res.redirect("/users/login");
+			return res
+				.status(401)
+				.send({ errors: [{ message: (error as Error).message }] });
 		}
 	}
 }
