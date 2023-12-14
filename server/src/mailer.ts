@@ -26,6 +26,6 @@ export const sendVerificationEmail = async ({
 		subject: "[CyberLive] Account Verification Link",
 		text: `Hello, ${username}, 
 		  Please verify your email by clicking this link :
-		  http://localhost:${config.APP_PORT}/users/verify-email/${user_id}/${activation_token} `,
+		  ${config.CLIENT_URL}/email-verification?user_id=${user_id}&activation_token=${activation_token} `,
 	});
 };

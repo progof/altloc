@@ -3,7 +3,9 @@ import bcrypt from "bcrypt";
 import {
 	changeEmailVerificationStatus,
 	createUser,
+	deleteUserActivationToken,
 	getUserByEmail,
+	getUserById,
 } from "../user.service";
 import {
 	createSession,
@@ -101,8 +103,12 @@ export async function userLogin(req: Request, res: Response) {
 			sessionId: session_id,
 		});
 
-		res.cookie("access_token", accessToken, { httpOnly: true });
-		res.cookie("refresh_token", refreshToken, { httpOnly: true });
+		res.cookie("access_token", accessToken, {
+			httpOnly: true,
+		});
+		res.cookie("refresh_token", refreshToken, {
+			httpOnly: true,
+		});
 
 		req.session.user = user;
 		return res.status(200).send();
@@ -169,13 +175,36 @@ export async function handleVerification(req: Request, res: Response) {
 	try {
 		const { activation_token: actual_activation_token } =
 			await getUserActivationById(user_id);
-		if (actual_activation_token === activation_token) {
-			await changeEmailVerificationStatus(user_id, true);
+
+		if (actual_activation_token !== activation_token) {
+			return res
+				.status(400)
+				.send({ errors: [{ message: "Invalid activation token" }] });
 		}
+
+		await changeEmailVerificationStatus(user_id, true);
+		await deleteUserActivationToken(user_id);
+
 		return res.status(200).send();
 	} catch (error) {
 		return res
-			.status(500)
+			.status(400)
 			.send({ errors: [{ message: (error as Error).message }] });
 	}
+}
+
+export async function getMe(req: Request, res: Response) {
+	if (!req.session.user) {
+		return res.status(401).send({ errors: [{ message: "Not found session" }] });
+	}
+	const me = await getUserById(req.session.user.user_id);
+	if (!me) {
+		return res.status(401).send({ errors: [{ message: "Not found user" }] });
+	}
+	return res.status(200).send({
+		data: {
+			...me,
+			password: undefined,
+		},
+	});
 }

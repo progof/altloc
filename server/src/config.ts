@@ -14,6 +14,7 @@ const envSchema = z.object({
 	APP_PORT: z.string(),
 	APP_EMAILL_ADDRESS: z.string(),
 	APP_EMAILL_PASSWORD: z.string(),
+	CLIENT_URL: z.string().url(),
 });
 
 export const config = envSchema.parse(loadEnv().parsed);

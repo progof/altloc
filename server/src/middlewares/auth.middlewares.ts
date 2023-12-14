@@ -27,17 +27,20 @@ export async function blockNotVerifedUser(
 	next();
 }
 
-// Function that blocks access for users who do not have a token or the user does not exist in the database
+// Will renew `access token` with `refresh token` if it was expired or not presented in cookies
 export async function blockNotAuthenticated(
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) {
 	try {
-		if (!("access_token" in req.cookies) || !req.cookies.access_token) {
+		if (!("access_token" in req.cookies) && !("refresh_token" in req.cookies)) {
 			return res.status(401).send({ errors: [{ message: "Not authorized" }] });
 		}
 
+		if (!("access_token" in req.cookies)) {
+			throw new Error("Dont have access token");
+		}
 		const payload = jwt.verify(
 			req.cookies.access_token,
 			config.ACCESS_TOKEN_SECRET
@@ -51,10 +54,6 @@ export async function blockNotAuthenticated(
 		req.session.user = user;
 		return next();
 	} catch (error) {
-		if (!("refresh_token" in req.cookies) || !req.cookies.refresh_token) {
-			return res.status(401).send();
-		}
-
 		try {
 			const payload = jwt.verify(
 				req.cookies.refresh_token,

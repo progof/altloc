@@ -9,7 +9,9 @@ import {
 	userRegister,
 	userLogout,
 	handleVerification,
+	getMe,
 } from "./auth/auth.controller";
+import { blockNotAuthenticated } from "./middlewares/auth.middlewares";
 
 const app = express();
 app.use(cors());
@@ -24,10 +26,11 @@ app.use(
 	})
 );
 
-app.get("/auth/verify-email/:user_id/:activation_token", handleVerification);
+app.post("/auth/verify-email/:user_id/:activation_token", handleVerification);
 app.post("/auth/register", userRegister);
 app.post("/auth/login", userLogin);
-app.get("/auth/logout", userLogout);
+app.post("/auth/logout", userLogout);
+app.get("/auth/me", blockNotAuthenticated, getMe);
 
 app.listen(config.APP_PORT, () => {
 	console.log(`Server running on port ${config.APP_PORT}`);
