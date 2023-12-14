@@ -3,13 +3,13 @@ import bcrypt from "bcrypt";
 import {
 	changeEmailVerificationStatus,
 	createUser,
-	deleteUserActivationToken,
 	getUserByEmail,
 	getUserById,
 } from "../user.service";
 import {
 	createSession,
 	deleteSession,
+	deleteUserActivationToken,
 	generateAccessToken,
 	generateRefreshToken,
 	getActivationTokenForUser,

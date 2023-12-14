@@ -50,7 +50,3 @@ export const changeEmailVerificationStatus = async (
 		is_verified,
 	]);
 };
-
-export const deleteUserActivationToken = async (user_id: string) => {
-	await pool.query(`DELETE FROM activation_token WHERE user_id = ?`, [user_id]);
-};

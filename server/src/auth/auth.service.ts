@@ -71,3 +71,7 @@ export const getActivationTokenForUser = async (user_id: string) => {
 		created_at: string;
 	};
 };
+
+export const deleteUserActivationToken = async (user_id: string) => {
+	await pool.query(`DELETE FROM user_activation WHERE user_id = $1`, [user_id]);
+};
