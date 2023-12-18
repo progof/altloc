@@ -29,3 +29,23 @@ export const sendVerificationEmail = async ({
 		  ${config.CLIENT_URL}/email-verification?user_id=${user_id}&activation_token=${activation_token} `,
 	});
 };
+
+
+export const sendPasswordRestToken = async ({
+	user_id,
+	email,
+	reset_token,
+}: {
+	user_id: string;
+	email: string;
+	reset_token: string;
+}) => {
+	return await transporter.sendMail({
+		from: config.APP_EMAILL_ADDRESS,
+		to: `${email}`,
+		subject: "[CyberLive] Account Reset Password",
+		text: `Hello,
+			Please сlick on the link to reset your password :
+			${config.CLIENT_URL}/email-reset-password?user_id=${user_id}&reset_token=${reset_token} `,
+	});
+};

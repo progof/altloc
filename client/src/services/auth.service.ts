@@ -28,7 +28,7 @@ export const useRegisterMutation = () =>
 				const errors = errorSchema.parse(await res.json()).errors;
 				throw new Error(errors.at(0)?.message);
 			}
-			return res.json();
+			return;
 		},
 	});
 
@@ -109,3 +109,45 @@ export const useVerifyEmailMutation = () => {
 		},
 	});
 };
+
+export const useRecoveryPasswordMutation = () =>
+	useMutation({
+		mutationFn: async (data: { email: string}) => {
+			const res = await fetch("/api/auth/recovery_password", {
+				method: "POST",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+
+			if (!res.ok) {
+				const errors = errorSchema.parse(await res.json()).errors;
+				throw new Error(errors.at(0)?.message);
+			}
+			return;
+		},
+	});
+
+	export const useResetPasswordEmailMutation = () => {
+		return useMutation({
+			mutationFn: async (data: { user_id: string; reset_token: string; password: string }) => {
+				const res = await fetch(
+					`/api/auth/email-reset-password/${data.user_id}/${data.reset_token}`,
+					{
+						method: "POST",
+						headers: {
+							Accept: "application/json",
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(data),
+					}
+				);
+				if (!res.ok) {
+					throw new Error(await res.text());
+				}
+				return;
+			},
+		});
+	};

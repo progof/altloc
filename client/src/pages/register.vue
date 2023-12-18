@@ -27,7 +27,11 @@ const submitForm = async (event: Event) => {
 		return;
 	}
 
-	register(result.data);
+	register(result.data, {
+		onSuccess: () => {
+			alert("The verification link was sent to your email address");
+		}
+	});
 };
 </script>
 
@@ -92,5 +96,9 @@ button {
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
+}
+
+fieldset {
+	border: none;
 }
 </style>

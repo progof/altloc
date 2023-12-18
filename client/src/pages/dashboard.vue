@@ -12,10 +12,9 @@ const router = useRouter();
 
 <template>
 	<div>
-		<h1>{{ me?.username }}</h1>
-		<span
-			>{{ me?.email }} {{ me?.is_verified ? "verified" : "not verified" }}</span
-		>
+		<h1>Hi, {{ me?.username }} 👋</h1>
+		<span>Your Email: {{ me?.email }}</span>
+		<span>Account status: {{ me?.is_verified ? "verified" : "not verified" }}</span>
 		<button
 			@click="
 				logout(undefined, {

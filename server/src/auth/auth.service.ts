@@ -28,6 +28,7 @@ export const getRefreshToken = async (userId: number) => {
 	}
 };
 
+// User sessions
 export const createSession = async (userId: string) => {
 	const result = await pool.query(
 		`INSERT INTO user_sessions (user_id) VALUES ($1) RETURNING session_id;`,
@@ -48,6 +49,7 @@ export const getSessionById = async (sessionId: string) => {
 	return result.rows[0] as { session_id: string; user_id: string };
 };
 
+// User activation account
 export const getUserActivationById = async (user_id: string) => {
 	const result = await pool.query(
 		`SELECT * FROM user_activation WHERE user_id = $1;`,
@@ -74,4 +76,34 @@ export const getActivationTokenForUser = async (user_id: string) => {
 
 export const deleteUserActivationToken = async (user_id: string) => {
 	await pool.query(`DELETE FROM user_activation WHERE user_id = $1`, [user_id]);
+};
+
+// User reset password
+
+export const getUserPasswordResetById = async (user_id: string) => {
+	const result = await pool.query(
+		`SELECT * FROM user_reset_password WHERE user_id = $1;`,
+		[user_id]
+	);
+	return result.rows[0] as {
+		user_id: string;
+		reset_token: string;
+	};
+};
+
+export const getResetTokenForUser = async (user_id: string) => {
+	const result = await pool.query(
+		`INSERT INTO user_reset_password (user_id) VALUES ($1)
+		ON CONFLICT (user_id) DO NOTHING RETURNING *;`,
+		[user_id]
+	);
+	return result.rows[0] as {
+		reset_token: string;
+		user_id: string;
+		created_at: string;
+	};
+};
+
+export const deleteUserResetToken = async (user_id: string) => {
+	await pool.query(`DELETE FROM user_reset_password WHERE user_id = $1`, [user_id]);
 };

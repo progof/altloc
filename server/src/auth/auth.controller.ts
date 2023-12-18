@@ -2,6 +2,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import {
 	changeEmailVerificationStatus,
+	changePassword,
 	createUser,
 	getUserByEmail,
 	getUserById,
@@ -10,16 +11,20 @@ import {
 	createSession,
 	deleteSession,
 	deleteUserActivationToken,
+	deleteUserResetToken,
 	generateAccessToken,
 	generateRefreshToken,
 	getActivationTokenForUser,
 	getUserActivationById,
+	getResetTokenForUser,
+	getUserPasswordResetById,
 } from "./auth.service";
-import { sendVerificationEmail } from "../mailer";
+import { sendVerificationEmail, sendPasswordRestToken } from "../mailer";
 import { Request, Response } from "express";
 
+// User register
 export async function userRegister(req: Request, res: Response) {
-	console.log("Request Body:", req.body); // Debug req.body
+	console.log("Request Body (userRegister):", req.body); // Debug req.body
 	const bodySchema = z.object({
 		username: z.string(),
 		email: z.string().email(),
@@ -56,7 +61,7 @@ export async function userRegister(req: Request, res: Response) {
 			user_id,
 			username,
 		});
-
+		console.log("Debug email: ",sendVerificationEmail);
 		return res.status(201).send({ data: { user_id } });
 	} catch (error) {
 		console.error(error);
@@ -66,9 +71,10 @@ export async function userRegister(req: Request, res: Response) {
 	}
 }
 
+// User login
 export async function userLogin(req: Request, res: Response) {
 	try {
-		console.log("Request Body:", req.body); // Debug req.body
+		console.log("Request Body (userLogin):", req.body); // Debug req.body
 		const bodySchema = z.object({
 			email: z.string().email(),
 			password: z.string().min(6),
@@ -120,6 +126,7 @@ export async function userLogin(req: Request, res: Response) {
 	}
 }
 
+// User logout
 export async function userLogout(req: Request, res: Response) {
 	if (!req.session.user) {
 		return res.status(401).send();
@@ -152,6 +159,7 @@ export async function userLogout(req: Request, res: Response) {
 	return res.status(200).send();
 }
 
+// Activation of account
 export async function handleVerification(req: Request, res: Response) {
 	const bodySchema = z.object({
 		activation_token: z.string(),
@@ -207,4 +215,89 @@ export async function getMe(req: Request, res: Response) {
 			password: undefined,
 		},
 	});
+}
+
+// Section for reset password
+export async function handleRecoveryPassword(req: Request, res: Response) {
+	console.log("Request Body (handleRecoveryPassword):", req.body); // Debug req.body
+	const bodySchema = z.object({
+		email: z.string().email()
+	});
+
+	const parseResult = bodySchema.safeParse(req.body);
+	if (!parseResult.success) {
+		console.error(parseResult.error);
+		return res.status(400).send({
+			errors: parseResult.error.issues,
+		});
+	}
+
+	try {
+		const { email } = parseResult.data;
+
+		const user = await getUserByEmail(email);
+		console.log("Request Body (handleRecoveryPassword) -> obj User:", user); // Debug req.body
+		if (!user) {
+			return res.status(400).send({
+			errors: [{ message: "No user with this email address is registered." }],
+			});
+		}
+
+		const { reset_token } = await getResetTokenForUser(user.user_id);
+		console.log("Debug handlePasswordForgot UserID ->", user.user_id)
+		console.log("Debug handlePasswordForgot ReseToken ->", reset_token)
+		sendPasswordRestToken({
+			user_id: user.user_id,
+			reset_token,
+			email,
+		});
+		console.log("Debug email: ",sendPasswordRestToken);
+		return res.status(200).send();
+	}catch (error) {
+		return res
+			.status(400)
+			.send({ errors: [{ message: (error as Error).message }] });
+	}
+}
+
+export async function handlePasswordReset(req: Request, res: Response) {
+	console.log("handlePasswordReset() data:", req.body);
+	const bodySchema = z.object({
+		password: z.string(),
+		reset_token: z.string(),
+		user_id: z.string(),
+	});
+	// const parsedResult = bodySchema.safeParse(req.query);
+	const parsedResult = bodySchema.safeParse(req.body);
+	if (!parsedResult.success) {
+		console.error(
+			"Reset token or user ID is missing:",
+			parsedResult.error.issues
+		);
+		return res.status(400).json({ errors: parsedResult.error.issues });
+	}
+
+	const { reset_token, user_id, password } = parsedResult.data;
+
+	console.log("Reset token from URL:", reset_token);
+	console.log("User ID from URL:", user_id);
+
+	try {
+		const { reset_token: actual_reset_token } = await getUserPasswordResetById(user_id);
+
+		if (actual_reset_token !== reset_token) {
+			return res
+				.status(400)
+				.send({ errors: [{ message: "Invalid reset token" }] });
+		}
+		const hashedPassword = await bcrypt.hash(password, 10);
+		await changePassword(user_id, hashedPassword);
+		await deleteUserResetToken(user_id);
+
+		return res.status(200).send();
+	} catch (error) {
+		return res
+			.status(400)
+			.send({ errors: [{ message: (error as Error).message }] });
+	}
 }

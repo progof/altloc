@@ -50,3 +50,13 @@ export const changeEmailVerificationStatus = async (
 		is_verified,
 	]);
 };
+
+export const changePassword = async (
+	user_id: string,
+	new_password: string
+) => {
+	await pool.query(`UPDATE users SET password = $2 WHERE user_id = $1;`, [
+		user_id,
+		new_password,
+	]);
+};

@@ -5,6 +5,8 @@ import RegisterPage from "@/pages/register.vue";
 import LoginPage from "@/pages/login.vue";
 import DashboardPage from "@/pages/dashboard.vue";
 import EmailVerificationPage from "@/pages/email-verification.vue";
+import RecoveryPasswordPage from "@/pages/recovery_password.vue";
+import ResetPasswordPage from "@/pages/reset_password.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -30,6 +32,14 @@ export const router = createRouter({
 		{
 			path: "/email-verification",
 			component: EmailVerificationPage,
+		},
+		{
+			path: "/recovery-password",
+			component: RecoveryPasswordPage,
+		},
+		{
+			path: "/email-reset-password",
+			component: ResetPasswordPage,
 		},
 	],
 	history: createWebHistory(),
