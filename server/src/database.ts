@@ -36,6 +36,17 @@ try {
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
+
+		CREATE TABLE IF NOT EXISTS user_notes (
+			note_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			user_id uuid NOT NULL,
+			note_title VARCHAR(200) NOT NULL,
+			note_description VARCHAR(200) NOT NULL,
+			note_body VARCHAR(200) NOT NULL,
+			note_category VARCHAR(200) NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
 	`);
 
 	console.log("Successfully connected to the database and created tables!");
