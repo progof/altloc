@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { z } from "zod";
 import { useRecoveryPasswordMutation } from "@/services/auth.service";
+import MyButton from "@/components/UI/MyButton.vue";
 // import { useRouter } from "vue-router";
 
 // const router = useRouter();
@@ -51,9 +52,9 @@ const submitForm = async (event: Event) => {
 
 		<span v-if="error">{{ error }}</span>
 
-		<button type="submit" :disabled="isPending">
+		<my-button type="submit" :disabled="isPending">
 			{{ isPending ? "Fetching..." : "Reset password" }}
-		</button>
+		</my-button>
 	</form>
 </template>
 
@@ -76,15 +77,6 @@ input {
 	padding: 8px;
 	margin-bottom: 10px;
 	box-sizing: border-box;
-}
-
-button {
-	background-color: #4caf50;
-	color: white;
-	padding: 10px 15px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
 }
 
 fieldset {

@@ -4,10 +4,12 @@ import { RouterLink } from "vue-router";
 
 <template>
 	<div class="navbar">
-		<div @click="$router.push('/')">Xnote</div>
+		<div @click="$router.push('/')">
+			<h1>{Xnote} 📚</h1>
+		</div>
 		<div class="navbar__btns">
-			<RouterLink to="/register">Register</RouterLink>
-			<RouterLink style="margin-left: 20px" to="/login">Login</RouterLink>
+			<RouterLink to="/register" class="btn">Register</RouterLink>
+			<RouterLink style="margin-left: 20px" to="/login" class="btn">Login</RouterLink>
 		</div>
 	</div>
 </template>
@@ -24,5 +26,25 @@ import { RouterLink } from "vue-router";
 
 .navbar__btns {
 	margin-left: auto;
+}
+
+h1 {
+  color: rgb(51, 101, 101);
+}
+
+span {
+  display: block;
+  margin-bottom: 10px;
+  color: teal;
+}
+
+.btn {
+  background-color: teal;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
 }
 </style>

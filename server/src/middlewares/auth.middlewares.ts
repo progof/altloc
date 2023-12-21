@@ -14,14 +14,9 @@ export async function blockNotVerifedUser(
 		return res.status(401).send();
 	}
 	if (!req.session.user.is_verified) {
-		return res.status(401).send({
-			errors: [
-				{
-					message:
-						"Your account is not activated. An activation letter has been sent to your mailbox.",
-				},
-			],
-		});
+		return res
+			.status(401)
+			.send({ errors: [{ message: "Your account is not activated. An activation letter has been sent to your mailbox." }] });
 	}
 
 	next();

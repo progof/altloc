@@ -52,6 +52,27 @@ export const useNoteCreateMutation = () =>
                 const errors = errorSchema.parse(await res.json()).errors;
                 throw new Error(errors.at(0)?.message);
             }
-            return (await (res.json() as Promise<{ data: Note }>)).data;
+            return (await (res.json() as Promise<{ data: Note[] }>)).data;
         },
     });
+
+    export const useNoteDeleteMutation = () =>
+	useMutation({
+		mutationFn: async (data: {
+			note_id: string;
+		}) => {
+			const res = await fetch("/api/app/delete-note", {
+				method: "POST",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+			if (!res.ok) {
+				const errors = errorSchema.parse(await res.json()).errors;
+				throw new Error(errors.at(0)?.message);
+			}
+			return;
+		},
+	});

@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { z } from "zod";
 import { useLoginMutation } from "@/services/auth.service";
 import { useRouter } from "vue-router";
+import MyButton from "@/components/UI/MyButton.vue";
 
 const router = useRouter();
 
@@ -62,9 +63,9 @@ const submitForm = async (event: Event) => {
 
 		<span v-if="error">{{ error }}</span>
 
-		<button type="submit" :disabled="isPending">
+		<my-button type="submit" :disabled="isPending">
 			{{ isPending ? "Fetching..." : "Login" }}
-		</button>
+		</my-button>
 	</form>
 	<div>
 		<RouterLink to="/recovery-password">Forgot password?</RouterLink>

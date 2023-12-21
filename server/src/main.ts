@@ -12,8 +12,8 @@ import {
 	handleRecoveryPassword,
 	handlePasswordReset,
 } from "./auth/auth.controller";
-import { blockNotAuthenticated } from "./middlewares/auth.middlewares";
-import { createNewNote, getNote } from "./app/app.contreoller";
+import { blockNotAuthenticated, blockNotVerifedUser } from "./middlewares/auth.middlewares";
+import { createNewNote, getNote, delNote } from "./app/app.contreoller";
 
 const app = express();
 app.use(cors());
@@ -34,10 +34,11 @@ app.post("/auth/recovery_password", handleRecoveryPassword);
 app.post("/auth/register", userRegister);
 app.post("/auth/login", userLogin);
 app.post("/auth/logout", userLogout);
-app.get("/auth/me", blockNotAuthenticated, getMe);
+app.get("/auth/me", blockNotAuthenticated, blockNotVerifedUser, getMe);
 
 app.post("/app/create-new-note", blockNotAuthenticated, createNewNote);
-app.get("/app/get-note", getNote)
+app.get("/app/get-note", blockNotAuthenticated, getNote)
+app.post("/app/delete-note", blockNotAuthenticated, delNote)
 
 
 app.listen(config.APP_PORT, () => {

@@ -38,5 +38,13 @@ export const getNoteByUserId = async (userId: string) => {
 		`SELECT * from user_notes WHERE user_id = $1;`,
 		[userId]
 	);
-	return result.rows[0] as { note_id: string; user_id: string; note_title: string; note_description: string; note_body: string; note_category: string;};
+	return result.rows as Array<{
+		note_id: string;
+		user_id: string;
+		note_title: string;
+		note_description: string;
+		note_body: string;
+		note_category: string;
+		created_at: string;
+	}>;
 };

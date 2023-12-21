@@ -267,7 +267,6 @@ export async function handlePasswordReset(req: Request, res: Response) {
 		reset_token: z.string(),
 		user_id: z.string(),
 	});
-	// const parsedResult = bodySchema.safeParse(req.query);
 	const parsedResult = bodySchema.safeParse(req.body);
 	if (!parsedResult.success) {
 		console.error(

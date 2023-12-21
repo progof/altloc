@@ -3,6 +3,7 @@ import { useResetPasswordEmailMutation } from "@/services/auth.service";
 import { z, ZodIssue } from "zod";
 import { ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+import MyButton from "@/components/UI/MyButton.vue";
 
 const router = useRouter();
 
@@ -72,9 +73,9 @@ const submitForm = async (event: Event) => {
 
     <span v-if="error">{{ error }}</span>
 
-    <button type="submit" :disabled="isPending">
+    <my-button type="submit" :disabled="isPending">
       {{ isPending ? "Fetching..." : "Reset password" }}
-    </button>
+    </my-button>
   </form>
   <p v-if="isPending">Reset your email...</p>
   <p v-else-if="error">
@@ -105,15 +106,6 @@ input {
   padding: 8px;
   margin-bottom: 10px;
   box-sizing: border-box;
-}
-
-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 fieldset {

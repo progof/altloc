@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { ZodIssue, z } from "zod";
 import { useRegisterMutation } from "@/services/auth.service";
+import MyButton from "@/components/UI/MyButton.vue";
 
 const validationSchema = z
 	.object({
@@ -62,9 +63,9 @@ const submitForm = async (event: Event) => {
 		</span>
 		<span v-if="error">{{ error }}</span>
 
-		<button type="submit" :disabled="validationErrors.length > 0 || isPending">
+		<my-button type="submit" :disabled="validationErrors.length > 0 || isPending">
 			{{ isPending ? "Fetching..." : "Register" }}
-		</button>
+		</my-button>
 	</form>
 </template>
 
@@ -87,15 +88,6 @@ input {
 	padding: 8px;
 	margin-bottom: 10px;
 	box-sizing: border-box;
-}
-
-button {
-	background-color: #4caf50;
-	color: white;
-	padding: 10px 15px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
 }
 
 fieldset {

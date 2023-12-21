@@ -1,20 +1,34 @@
 <template>
-    <button class="btn">
-        <slot></slot>  
+    <button :class="['btn', btnType]" @click="$emit('click')">
+      <slot></slot>
     </button>
-</template>
+  </template>
+  
+  <script setup lang="ts">
+  import { ref } from 'vue';
+  
+  const btnType = ref('default'); // Возможные значения: 'default', 'primary', 'danger', и т.д.
+  </script>
+  
+  <style scoped>
+  .btn {
+    background-color: teal;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
+  }
 
-<script>
-export default {
-    name: 'my-button'
-}
-</script>
-
-<style scoped>
-.btn {
-    padding: 10px 15px;
-    background: none;
-    color: teal;
-    border: 1px solid teal;
-}
-</style>
+  .btn.primary {
+    background-color: teal;
+    color: white;
+  }
+  
+  .btn.danger {
+    border-color: red;
+    color: red;
+  }
+  </style>
+  

@@ -48,6 +48,7 @@ export const useLoginMutation = () =>
 				const errors = errorSchema.parse(await res.json()).errors;
 				throw new Error(errors.at(0)?.message);
 			}
+			// console.log(await res.json());
 			return;
 		},
 	});
