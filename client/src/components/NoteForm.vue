@@ -46,7 +46,7 @@ const submitForm = async (event: Event) => {
 	console.log('My user_id:', me.value?.user_id); // Debug
 	const result = validationSchema.safeParse(rawData);
 
-    rawData.note_body = noteBodyContent.value.getText();
+    rawData.note_body = noteBodyContent.value;
  
 	console.log('Validation result:', result); // Debug
 	if (!result.success) {
