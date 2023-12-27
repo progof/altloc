@@ -1,4 +1,5 @@
   <script setup lang="ts">
+import { reactive } from 'vue';
   import { useQuery } from '@tanstack/vue-query';
   import { getNoteQueryOptions, useNoteDeleteMutation } from '@/services/app.service';
   import MarkdownIt from 'markdown-it';
@@ -18,12 +19,16 @@ const renderMarkdown = (text: string) => {
         note_id: noteId,
       });
   
-      if (notes.value) {
-        const index = notes.value.findIndex((note) => note.note_id === noteId);
-        if (index !== -1) {
-          notes.value.splice(index, 1);
-        }
-      }
+    //   if (notes.value) {
+    //     const index = notes.value.findIndex((note) => note.note_id === noteId);
+    //     if (index !== -1) {
+    //       notes.value.splice(index, 1);
+    //     }
+    //   }
+    if (notes.value) {
+      const filteredNotes = notes.value.filter((note) => note.note_id !== noteId);
+      notes.value = reactive([...filteredNotes]);
+    }
   
       alert('Note deleted successfully!');
     } catch (err) {

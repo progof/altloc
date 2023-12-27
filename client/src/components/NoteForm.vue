@@ -5,13 +5,13 @@
   import { getMeQueryOptions } from "@/services/auth.service";
   import { useQuery } from "@tanstack/vue-query";
   import MyButton from '@/components/UI/MyButton.vue';
-  import { QuillEditor, getText } from '@vueup/vue-quill';
+  import { QuillEditor } from '@vueup/vue-quill';
 import 'quill/dist/quill.snow.css';
 
   const { data: me } = useQuery(getMeQueryOptions);
 
 const noteBodyContent = ref<string>('');
-const contentType = ref('text'); // Set the appropriate content type
+const contentType = ref('html'); // Set the appropriate content type
 
   const validationSchema = z.object({
   note_title: z.string().refine((value) => value.trim() !== '', {
@@ -20,7 +20,12 @@ const contentType = ref('text'); // Set the appropriate content type
   note_description: z.string().refine((value) => value.trim() !== '', {
     message: 'Description is required',
   }),
-  note_body: z.string().refine((value) => value.trim() !== '', {
+  note_body: z.string().refine((value) => {
+    if (typeof value === 'string') {
+      return value.trim() !== '';
+    }
+    return false;
+  }, {
     message: 'Body is required',
   }),
   note_category: z.string().refine((value) => value.trim() !== '', {
@@ -41,13 +46,15 @@ const submitForm = async (event: Event) => {
 	const rawData = Object.fromEntries(
 		new FormData(event.target as HTMLFormElement)
 	);
-    console.log("noteBodyContent", noteBodyContent);
+    console.log("noteBodyContent", noteBodyContent.value);
 	console.log('Raw data:', rawData); // Debug
 	console.log('My user_id:', me.value?.user_id); // Debug
+    rawData.note_body = noteBodyContent.value;
 	const result = validationSchema.safeParse(rawData);
 
-    rawData.note_body = noteBodyContent.value;
- 
+    console.log("rawData.note_body", rawData.note_body)
+
+
 	console.log('Validation result:', result); // Debug
 	if (!result.success) {
 		console.log('Validation failed:', result.error); // Debug
