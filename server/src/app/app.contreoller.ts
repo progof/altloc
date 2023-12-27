@@ -14,6 +14,7 @@ export async function createNewNote(req: Request, res: Response) {
 	});
 
 	const parseResult = bodySchema.safeParse(req.body);
+    res.status(201).json({ success: true, message: 'Post created successfully' });
 	if (!parseResult.success) {
 		console.error("Error when creating a new note:", parseResult.error);
 		return res.status(400).send({

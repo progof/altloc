@@ -1,11 +1,17 @@
   <script setup lang="ts">
-
-  import { getNoteQueryOptions, useNoteDeleteMutation } from '@/services/app.service';
   import { useQuery } from '@tanstack/vue-query';
+  import { getNoteQueryOptions, useNoteDeleteMutation } from '@/services/app.service';
+  import MarkdownIt from 'markdown-it';
   
   const { data: notes } = useQuery(getNoteQueryOptions);
   const { mutate: noteDelete, isPending: isDeleting, error: deleteError } = useNoteDeleteMutation();
-  
+
+const md = new MarkdownIt();
+const renderMarkdown = (text: string) => {
+    return md.render(text);
+};
+
+
   const handleDeleteNote = async (noteId: string) => {
     try {
       await noteDelete({
@@ -33,8 +39,8 @@
       <ul>
         <li v-for="note in notes" :key="note.note_id">
           <h3>Title: {{ note.note_title }}</h3>
-          <p>Description: {{ note.note_description }}</p>
-          <p>Body: {{ note.note_body }}</p>
+          <p>Description: {{ renderMarkdown(note.note_description) }}</p>
+            <p>Body: {{ renderMarkdown(note.note_body) }}</p>
           <p>Category: {{ note.note_category }}</p>
           <p>Created at: {{ note.created_at }}</p>
           <p>Note ID: {{ note.note_id }}</p>
@@ -46,6 +52,7 @@
       </ul>
     </div>
   </template>
+  
   
 <style scoped>
 .note-lists {
