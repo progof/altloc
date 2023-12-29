@@ -1,91 +1,50 @@
-<!-- <template>
-    <div v-if="show" class="dialog" @click.stop="hideDialog">
-      <div @click.stop class="dialog__content">
-        <slot></slot>
+<template>
+    <div v-if="visible" class="dialog-overlay" @click="closeDialog">
+      <div class="dialog-container">
+        <div class="dialog-content">
+          <slot></slot>
+        </div>
+        <button @click="closeDialog" class="close-button">Close</button>
       </div>
     </div>
   </template>
   
   <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
+  import { defineProps, defineEmits } from 'vue';
   
-  const show = ref(false);
+  const props = defineProps(['visible']);
+  const { emit } = defineEmits();
   
-  const toggleDialog = () => {
-    show.value = !show.value;
+  const closeDialog = () => {
+    emit('update:visible', false);
   };
-  
-  const hideDialog = () => {
-    show.value = false;
-  };
-  
-  onMounted(() => {
-    console.log('dialog mounted');
-  });
   </script>
   
   <style scoped>
-  .dialog {
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.5);
+  .dialog-overlay {
     position: fixed;
-    display: flex;
-  }
-  
-  .dialog__content {
-    margin: auto;
-    background: white;
-    border-radius: 12px;
-    min-height: 50px;
-    min-width: 300px;
-    padding: 20px;
-  }
-  </style>
-   -->
-
-   <template>
-    <div v-if="show" class="dialog" @click.stop="hideDialog">
-      <div @click.stop class="dialog__content">
-        <slot></slot>
-      </div>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  
-  const show = ref(false);
-  
-  const hideDialog = () => {
-    show.value = false;
-  };
-  
-  onMounted(() => {
-    console.log('dialog mounted');
-  });
-  </script>
-  
-  <style scoped>
-  .dialog {
     top: 0;
-    bottom: 0;
-    right: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    position: fixed;
     display: flex;
+    justify-content: center;
+    align-items: center;
   }
   
-  .dialog__content {
-    margin: auto;
+  .dialog-container {
     background: white;
-    border-radius: 12px;
-    min-height: 50px;
-    min-width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     padding: 20px;
+    position: relative;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
   }
   </style>
   

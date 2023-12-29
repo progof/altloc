@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createNote, deleteNote, getNoteByUserId } from "./app.service";
+import { createNote, deleteNote, getNoteByUserId, getNoteById } from "./app.service";
 import { Request, Response } from "express";
 // import { getUserByEmail, getUserById } from "../user.service";
 
@@ -38,6 +38,30 @@ export async function getNote(req: Request, res: Response) {
 	}
 
 	return res.status(200).send({
+		data: noteData,
+	});
+}
+
+export async function getNoteId(req: Request, res: Response) {
+    console.log("Request Body (getNoteId):", req.body); // Debug req.body
+	const bodySchema = z.object({
+        note_id: z.string(),
+	});
+
+	const parseResult = bodySchema.safeParse(req.body);
+	if (!parseResult.success) {
+		console.error("Error when deleting a note:", parseResult.error);
+		return res.status(400).send({
+			errors: parseResult.error.issues,
+		});
+	}
+
+	const { note_id } = parseResult.data;
+    const noteData = await getNoteById(note_id);
+    console.log("Data getNoteId:", noteData);
+    console.log("Server send getNoteId:", res.send);
+
+    return res.status(200).send({
 		data: noteData,
 	});
 }

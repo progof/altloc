@@ -13,7 +13,7 @@ import {
 	handlePasswordReset,
 } from "./auth/auth.controller";
 import { blockNotAuthenticated, blockNotVerifedUser } from "./middlewares/auth.middlewares";
-import { createNewNote, getNote, delNote } from "./app/app.contreoller";
+import { createNewNote, getNote, delNote, getNoteId } from "./app/app.contreoller";
 
 const app = express();
 app.use(cors());
@@ -39,6 +39,7 @@ app.get("/auth/me", blockNotAuthenticated, blockNotVerifedUser, getMe);
 app.post("/app/create-new-note", blockNotAuthenticated, createNewNote);
 app.get("/app/get-note", blockNotAuthenticated, getNote)
 app.post("/app/delete-note", blockNotAuthenticated, delNote)
+app.post("/app/get-note-id/", blockNotAuthenticated, getNoteId)
 
 
 app.listen(config.APP_PORT, () => {

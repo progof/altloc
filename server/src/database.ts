@@ -42,7 +42,7 @@ try {
 			user_id uuid NOT NULL,
 			note_title VARCHAR(200) NOT NULL,
 			note_description VARCHAR(500) NOT NULL,
-			note_body VARCHAR(1000) NOT NULL,
+			note_body VARCHAR(10000) NOT NULL,
 			note_category VARCHAR(200) NOT NULL,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE

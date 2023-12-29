@@ -19,6 +19,7 @@
   cursor: pointer;
   margin-top: 10px;
   border-radius: 5px;
+  margin-left: 6px;
   }
 
   .btn.primary {

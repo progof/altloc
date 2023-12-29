@@ -7,6 +7,7 @@ import DashboardPage from "@/pages/dashboard.vue";
 import EmailVerificationPage from "@/pages/email-verification.vue";
 import RecoveryPasswordPage from "@/pages/recovery_password.vue";
 import ResetPasswordPage from "@/pages/reset_password.vue";
+import NotesPage from "@/pages/notes.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -40,6 +41,10 @@ export const router = createRouter({
 		{
 			path: "/email-reset-password",
 			component: ResetPasswordPage,
+		},
+		{
+			path: "/notes/:id",
+			component: NotesPage,
 		},
 	],
 	history: createWebHistory(),
@@ -78,10 +83,6 @@ import { RouterView } from "vue-router";
 	padding: 0;
 	box-sizing: border-box;
 	font-family: 'Arial', sans-serif;
-}
-
-.ql-editor {
-  font-family: 'Arial', sans-serif; /* Используйте подходящий шрифт */
 }
 
 .app {
