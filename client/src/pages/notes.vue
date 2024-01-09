@@ -36,7 +36,6 @@ onMounted(async () => {
       <p>User ID: {{ noteData.user_id }}</p>
       <p>Title: {{ noteData.note_title }}</p>
       <p>Description: {{ noteData.note_description }}</p>
-      <!-- и так далее... -->
     </div>
     <div v-else>
       <p>Loading...</p>
@@ -45,5 +44,4 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Добавьте стили, если необходимо */
 </style>
