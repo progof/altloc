@@ -17,7 +17,7 @@ onMounted(async () => {
     console.log("Response data:", responseData);
 
     if (responseData) {
-      noteData.value = responseData[0];
+      noteData.value = responseData;
       console.log("noteData", noteData.value);
     } else {
       console.error("No data received from the server.");
