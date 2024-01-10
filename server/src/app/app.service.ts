@@ -25,6 +25,7 @@ export const deleteNote = async (noteId: string) => {
 		noteId,
 	]);
 };
+
 export const getNoteById = async (noteId: string) => {
 	const result = await pool.query(
 		`SELECT * from user_notes WHERE note_id = $1;`,
@@ -32,6 +33,37 @@ export const getNoteById = async (noteId: string) => {
 	);
 	return result.rows[0] as { note_id: string; user_id: string; note_title: string; note_description: string; note_body: string; note_category: string;};
 };
+
+// export const getNoteById = async (noteId: string) => {
+// 	try {
+// 	  const result = await pool.query(
+// 		'SELECT * FROM user_notes WHERE note_id = $1;',
+// 		[noteId]
+// 	  );
+  
+// 	  // Проверка, были ли возвращены какие-либо строки
+// 	  if (result.rows.length > 0) {
+// 		return result.rows[0] as {
+// 		  note_id: string;
+// 		  user_id: string;
+// 		  note_title: string;
+// 		  note_description: string;
+// 		  note_body: string;
+// 		  note_category: string;
+// 		};
+// 	  } else {
+// 		// Если ничего не найдено, вернуть undefined или бросить ошибку
+// 		return undefined;
+// 		// или бросить ошибку:
+// 		// throw new Error(`Note not found with id: ${noteId}`);
+// 	  }
+// 	} catch (error) {
+// 	  // Обработка ошибок выполнения запроса
+// 	  console.error('Error in getNoteById:', error);
+// 	  throw new Error('Error retrieving note by id');
+// 	}
+//   };
+  
 
 export const getNoteByUserId = async (userId: string) => {
 	const result = await pool.query(

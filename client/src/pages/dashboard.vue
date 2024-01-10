@@ -6,22 +6,29 @@ import { getMeQueryOptions, useLogoutMutation } from '@/services/auth.service';
 import NoteForm from '@/components/NoteForm.vue';
 import NoteList from '@/components/NoteList.vue';
 import MyButton from '@/components/UI/MyButton.vue';
-import ModalWindow from '@/components/ModalWindow.vue'; 
+// import ModalWindow from '@/components/ModalWindow.vue'; 
+import Modal from "@/components/Modal.vue";
+
+const modalActive = ref(false);
+
+const toggleModal = () => {
+  modalActive.value = !modalActive.value;
+};
 
 const router = useRouter();
 
 const { data: me } = useQuery(getMeQueryOptions);
 const { mutate: logout } = useLogoutMutation();
 
-const isNoteModalVisible = ref(false);
-console.log("isNoteModalVisible", isNoteModalVisible.value);
-const openNoteModal = () => {
-  isNoteModalVisible.value = true;
-};
+// const isNoteModalVisible = ref(false);
+// console.log("isNoteModalVisible", isNoteModalVisible.value);
+// const openNoteModal = () => {
+//   isNoteModalVisible.value = true;
+// };
 
-const closeNoteModal = () => {
-  isNoteModalVisible.value = false;
-};
+// const closeNoteModal = () => {
+//   isNoteModalVisible.value = false;
+// };
 </script>
 
 <template>
@@ -40,15 +47,32 @@ const closeNoteModal = () => {
 	  	>	
 			Logout
 	  	</my-button>
+		<MyButton @click="toggleModal" type="button">Open Modal</MyButton>
+		<button @click="toggleModal" type="button">Open Modal</button>
   
 
-		<my-button @click="openNoteModal">New Note</my-button>
+		<!-- <button @click="openNoteModal">New Note</button>
 		<ModalWindow v-if="isNoteModalVisible" @closeModal="closeNoteModal" style="z-index: 9999;">
  			 <note-form />
-		</ModalWindow>
+		</ModalWindow> -->
+		<!-- <div class="home">
+    <Modal @close="toggleModal" :modalActive="modalActive">
+      <div class="dialog__content">
+        <note-form />
+      </div>
+    </Modal>
+    <button @click="toggleModal" type="button">Open Modal</button>
+  </div> -->
 		
-		<note-form />
+		<!-- <note-form /> -->
 	  	<note-list />
+		<Modal @close="toggleModal" :modalActive="modalActive">
+      		<div class="dialog">
+       			 <div class="dialog__content">
+         			 <note-form />
+       			 </div>
+      		</div>
+    	</Modal>
 	</div>
 </template>
  
@@ -74,4 +98,50 @@ note-form,
 note-list {
   margin-top: 20px;
 }
+
+.home {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialog__content {
+  background: white;
+  border-radius: 12px;
+  min-height: 50px;
+  min-width: 300px;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.dialog__content button {
+  margin-top: 10px;
+}
+
+
+.home .modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.home .modal-content h1,
+.home .modal-content p {
+  margin-bottom: 16px;
+}
+
+.home .modal-content h1 {
+  font-size: 32px;
+}
+
+.home .modal-content p {
+  font-size: 18px;
+}
+
 </style>
