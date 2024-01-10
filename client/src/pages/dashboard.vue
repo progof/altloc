@@ -6,7 +6,6 @@ import { getMeQueryOptions, useLogoutMutation } from '@/services/auth.service';
 import NoteForm from '@/components/NoteForm.vue';
 import NoteList from '@/components/NoteList.vue';
 import MyButton from '@/components/UI/MyButton.vue';
-// import ModalWindow from '@/components/ModalWindow.vue'; 
 import Modal from "@/components/Modal.vue";
 
 const modalActive = ref(false);
@@ -20,15 +19,6 @@ const router = useRouter();
 const { data: me } = useQuery(getMeQueryOptions);
 const { mutate: logout } = useLogoutMutation();
 
-// const isNoteModalVisible = ref(false);
-// console.log("isNoteModalVisible", isNoteModalVisible.value);
-// const openNoteModal = () => {
-//   isNoteModalVisible.value = true;
-// };
-
-// const closeNoteModal = () => {
-//   isNoteModalVisible.value = false;
-// };
 </script>
 
 <template>
@@ -48,21 +38,6 @@ const { mutate: logout } = useLogoutMutation();
 			Logout
 	  	</my-button>
 		<MyButton @click="toggleModal" type="button">Open Modal</MyButton>
-		<button @click="toggleModal" type="button">Open Modal</button>
-  
-
-		<!-- <button @click="openNoteModal">New Note</button>
-		<ModalWindow v-if="isNoteModalVisible" @closeModal="closeNoteModal" style="z-index: 9999;">
- 			 <note-form />
-		</ModalWindow> -->
-		<!-- <div class="home">
-    <Modal @close="toggleModal" :modalActive="modalActive">
-      <div class="dialog__content">
-        <note-form />
-      </div>
-    </Modal>
-    <button @click="toggleModal" type="button">Open Modal</button>
-  </div> -->
 		
 		<!-- <note-form /> -->
 	  	<note-list />

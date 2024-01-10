@@ -63,9 +63,9 @@ const submitForm = async (event: Event) => {
 
 		<span v-if="error">{{ error }}</span>
 
-		<my-button type="submit" :disabled="isPending">
+		<MyButton type="submit" :disabled="isPending">
 			{{ isPending ? "Fetching..." : "Login" }}
-		</my-button>
+		</MyButton>
 	</form>
 	<div>
 		<RouterLink to="/recovery-password">Forgot password?</RouterLink>

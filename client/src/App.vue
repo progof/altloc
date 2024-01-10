@@ -7,7 +7,7 @@ import DashboardPage from "@/pages/dashboard.vue";
 import EmailVerificationPage from "@/pages/email-verification.vue";
 import RecoveryPasswordPage from "@/pages/recovery_password.vue";
 import ResetPasswordPage from "@/pages/reset_password.vue";
-import NotesPage from "@/pages/notes.vue";
+import NoteByIdPage from "@/pages/notes/[id].vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -44,17 +44,24 @@ export const router = createRouter({
 		},
 		{
 			path: "/notes/:id",
-			component: NotesPage,
+			component: NoteByIdPage,
 		},
 	],
 	history: createWebHistory(),
 });
 
 router.beforeEach(async (to) => {
+	if (to.path === "/login" || to.path === "/register") {
+		try {
+			await queryClient.ensureQueryData(getMeQueryOptions);
+			return { path: "/dashboard" };
+		} catch (error) {
+			// do nothing
+		}
+	}
 	if (to.meta.requiresAuth) {
 		let me: User;
 		try {
-			// @ts-expect-error
 			me = await queryClient.ensureQueryData(getMeQueryOptions);
 		} catch (error) {
 			return { path: "/login" };
@@ -82,7 +89,7 @@ import { RouterView } from "vue-router";
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: 'Arial', sans-serif;
+	font-family: "Arial", sans-serif;
 }
 
 .app {

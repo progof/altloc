@@ -28,11 +28,7 @@ const submitForm = async (event: Event) => {
 		return;
 	}
 
-	register(result.data, {
-		onSuccess: () => {
-			alert("The verification link was sent to your email address");
-		}
-	});
+	register(result.data);
 };
 </script>
 
@@ -63,9 +59,12 @@ const submitForm = async (event: Event) => {
 		</span>
 		<span v-if="error">{{ error }}</span>
 
-		<my-button type="submit" :disabled="validationErrors.length > 0 || isPending">
+		<MyButton
+			type="submit"
+			:disabled="validationErrors.length > 0 || isPending"
+		>
 			{{ isPending ? "Fetching..." : "Register" }}
-		</my-button>
+		</MyButton>
 	</form>
 </template>
 
