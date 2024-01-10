@@ -15,7 +15,11 @@ const validationErrors = ref<{
 	email?: string;
 }>({});
 
-const { mutate: recovery_password, isPending, error } = useRecoveryPasswordMutation();
+const {
+	mutate: recovery_password,
+	isPending,
+	error,
+} = useRecoveryPasswordMutation();
 
 const submitForm = async (event: Event) => {
 	const rawData = Object.fromEntries(
@@ -32,13 +36,9 @@ const submitForm = async (event: Event) => {
 	}
 	validationErrors.value = {};
 
-    // recovery_password(result.data);
-	
-	recovery_password(result.data, {
-		onSuccess: () => {
-			alert("A password recovery link has been sent to your e-mail address");
-		}
-	});
+	// recovery_password(result.data);
+
+	recovery_password(result.data);
 };
 </script>
 
@@ -52,9 +52,9 @@ const submitForm = async (event: Event) => {
 
 		<span v-if="error">{{ error }}</span>
 
-		<my-button type="submit" :disabled="isPending">
+		<MyButton type="submit" :disabled="isPending">
 			{{ isPending ? "Fetching..." : "Reset password" }}
-		</my-button>
+		</MyButton>
 	</form>
 </template>
 

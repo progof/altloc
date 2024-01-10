@@ -1,302 +1,333 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { sendPasswordRestToken, sendVerificationEmail } from "../mailer";
+import { Request, Response, Router } from "express";
+import { AuthService } from "./auth.service";
 import {
-	changeEmailVerificationStatus,
-	changePassword,
-	createUser,
-	getUserByEmail,
-	getUserById,
-} from "../user.service";
-import {
-	createSession,
-	deleteSession,
-	deleteUserActivationToken,
-	deleteUserResetToken,
-	generateAccessToken,
-	generateRefreshToken,
-	getActivationTokenForUser,
-	getUserActivationById,
-	getResetTokenForUser,
-	getUserPasswordResetById,
-} from "./auth.service";
-import { sendVerificationEmail, sendPasswordRestToken } from "../mailer";
-import { Request, Response } from "express";
+  blockNotAuthenticated,
+  blockNotVerifedUser,
+} from "../middlewares/auth.middlewares";
 
-// User register
-export async function userRegister(req: Request, res: Response) {
-	console.log("Request Body (userRegister):", req.body); // Debug req.body
-	const bodySchema = z.object({
-		username: z.string(),
-		email: z.string().email(),
-		password: z.string().min(6),
-	});
+export class AuthController {
+  public readonly router = Router();
 
-	const parseResult = bodySchema.safeParse(req.body);
-	if (!parseResult.success) {
-		console.error(parseResult.error);
-		return res.status(400).send({
-			errors: parseResult.error.issues,
-		});
-	}
+  constructor(private readonly authService: AuthService) {
+    this.router.post(
+      "/auth/verify-email/:user_id/:activation_token",
+      this.handleVerification.bind(this),
+    );
+    this.router.post(
+      "/auth/email-reset-password/:user_id/:reset_token",
+      this.handlePasswordReset.bind(this),
+    );
+    this.router.post(
+      "/auth/recovery_password",
+      this.handleRecoveryPassword.bind(this),
+    );
+    this.router.post("/auth/register", this.userRegister.bind(this));
+    this.router.post("/auth/login", this.userLogin.bind(this));
+    this.router.post(
+      "/auth/logout",
+      blockNotAuthenticated,
+      blockNotVerifedUser,
+      this.userLogout.bind(this),
+    );
+    this.router.get(
+      "/auth/me",
+      blockNotAuthenticated,
+      blockNotVerifedUser,
+      this.getMe.bind(this),
+    );
+  }
 
-	const { email, password, username } = parseResult.data;
+  async userRegister(req: Request, res: Response) {
+    const bodySchema = z.object({
+      username: z.string(),
+      email: z.string().email(),
+      password: z.string().min(6),
+    });
 
-	try {
-		const hashedPassword = await bcrypt.hash(password, 10);
+    const body = bodySchema.safeParse(req.body);
+    if (!body.success) {
+      return res.status(400).send({
+        errors: body.error.issues,
+      });
+    }
 
-		const existingUser = await getUserByEmail(email);
-		if (existingUser) {
-			return res
-				.status(400)
-				.send({ errors: [{ message: "Email already registered" }] });
-		}
+    const { email, password, username } = body.data;
 
-		const { user_id } = await createUser({ email, hashedPassword, username });
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-		const { activation_token } = await getActivationTokenForUser(user_id);
+      const existingUser = await this.authService.getUserByEmail(email);
+      if (existingUser) {
+        return res
+          .status(400)
+          .send({ errors: [{ message: "Email already registered" }] });
+      }
 
-		sendVerificationEmail({
-			activation_token,
-			email,
-			user_id,
-			username,
-		});
-		console.log("Debug email: ",sendVerificationEmail);
-		return res.status(201).send({ data: { user_id } });
-	} catch (error) {
-		console.error(error);
-		return res
-			.status(500)
-			.send({ errors: [{ message: (error as Error).message }] });
-	}
-}
+      const { user_id } = await this.authService.createUser({
+        email,
+        hashedPassword,
+        username,
+      });
 
-// User login
-export async function userLogin(req: Request, res: Response) {
-	try {
-		console.log("Request Body (userLogin):", req.body); // Debug req.body
-		const bodySchema = z.object({
-			email: z.string().email(),
-			password: z.string().min(6),
-		});
+      const { activation_token } = await this.authService
+        .createOrGetEmailActivation(user_id);
 
-		const parsedResult = bodySchema.safeParse(req.body);
-		if (!parsedResult.success) {
-			return res.status(400).send({ errors: parsedResult.error.issues });
-		}
+      sendVerificationEmail({
+        activation_token,
+        email,
+        user_id,
+        username,
+      });
+      console.log("Debug email: ", sendVerificationEmail);
+      return res.status(201).send({ data: { user_id } });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .send({ errors: [{ message: (error as Error).message }] });
+    }
+  }
 
-		const { email, password } = parsedResult.data;
+  async userLogin(req: Request, res: Response) {
+    try {
+      const bodySchema = z.object({
+        email: z.string().email(),
+        password: z.string().min(6),
+      });
 
-		const user = await getUserByEmail(email);
-		if (!user) {
-			return res.status(400).send({
-				errors: [{ message: "User with this email does not exist" }],
-			});
-		}
+      const body = bodySchema.safeParse(req.body);
+      if (!body.success) {
+        return res.status(400).send({ errors: body.error.issues });
+      }
 
-		const isMatch = await bcrypt.compare(password, user.password);
-		if (!isMatch) {
-			return res
-				.status(400)
-				.send({ errors: [{ message: "Invalid password" }] });
-		}
+      const { email, password } = body.data;
 
-		const { session_id } = await createSession(user.user_id);
+      const user = await this.authService.getUserByEmail(email);
+      if (!user) {
+        return res.status(400).send({
+          errors: [{ message: "User with this email does not exist" }],
+        });
+      }
 
-		const accessToken = generateAccessToken({ userId: user.user_id });
-		const refreshToken = generateRefreshToken({
-			userId: user.user_id,
-			sessionId: session_id,
-		});
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res
+          .status(400)
+          .send({ errors: [{ message: "Invalid password" }] });
+      }
 
-		res.cookie("access_token", accessToken, {
-			httpOnly: true,
-		});
-		res.cookie("refresh_token", refreshToken, {
-			httpOnly: true,
-		});
+      const { session_id } = await this.authService.createSession(user.user_id);
 
-		req.session.user = user;
-		return res.status(200).send();
-	} catch (error) {
-		console.error(error);
-		return res
-			.status(500)
-			.send({ errors: [{ message: (error as Error).message }] });
-	}
-}
+      const accessToken = this.authService.generateAccessToken({
+        userId: user.user_id,
+      });
+      const refreshToken = this.authService.generateRefreshToken({
+        userId: user.user_id,
+        sessionId: session_id,
+      });
 
-// User logout
-export async function userLogout(req: Request, res: Response) {
-	if (!req.session.user) {
-		return res.status(401).send();
-	}
+      res.cookie("access_token", accessToken, {
+        httpOnly: true,
+      });
+      res.cookie("refresh_token", refreshToken, {
+        httpOnly: true,
+      });
 
-	try {
-		const userId = req.session.user.user_id;
+      req.session.user = user;
+      return res.status(200).send();
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .send({ errors: [{ message: (error as Error).message }] });
+    }
+  }
 
-		await deleteSession(userId);
+  async userLogout(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send();
+    }
 
-		res.clearCookie("access_token", { httpOnly: true });
-		res.clearCookie("refresh_token", { httpOnly: true });
+    try {
+      const userId = req.session.user.user_id;
 
-		await new Promise<void>((res, rej) => {
-			req.session.destroy((err) => {
-				if (err) {
-					rej(err);
-				} else {
-					res();
-				}
-			});
-		});
-	} catch (error) {
-		console.error(error);
-		return res
-			.status(400)
-			.send({ errors: [{ message: "Failed to destroy session" }] });
-	}
+      await this.authService.deleteSession(userId);
 
-	return res.status(200).send();
-}
+      res.clearCookie("access_token", { httpOnly: true });
+      res.clearCookie("refresh_token", { httpOnly: true });
 
-// Activation of account
-export async function handleVerification(req: Request, res: Response) {
-	const bodySchema = z.object({
-		activation_token: z.string(),
-		user_id: z.string(),
-	});
+      await new Promise<void>((res, rej) => {
+        req.session.destroy((err) => {
+          if (err) {
+            rej(err);
+          } else {
+            res();
+          }
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(400)
+        .send({ errors: [{ message: "Failed to destroy session" }] });
+    }
 
-	const parsedResult = bodySchema.safeParse(req.params);
-	if (!parsedResult.success) {
-		console.error(
-			"Activation token or user ID is missing:",
-			parsedResult.error.issues
-		);
-		return res.status(400).json({ errors: parsedResult.error.issues });
-	}
+    return res.status(200).send();
+  }
 
-	const { activation_token, user_id } = parsedResult.data;
+  async handleVerification(req: Request, res: Response) {
+    const bodySchema = z.object({
+      activation_token: z.string(),
+      user_id: z.string(),
+    });
 
-	console.log("Activation token from URL:", activation_token);
-	console.log("User ID from URL:", user_id);
+    const parsedResult = bodySchema.safeParse(req.params);
+    if (!parsedResult.success) {
+      console.error(
+        "Activation token or user ID is missing:",
+        parsedResult.error.issues,
+      );
+      return res.status(400).json({ errors: parsedResult.error.issues });
+    }
 
-	try {
-		const { activation_token: actual_activation_token } =
-			await getUserActivationById(user_id);
+    const { activation_token, user_id } = parsedResult.data;
 
-		if (actual_activation_token !== activation_token) {
-			return res
-				.status(400)
-				.send({ errors: [{ message: "Invalid activation token" }] });
-		}
+    console.log("Activation token from URL:", activation_token);
+    console.log("User ID from URL:", user_id);
 
-		await changeEmailVerificationStatus(user_id, true);
-		await deleteUserActivationToken(user_id);
+    try {
+      const { activation_token: actual_activation_token } = await this
+        .authService.getUserActivationById(user_id);
 
-		return res.status(200).send();
-	} catch (error) {
-		return res
-			.status(400)
-			.send({ errors: [{ message: (error as Error).message }] });
-	}
-}
+      if (actual_activation_token !== activation_token) {
+        return res
+          .status(400)
+          .send({ errors: [{ message: "Invalid activation token" }] });
+      }
 
-export async function getMe(req: Request, res: Response) {
-	if (!req.session.user) {
-		return res.status(401).send({ errors: [{ message: "Not found session" }] });
-	}
-	const me = await getUserById(req.session.user.user_id);
-	if (!me) {
-		return res.status(401).send({ errors: [{ message: "Not found user" }] });
-	}
-	return res.status(200).send({
-		data: {
-			...me,
-			password: undefined,
-		},
-	});
-}
+      await this.authService.changeEmailVerificationStatus(user_id, true);
+      await this.authService.deleteUserActivationToken(user_id);
 
-// Section for reset password
-export async function handleRecoveryPassword(req: Request, res: Response) {
-	console.log("Request Body (handleRecoveryPassword):", req.body); // Debug req.body
-	const bodySchema = z.object({
-		email: z.string().email()
-	});
+      return res.status(200).send();
+    } catch (error) {
+      return res
+        .status(400)
+        .send({ errors: [{ message: (error as Error).message }] });
+    }
+  }
 
-	const parseResult = bodySchema.safeParse(req.body);
-	if (!parseResult.success) {
-		console.error(parseResult.error);
-		return res.status(400).send({
-			errors: parseResult.error.issues,
-		});
-	}
+  async getMe(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "Not found session" }],
+      });
+    }
+    const me = await this.authService.getUserById(req.session.user.user_id);
+    if (!me) {
+      return res.status(401).send({ errors: [{ message: "Not found user" }] });
+    }
+    return res.status(200).send({
+      data: {
+        ...me,
+        password: undefined,
+      },
+    });
+  }
 
-	try {
-		const { email } = parseResult.data;
+  async handleRecoveryPassword(req: Request, res: Response) {
+    console.log("Request Body (handleRecoveryPassword):", req.body); // Debug req.body
+    const bodySchema = z.object({
+      email: z.string().email(),
+    });
 
-		const user = await getUserByEmail(email);
-		console.log("Request Body (handleRecoveryPassword) -> obj User:", user); // Debug req.body
-		if (!user) {
-			return res.status(400).send({
-			errors: [{ message: "No user with this email address is registered." }],
-			});
-		}
+    const parseResult = bodySchema.safeParse(req.body);
+    if (!parseResult.success) {
+      console.error(parseResult.error);
+      return res.status(400).send({
+        errors: parseResult.error.issues,
+      });
+    }
 
-		const { reset_token } = await getResetTokenForUser(user.user_id);
-		console.log("Debug handlePasswordForgot UserID ->", user.user_id)
-		console.log("Debug handlePasswordForgot ReseToken ->", reset_token)
-		sendPasswordRestToken({
-			user_id: user.user_id,
-			reset_token,
-			email,
-		});
-		console.log("Debug email: ",sendPasswordRestToken);
-		return res.status(200).send();
-	}catch (error) {
-		return res
-			.status(400)
-			.send({ errors: [{ message: (error as Error).message }] });
-	}
-}
+    try {
+      const { email } = parseResult.data;
 
-export async function handlePasswordReset(req: Request, res: Response) {
-	console.log("handlePasswordReset() data:", req.body);
-	const bodySchema = z.object({
-		password: z.string(),
-		reset_token: z.string(),
-		user_id: z.string(),
-	});
-	const parsedResult = bodySchema.safeParse(req.body);
-	if (!parsedResult.success) {
-		console.error(
-			"Reset token or user ID is missing:",
-			parsedResult.error.issues
-		);
-		return res.status(400).json({ errors: parsedResult.error.issues });
-	}
+      const user = await this.authService.getUserByEmail(email);
+      console.log("Request Body (handleRecoveryPassword) -> obj User:", user); // Debug req.body
+      if (!user) {
+        return res.status(400).send({
+          errors: [{
+            message: "No user with this email address is registered.",
+          }],
+        });
+      }
 
-	const { reset_token, user_id, password } = parsedResult.data;
+      const { reset_token } = await this.authService
+        .createOrGetResetPasswordRequest(
+          user.user_id,
+        );
+      console.log("Debug handlePasswordForgot UserID ->", user.user_id);
+      console.log("Debug handlePasswordForgot ReseToken ->", reset_token);
+      sendPasswordRestToken({
+        user_id: user.user_id,
+        reset_token,
+        email,
+      });
+      console.log("Debug email: ", sendPasswordRestToken);
+      return res.status(200).send();
+    } catch (error) {
+      return res
+        .status(400)
+        .send({ errors: [{ message: (error as Error).message }] });
+    }
+  }
 
-	console.log("Reset token from URL:", reset_token);
-	console.log("User ID from URL:", user_id);
+  async handlePasswordReset(req: Request, res: Response) {
+    console.log("handlePasswordReset() data:", req.body);
+    const bodySchema = z.object({
+      password: z.string(),
+      reset_token: z.string(),
+      user_id: z.string(),
+    });
+    const parsedResult = bodySchema.safeParse(req.body);
+    if (!parsedResult.success) {
+      console.error(
+        "Reset token or user ID is missing:",
+        parsedResult.error.issues,
+      );
+      return res.status(400).json({ errors: parsedResult.error.issues });
+    }
 
-	try {
-		const { reset_token: actual_reset_token } = await getUserPasswordResetById(user_id);
+    const { reset_token, user_id, password } = parsedResult.data;
 
-		if (actual_reset_token !== reset_token) {
-			return res
-				.status(400)
-				.send({ errors: [{ message: "Invalid reset token" }] });
-		}
-		const hashedPassword = await bcrypt.hash(password, 10);
-		await changePassword(user_id, hashedPassword);
-		await deleteUserResetToken(user_id);
+    console.log("Reset token from URL:", reset_token);
+    console.log("User ID from URL:", user_id);
 
-		return res.status(200).send();
-	} catch (error) {
-		return res
-			.status(400)
-			.send({ errors: [{ message: (error as Error).message }] });
-	}
+    try {
+      const resetPasswordRequest = await this.authService
+        .getResetPasswordRequest(
+          user_id,
+        );
+      if (!resetPasswordRequest) {
+        throw new Error("Couldn't find reset password request");
+      }
+
+      if (resetPasswordRequest.reset_token !== reset_token) {
+        return res
+          .status(400)
+          .send({ errors: [{ message: "Invalid reset token" }] });
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await this.authService.changePassword(user_id, hashedPassword);
+      await this.authService.deleteUserResetPasswordRequest(user_id);
+
+      return res.status(200).send();
+    } catch (error) {
+      return res
+        .status(400)
+        .send({ errors: [{ message: (error as Error).message }] });
+    }
+  }
 }
