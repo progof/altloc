@@ -37,9 +37,8 @@ const { mutate: logout } = useLogoutMutation();
 	  	>	
 			Logout
 	  	</my-button>
-		<MyButton @click="toggleModal" type="button">Open Modal</MyButton>
+		<MyButton @click="toggleModal" type="button">Add note</MyButton>
 		
-		<!-- <note-form /> -->
 	  	<note-list />
 		<Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
@@ -52,11 +51,15 @@ const { mutate: logout } = useLogoutMutation();
 </template>
  
 <style scoped>
+* {
+	background-color: rgb(255, 255, 255);
+}
 .dashboard {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Arial', sans-serif;
+
 }
 
 h1 {

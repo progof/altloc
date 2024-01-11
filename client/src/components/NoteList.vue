@@ -24,7 +24,7 @@ const {
 
 const formatCreatedAt = (createdAt: string) => {
 	const date = new Date(createdAt);
-	return date.toLocaleString(); // Или другой формат вывода по вашему выбору
+	return date.toLocaleString();
 };
 
 function htmlToFormattedText2(html: string) {
@@ -72,14 +72,8 @@ const handleDeleteNote = async (noteId: string) => {
 				<p>Note ID: {{ note.note_id }}</p>
 				<span v-if="deleteError">{{ deleteError }}</span>
 				<MyButton @click="$router.push(`/notes/${note.note_id}`)">
-					Open
+					Full note
 				</MyButton>
-				<button
-					class="open-button"
-					@click="$router.push(`/notes/${note.note_id}`)"
-				>
-					Open
-				</button>
 				<button
 					class="delete-button"
 					@click="() => handleDeleteNote(note?.note_id)"
@@ -149,9 +143,9 @@ const handleDeleteNote = async (noteId: string) => {
 }
 
 .no-notes-message {
-	color: #666; /* Цвет текста */
-	font-size: 18px; /* Размер шрифта */
-	text-align: center; /* Выравнивание текста по центру */
-	margin-top: 20px; /* Отступ сверху */
+	color: #666; 
+	font-size: 18px; 
+	text-align: center; 
+	margin-top: 20px; 
 }
 </style>
