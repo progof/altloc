@@ -3,10 +3,10 @@ import { ref } from "vue";
 import { useRouter } from 'vue-router';
 import { useQuery } from '@tanstack/vue-query';
 import { getMeQueryOptions, useLogoutMutation } from '@/services/auth.service';
-import NoteForm from '@/components/NoteForm.vue';
+// import NoteForm from '@/components/NoteForm.vue';
 import NoteList from '@/components/NoteList.vue';
 import MyButton from '@/components/UI/MyButton.vue';
-import Modal from "@/components/Modal.vue";
+// import Modal from "@/components/Modal.vue";
 
 const modalActive = ref(false);
 
@@ -37,16 +37,17 @@ const { mutate: logout } = useLogoutMutation();
 	  	>	
 			Logout
 	  	</my-button>
-		<MyButton @click="toggleModal" type="button">Add note</MyButton>
+		<!-- <MyButton @click="toggleModal" type="button">Add note</MyButton> -->
+		<MyButton @click="$router.push(`/notes/editor`)">Editor</MyButton>
 		
 	  	<note-list />
-		<Modal @close="toggleModal" :modalActive="modalActive">
+		<!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
        			 <div class="dialog__content">
          			 <note-form />
        			 </div>
       		</div>
-    	</Modal>
+    	</Modal> -->
 	</div>
 </template>
  
@@ -59,7 +60,6 @@ const { mutate: logout } = useLogoutMutation();
   margin: 0 auto;
   padding: 20px;
   font-family: 'Arial', sans-serif;
-
 }
 
 h1 {

@@ -8,6 +8,7 @@ import EmailVerificationPage from "@/pages/email-verification.vue";
 import RecoveryPasswordPage from "@/pages/recovery_password.vue";
 import ResetPasswordPage from "@/pages/reset_password.vue";
 import NoteByIdPage from "@/pages/notes/[id].vue";
+import NoteEditor from "@/pages/notes/editor.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -45,6 +46,10 @@ export const router = createRouter({
 		{
 			path: "/notes/:id",
 			component: NoteByIdPage,
+		},
+		{
+			path: "/notes/editor",
+			component: NoteEditor,
 		},
 	],
 	history: createWebHistory(),

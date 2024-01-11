@@ -26,16 +26,17 @@ function htmlToFormattedText2(html: string) {
     <div class="wrapper">
       <div v-if="note" class="note">
         <h3>Title: {{ note.title }}</h3>
+        <hr />
         <div class="note-description">
             <p>Description: {{ note.description }}</p>
+        </div>
+        <div class="note-category">
+            <p>Category: {{ note.category }}</p>
         </div>
         <div class="note-body">
             <hr />
             <p>Body: <span v-html="htmlToFormattedText2(note.body)"></span></p>
             <hr />
-        </div>
-        <div class="note-category">
-            <p>Category: {{ note.category }}</p>
         </div>
         <div class="note-created_at">
             <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
@@ -86,9 +87,5 @@ function htmlToFormattedText2(html: string) {
   .noteID p {
     font-weight: bold;
   }
-  
-.note-body{
-    color: gray;
-}
   </style>
   

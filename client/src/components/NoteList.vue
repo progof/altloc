@@ -27,12 +27,12 @@ const formatCreatedAt = (createdAt: string) => {
 	return date.toLocaleString();
 };
 
-function htmlToFormattedText2(html: string) {
-	let tempElement = document.createElement("div");
-	tempElement.innerHTML = html;
+// function htmlToFormattedText2(html: string) {
+// 	let tempElement = document.createElement("div");
+// 	tempElement.innerHTML = html;
 
-	return tempElement.innerHTML;
-}
+// 	return tempElement.innerHTML;
+// }
 
 const handleDeleteNote = async (noteId: string) => {
 	try {
@@ -65,11 +65,11 @@ const handleDeleteNote = async (noteId: string) => {
 			<li v-for="note in notes" :key="note.note_id">
 				<h3>Title: {{ note.title }}</h3>
 				<p>Description: {{ note.description }}</p>
-				<p>Body: <span v-html="htmlToFormattedText2(note.body)"></span></p>
+				<!-- <p>Body: <span v-html="htmlToFormattedText2(note.body)"></span></p> -->
 				<p>Category: {{ note.category }}</p>
 				<p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
-				<p>Author: {{ note.user_id }}</p>
-				<p>Note ID: {{ note.note_id }}</p>
+				<!-- <p>Author: {{ note.user_id }}</p>
+				<p>Note ID: {{ note.note_id }}</p> -->
 				<span v-if="deleteError">{{ deleteError }}</span>
 				<MyButton @click="$router.push(`/notes/${note.note_id}`)">
 					Full note

@@ -39,6 +39,7 @@ const quillOptions = ref({
 			[{ font: [] }],
 			[{ align: [] }],
 			["clean"],
+      ["link", "image"],
 		],
 	},
 	formats: [
@@ -157,27 +158,33 @@ const submitForm = async (event: Event) => {
 	<form @submit.prevent="submitForm">
 		<fieldset>
 			<label for="note_title">Title:</label>
-			<input type="text" id="note_title" name="title" />
+			<input type="text" id="note_title" name="title" placeholder="Title..."/>
 			<span v-if="validationErrors.title">{{ validationErrors.title }}</span>
 		</fieldset>
 
-		<fieldset>
-			<label for="note_category">Category:</label>
-			<input type="text" id="note_category" name="category" />
-			<span v-if="validationErrors.category">{{
-				validationErrors.category
-			}}</span>
-		</fieldset>
+    <fieldset>
+      <label for="note_category">Category:</label>
+      <select id="note_category" name="category">
+        <option value="" disabled selected>Select a category</option>
+        <option value="IT">🧑‍💻 IT</option>
+        <option value="Eco">🌽 Eco</option>
+        <option value="Build">👷‍♂️ Build</option>
+        <option value="Art">🧑‍🎨 Art</option>
+        <option value="Crypto">🚀 Crypto</option>
+      </select>
+      <span v-if="validationErrors.category">{{ validationErrors.category }}</span>
+    </fieldset>
 
 		<fieldset>
 			<label for="note_description">Description:</label>
-			<textarea type="text" id="note_description" name="description" />
+			<textarea type="text" id="note_description" name="description" placeholder="Description..." />
 			<span v-if="validationErrors.description">{{
 				validationErrors.description
 			}}</span>
 		</fieldset>
 
-		<fieldset>
+    <div class="editor-container">
+      <fieldset>
 			<label for="note_body">Body:</label>
 			<QuillEditor
 				v-model:content="noteBodyContent"
@@ -190,6 +197,7 @@ const submitForm = async (event: Event) => {
 
 			<span v-if="validationErrors.body">{{ validationErrors.body }}</span>
 		</fieldset>
+    </div>
 
 		<span v-if="error">{{ error }}</span>
 
@@ -199,7 +207,7 @@ const submitForm = async (event: Event) => {
 	</form>
 </template>
 
-<style scoped>
+<style >
 .container {
 	max-width: 600px;
 	margin: 0 auto;
@@ -241,5 +249,27 @@ button[type="submit"] {
 
 fieldset {
 	border: none;
+}
+
+.ql-editor{
+  height: 72vh; 
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+select:focus {
+  outline: none;
+  border: 1px solid teal;
+  background-color: #f0f0f0;
+}
+
+select option {
+  font-size: 14px;
+  color: teal;
 }
 </style>
