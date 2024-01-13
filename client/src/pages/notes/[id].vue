@@ -42,7 +42,7 @@ function htmlToFormattedText2(html: string) {
             <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
         </div>
         <div class="note-author">
-            <p>Author: {{ note.user_id }}</p>
+            <p>Author: {{ note.username }}</p>
         </div>
         <div class="noteID">
             <p>Note ID: {{ note.note_id }}</p>

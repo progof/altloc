@@ -6,19 +6,28 @@ import { getMeQueryOptions, useLogoutMutation } from '@/services/auth.service';
 // import NoteForm from '@/components/NoteForm.vue';
 import NoteList from '@/components/NoteList.vue';
 import MyButton from '@/components/UI/MyButton.vue';
+import SearchQuery from '@/components/SearchQuery.vue';
 // import Modal from "@/components/Modal.vue";
 
-const modalActive = ref(false);
+// const modalActive = ref(false);
 
-const toggleModal = () => {
-  modalActive.value = !modalActive.value;
-};
+// const toggleModal = () => {
+//   modalActive.value = !modalActive.value;
+// };
 
 const router = useRouter();
 
 const { data: me } = useQuery(getMeQueryOptions);
 const { mutate: logout } = useLogoutMutation();
 
+const searchQuery = ref('');
+
+const searchNotes = () => {
+  // Ваша базовая логика поиска
+  // Например, можно фильтровать заметки по содержанию searchQuery в названии title
+  // Это пример, который можно настроить под ваши нужды
+  NoteList.value.searchNotes(searchQuery.value);
+};
 </script>
 
 <template>
@@ -38,9 +47,14 @@ const { mutate: logout } = useLogoutMutation();
 			Logout
 	  	</my-button>
 		<!-- <MyButton @click="toggleModal" type="button">Add note</MyButton> -->
-		<MyButton @click="$router.push(`/notes/editor`)">Editor</MyButton>
+		<MyButton @click="$router.push(`/notes/add`)">Add note</MyButton>
+		<MyButton @click="$router.push(`/notes/all`)">All notes</MyButton>
 		
-	  	<note-list />
+		<!-- Добавляем компонент поиска -->
+		<!-- <search-query v-model="searchQuery" @search="searchNotes" /> -->
+    
+    <!-- Передаем searchQuery в компонент NoteList -->
+    <note-list />
 		<!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
        			 <div class="dialog__content">

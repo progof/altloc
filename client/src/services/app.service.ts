@@ -17,6 +17,7 @@ export type Note = {
   body: string;
   category: string;
   created_at: string;
+  username: string;
 };
 
 export const useCreateNoteMutation = () => {
@@ -129,3 +130,24 @@ export const getNotesQueryOptions = queryOptions({
   queryKey: ["notes"],
   queryFn: getNotes,
 });
+
+
+export const getAllNotes = async () => {
+	const res = await fetch(`/api/all-notes`, {
+	  headers: {
+		Accept: "application/json",
+	  },
+	});
+  
+	if (!res.ok) {
+	  const errors = errorSchema.parse(await res.json()).errors;
+	  throw new Error(errors.at(0)?.message);
+	}
+  
+	return (await res.json() as { data: Note[] }).data;
+  };
+
+  export const getAllNotesQueryOptions = queryOptions({
+	queryKey: ["all-notes"],
+	queryFn: getAllNotes,
+  });
