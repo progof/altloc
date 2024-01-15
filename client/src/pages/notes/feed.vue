@@ -4,6 +4,7 @@ import {
 	getAllNotesQueryOptions,
 } from "@/services/app.service";
 import { MyButton } from "@/components/UI";
+import SearchBar from "@/components/SearchBar.vue";
 
 const { data: notes } = useQuery(getAllNotesQueryOptions);
 
@@ -15,6 +16,8 @@ const formatCreatedAt = (createdAt: string) => {
 </script>
 
 <template>
+    <MyButton @click="$router.push(`/dashboard`)">Home</MyButton>
+	<SearchBar />
 	<div class="note-lists" v-if="notes">
 		<h2>All Notes</h2>
 		<ul v-if="notes.length > 0">

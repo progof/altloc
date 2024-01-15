@@ -48,7 +48,7 @@ const searchNotes = () => {
 	  	</my-button>
 		<!-- <MyButton @click="toggleModal" type="button">Add note</MyButton> -->
 		<MyButton @click="$router.push(`/notes/add`)">Add note</MyButton>
-		<MyButton @click="$router.push(`/notes/all`)">All notes</MyButton>
+		<MyButton @click="$router.push(`/notes/feed`)">Feed</MyButton>
 		
 		<!-- Добавляем компонент поиска -->
 		<!-- <search-query v-model="searchQuery" @search="searchNotes" /> -->

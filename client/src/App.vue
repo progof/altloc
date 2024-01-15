@@ -9,7 +9,8 @@ import RecoveryPasswordPage from "@/pages/recovery_password.vue";
 import ResetPasswordPage from "@/pages/reset_password.vue";
 import NoteByIdPage from "@/pages/notes/[id].vue";
 import NoteAdd from "@/pages/notes/add.vue";
-import NoteAll from "@/pages/notes/all.vue";
+import NoteEditor from "@/pages/notes/editor.vue";
+import NoteFeedPage from "@/pages/notes/feed.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -53,8 +54,12 @@ export const router = createRouter({
 			component: NoteAdd,
 		},
 		{
-			path: "/notes/all",
-			component: NoteAll,
+			path: "/notes/feed",
+			component: NoteFeedPage,
+		},
+		{
+			path: "/notes/editor/:id",
+			component: NoteEditor,
 		},
 	],
 	history: createWebHistory(),
@@ -99,7 +104,7 @@ import { RouterView } from "vue-router";
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: "Arial", sans-serif;
+	font-family: "Montserrat", sans-serif;
 }
 
 .app {

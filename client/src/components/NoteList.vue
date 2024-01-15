@@ -74,6 +74,9 @@ const handleDeleteNote = async (noteId: string) => {
 				<MyButton @click="$router.push(`/notes/${note.note_id}`)">
 					Full note
 				</MyButton>
+				<MyButton @click="$router.push(`/notes/editor/${note.note_id}`)">
+					Edit
+				</MyButton>
 				<button
 					class="delete-button"
 					@click="() => handleDeleteNote(note?.note_id)"

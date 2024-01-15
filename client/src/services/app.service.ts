@@ -59,6 +59,46 @@ export const useCreateNoteMutation = () => {
   });
 };
 
+export const useUpdateNoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      noteId: string;
+      title: string;
+      description: string;
+      body: string;
+      category: string;
+    }) => {
+      const res = await fetch(`/api/update-notes/${data.noteId}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Note }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["update-notes"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["update-notes", res.data.note_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+
 export const useDeleteNoteMutation = () => {
   const queryClient = useQueryClient();
 
