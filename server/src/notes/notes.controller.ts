@@ -11,7 +11,9 @@ export class NotesController {
   ) {
     this.router.use("/notes", blockNotVerifedUser);
     this.router.post("/notes", this.createNote.bind(this));
+    this.router.post("/update-notes/:noteId", this.updateNote.bind(this));
     this.router.get("/notes", this.getNotes.bind(this));
+    this.router.get("/all-notes", this.getAllNotes.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));
     this.router.delete("/notes/:noteId", this.deleteNote.bind(this));
   }
@@ -37,6 +39,40 @@ export class NotesController {
 
     try {
       const note = await this.notesService.createNote(userId, body.data);
+      return res.status(201).send({ data: note });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async updateNote(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      noteId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    const bodySchema = z.object({
+      title: z.string(),
+      description: z.string(),
+      body: z.string(),
+      category: z.string(),
+    });
+
+    const body = bodySchema.safeParse(req.body);
+    if (!body.success) {
+      return res.status(400).send({
+        errors: body.error.issues,
+      });
+    }
+
+    try {
+      const note = await this.notesService.updateNote(params.data.noteId, body.data);
       return res.status(201).send({ data: note });
     } catch (error) {
       console.error(error);
@@ -80,6 +116,23 @@ export class NotesController {
 
     try {
       const note = await this.notesService.getNoteById(params.data.noteId);
+      return res.status(200).send({
+        data: note,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async getAllNotes(req: Request, res: Response) {
+    const note = await this.notesService.getAllNotes();
+      console.log("getAllNotes() data: ", note);
+    try {
+      const note = await this.notesService.getAllNotes();
+      console.log("getAllNotes() data: ", note);
       return res.status(200).send({
         data: note,
       });
