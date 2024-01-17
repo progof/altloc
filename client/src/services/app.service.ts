@@ -17,6 +17,7 @@ export type Note = {
   body: string;
   category: string;
   created_at: string;
+  edit_at: string;
   username: string;
 };
 
@@ -71,8 +72,8 @@ export const useUpdateNoteMutation = () => {
       body: string;
       category: string;
     }) => {
-      const res = await fetch(`/api/update-notes/${data.noteId}/${data.userId}`, {
-        method: "POST",
+      const res = await fetch(`/api/notes/${data.userId}/${data.noteId}`, {
+        method: "PATCH",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
@@ -87,12 +88,12 @@ export const useUpdateNoteMutation = () => {
     },
     onSuccess: (res) => {
       queryClient.invalidateQueries({
-        queryKey: ["update-notes"],
+        queryKey: ["notes"],
         exact: true,
         type: "active",
       });
       queryClient.setQueryData(
-        ["update-notes", res.data.note_id, res.data.user_id],
+        ["notes", res.data.note_id],
         res.data,
       );
       return;

@@ -29,7 +29,7 @@ export class NotesService {
 
   async getNoteById(noteId: string) {
     const result = await this.db.query<Note>(
-      `SELECT title, description, body, category, users.username, note_id, notes.created_at 
+      `SELECT title, description, body, category, users.username, note_id, notes.created_at, notes.edit_at
       FROM notes JOIN users ON notes.user_id = users.user_id WHERE note_id = $1;`,
       [noteId],
     );
@@ -37,9 +37,10 @@ export class NotesService {
   }
 
   async updateNote(noteId: string, userId: string, data: CreateNoteDTO) {
+    const nowDate = new Date().toISOString();
     const result = await this.db.query<Note>(
-      `UPDATE notes SET title = $3, description = $4, body = $5, category = $6 WHERE note_id = $1 AND user_id = $2 RETURNING *;`,
-      [noteId, userId, data.title, data.description, data.body, data.category],
+      `UPDATE notes SET title = $3, description = $4, body = $5, category = $6, edit_at = $7 WHERE note_id = $1 AND user_id = $2 RETURNING *;`,
+      [noteId, userId, data.title, data.description, data.body, data.category, nowDate],
     );
     return result.rows[0] as Note;
   }

@@ -11,7 +11,7 @@ export class NotesController {
   ) {
     this.router.use("/notes", blockNotVerifedUser);
     this.router.post("/notes", this.createNote.bind(this));
-    this.router.post("/update-notes/:noteId/:userId", this.updateNote.bind(this));
+    this.router.patch("/notes/:userId/:noteId", this.updateNote.bind(this));
     this.router.get("/notes", this.getNotes.bind(this));
     this.router.get("/all-notes", this.getAllNotes.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));

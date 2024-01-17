@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { z } from "zod";
 import { useRoute, useRouter } from 'vue-router';
 import { useQuery } from '@tanstack/vue-query';
@@ -83,17 +83,17 @@ const validationSchema = z.object({
 	description: z.string().refine((value) => value.trim() !== "", {
 		message: "Description is required",
 	}),
-	body: z.string().refine(
-		(value) => {
-			if (typeof value === "string") {
-				return value.trim() !== "";
-			}
-			return false;
-		},
-		{
-			message: "Body is required",
-		}
-	),
+	// body: z.string().refine(
+	// 	(value) => {
+	// 		if (typeof value === "string") {
+	// 			return value.trim() !== "";
+	// 		}
+	// 		return false;
+	// 	},
+	// 	{
+	// 		message: "Body is required",
+	// 	}
+	// ),
 	category: z.string().refine((value) => value.trim() !== "", {
 		message: "Category is required",
 	}),
@@ -106,12 +106,20 @@ const validationErrors = ref<{
 	category?: string;
 }>({});
 
+watch(noteData, () => {
+  if (!noteData.value) return;
+  content.value = noteData.value.body;
+})
+
+const content = ref("")
+
 const { mutate: noteUpdate, isPending, error } = useUpdateNoteMutation();
 
 const updateNote = async (event: Event) => {
 	const rawData = Object.fromEntries(
 		new FormData(event.target as HTMLFormElement)
 	);
+  console.log("rawData", rawData);
 
   const result = validationSchema.safeParse(rawData);
   rawData.body = convertToMarkdown(noteData.value?.body || '');
@@ -127,9 +135,6 @@ const updateNote = async (event: Event) => {
 		validationErrors.value.description = error.issues.find(
 			(issue) => issue.path[0] === "note_description"
 		)?.message;
-		validationErrors.value.body = error.issues.find(
-			(issue) => issue.path[0] === "note_body"
-		)?.message;
 		validationErrors.value.category = error.issues.find(
 			(issue) => issue.path[0] === "note_category"
 		)?.message;
@@ -138,14 +143,13 @@ const updateNote = async (event: Event) => {
 	validationErrors.value = {};
 
 	console.log("Data to be sent:", result.data);
-  console.log("noteData.body", result.data.body);
-  await noteUpdate({
+  noteUpdate({
     noteId: noteId,
     userId: userId,
     title: result.data.title,
     description: result.data.description,
     category: result.data.category,
-    body: result.data.body,
+    body: content.value,
   }, {
 		onError: (err) => {
 			console.error("Error updating note:", err);
@@ -164,21 +168,21 @@ const updateNote = async (event: Event) => {
     <div v-if="noteData" class="note">
       <form @submit.prevent="updateNote">
         <div class="form-group">
-          <label for="note_title">Title:</label>
-          <input v-model="noteData.title" type="text" id="note_title" name="note_title" required />
+          <label for="title">Title:</label>
+          <input :value="noteData.title"  type="text" id="title" name="title" required />
           <span v-if="validationErrors.description">{{ validationErrors.title }}</span>
         </div>
 
         <div class="form-group">
-          <label for="note_description">Description:</label>
-          <textarea v-model="noteData.description" id="note_description" name="note_description" required></textarea>
+          <label for="description">Description:</label>
+          <textarea :value="noteData.description"  id="description" name="description" required></textarea>
           <span v-if="validationErrors.description">{{ validationErrors.description }}</span>
         </div>
 
         <div class="form-group">
           <fieldset>
-            <label for="note_category">Category:</label>
-              <select v-model="noteData.category" id="note_category" name="note_category">
+            <label for="category">Category:</label>
+              <select :value="noteData.category" id="category" name="category">
                 <option value="">Select a category</option>
                 <option value="🧑‍💻 IT">🧑‍💻 IT</option>
                 <option value="🌽 Eco">🌽 Eco</option>
@@ -191,13 +195,12 @@ const updateNote = async (event: Event) => {
         </div>
 
         <div class="form-group">
-          <label for="note_body">Body:</label>
+          <label for="body">Body:</label>
           <!-- <textarea v-model="noteData.body" id="note_body"  name="note_body" required></textarea> -->
           <QuillEditor
-				    v-model:content="noteData.body"
+				    v-model:content="content"
 				    theme="snow"
-				    id="note_body"
-				    name="note_body"
+				    id="body"
 				    :options="quillOptions"
 				    contentType="html"
 			    />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { getAllNotesQueryOptions } from "@/services/app.service";
 import { MyButton } from "@/components/UI";
@@ -7,60 +7,55 @@ import { MyButton } from "@/components/UI";
 const { data: notes } = useQuery(getAllNotesQueryOptions);
 
 const formatCreatedAt = (createdAt: string) => {
-	const date = new Date(createdAt);
-	return date.toLocaleString();
+  const date = new Date(createdAt);
+  return date.toLocaleString();
 };
 
-let input = ref("");
+const searchValue = ref("");
 
-function filteredList() {
-  if (!notes.value) {
-    return [];
-  }
+const filteredList = computed(() => {
+  if (!notes.value) return [];
+  if (!searchValue.value) return notes.value;
 
-  const searchTerm = input.value.toLowerCase();
-
-  // Преобразовать объект заметок в массив
-  const notesArray = Object.values(notes.value);
-
-  return notesArray.filter((note) =>
-    note.title.toLowerCase().includes(searchTerm)
+  return notes.value.filter((note) =>
+    note.title.toLowerCase().includes(searchValue.value.toLowerCase())
   );
-}
+});
 </script>
 
 <template>
   <div>
-    <input type="text" v-model="input" placeholder="Search notes..." />
-    <div v-if="filteredList().length > 0"></div>
-    <div class="item note" v-for="note in filteredList()" :key="note.title">
+    <input type="text" v-model="searchValue" placeholder="Search notes..." />
+    <div v-if="searchValue === ''">Niczego</div>
+    <div
+      v-else-if="filteredList.length > 0"
+      class="item note"
+      v-for="note in filteredList"
+      :key="note.title"
+    >
       <!-- <p>{{ note.title, note.note_id}}</p> -->
       <div class="note-lists">
-		<ul>
-			<li>
-				<h3>Title: {{ note.title }}</h3>
-                <p>Category: {{ note.category }}</p>
-				<p>Description: {{ note.description }}</p>
-				<p>Author: {{ note.username }}</p>
-                <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
-				<MyButton @click="$router.push(`/notes/${note.note_id}`)">
-					Full note
-				</MyButton>
-			</li>
-		</ul>
-	</div>
+        <ul>
+          <li>
+            <h3>Title: {{ note.title }}</h3>
+            <p>Category: {{ note.category }}</p>
+            <p>Description: {{ note.description }}</p>
+            <p>Author: {{ note.username }}</p>
+            <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
+            <MyButton @click="$router.push(`/notes/${note.note_id}`)">
+              Full note
+            </MyButton>
+          </li>
+        </ul>
+      </div>
     </div>
-    
-    <div class="item error" v-if="input && !filteredList().length">
+    <div v-else-if="searchValue !== '' && notes?.length" class="item error">
       <p>No results found!</p>
     </div>
   </div>
-</template> 
-
-
+</template>
 
 <style scoped>
-
 body {
   padding: 20px;
   min-height: 100vh;
@@ -103,33 +98,32 @@ input {
 }
 
 .note-lists {
-	margin-top: 20px;
+  margin-top: 20px;
 }
 
 .note-lists h2 {
-	color: teal;
-	margin-bottom: 10px;
+  color: teal;
+  margin-bottom: 10px;
 }
 
 .note-lists ul {
-	list-style-type: none;
-	padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 .note-lists li {
-	margin-bottom: 10px;
-	padding: 10px;
-	position: relative;
+  margin-bottom: 10px;
+  padding: 10px;
+  position: relative;
 }
 
 .note-lists h3 {
-	color: teal;
-	margin-bottom: 5px;
+  color: teal;
+  margin-bottom: 5px;
 }
 
 .note-lists p {
-	margin-bottom: 5px;
-	color: #333;
+  margin-bottom: 5px;
+  color: #333;
 }
-
 </style>

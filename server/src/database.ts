@@ -35,6 +35,7 @@ export type Note = {
   body: string;
   category: string;
   created_at: string;
+  edit_at: string;
 };
 
 try {
@@ -78,6 +79,7 @@ try {
 			body VARCHAR(10000) NOT NULL,
 			category VARCHAR(200) NOT NULL,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			edit_at VARCHAR(200),
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 	`);
