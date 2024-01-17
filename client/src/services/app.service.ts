@@ -65,12 +65,13 @@ export const useUpdateNoteMutation = () => {
   return useMutation({
     mutationFn: async (data: {
       noteId: string;
+      userId: string;
       title: string;
       description: string;
       body: string;
       category: string;
     }) => {
-      const res = await fetch(`/api/update-notes/${data.noteId}`, {
+      const res = await fetch(`/api/update-notes/${data.noteId}/${data.userId}`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -91,7 +92,7 @@ export const useUpdateNoteMutation = () => {
         type: "active",
       });
       queryClient.setQueryData(
-        ["update-notes", res.data.note_id],
+        ["update-notes", res.data.note_id, res.data.user_id],
         res.data,
       );
       return;

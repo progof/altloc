@@ -36,10 +36,10 @@ export class NotesService {
     return result.rows.at(0) || null;
   }
 
-  async updateNote(noteId: string, data: CreateNoteDTO) {
+  async updateNote(noteId: string, userId: string, data: CreateNoteDTO) {
     const result = await this.db.query<Note>(
-      `UPDATE notes SET title = $2, description = $3, body = $4, category = $5 WHERE  note_id = $1 RETURNING *;`,
-      [noteId, data.title, data.description, data.body, data.category],
+      `UPDATE notes SET title = $3, description = $4, body = $5, category = $6 WHERE note_id = $1 AND user_id = $2 RETURNING *;`,
+      [noteId, userId, data.title, data.description, data.body, data.category],
     );
     return result.rows[0] as Note;
   }

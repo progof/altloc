@@ -8,8 +8,9 @@ import MyButton from "@/components/UI/MyButton.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
 import { marked } from "marked";
+import { useRouter } from 'vue-router';
 // import MarkdownIt from 'markdown-it';
-
+const $router = useRouter();
 const { data: me } = useQuery(getMeQueryOptions);
 // const md = new MarkdownIt();
 // const renderMarkdown = (text: string) => {
@@ -114,15 +115,15 @@ const submitForm = async (event: Event) => {
 	// console.log("test2 parse MD", test2);
 
 	// convert MD to html
-	const test = marked.parse("<p><strong>dsfsadfa</strong></p>");
-	console.log("test parse MD", test);
+	// const test = marked.parse("<p><strong>dsfsadfa</strong></p>");
+	// console.log("test parse MD", test);
 
 	//   rawData.note_body = noteBodyContent.value;
 	//   rawData.note_body = marked.parse(noteBodyContent.value);
 	// rawData.original_note_body = noteBodyContent.value;
 
 	rawData.body = convertToMarkdown(noteBodyContent.value);
-	console.log("rawData.note_body", rawData.note_body);
+	console.log("rawData.note_body", rawData.body);
 	const result = validationSchema.safeParse(rawData);
 
 	console.log("Validation result:", result);
@@ -151,6 +152,7 @@ const submitForm = async (event: Event) => {
 			console.error("Error creating note:", err);
 		},
 	});
+	$router.push(`/dashboard`);
 };
 </script>
 

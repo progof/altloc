@@ -35,6 +35,7 @@ const searchNotes = () => {
 		<h1>Hi, {{ me?.username }} 👋</h1>
 	  	<span>Your Email: {{ me?.email }}</span>
 	  	<span>Account status: {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span>
+      <span>Your ID: {{ me?.user_id }}</span>
 	  	<my-button
 			@click="
 		  	logout(undefined, {

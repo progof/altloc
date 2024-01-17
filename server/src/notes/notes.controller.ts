@@ -11,7 +11,7 @@ export class NotesController {
   ) {
     this.router.use("/notes", blockNotVerifedUser);
     this.router.post("/notes", this.createNote.bind(this));
-    this.router.post("/update-notes/:noteId", this.updateNote.bind(this));
+    this.router.post("/update-notes/:noteId/:userId", this.updateNote.bind(this));
     this.router.get("/notes", this.getNotes.bind(this));
     this.router.get("/all-notes", this.getAllNotes.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));
@@ -29,7 +29,7 @@ export class NotesController {
       body: z.string(),
       category: z.string(),
     });
-
+  
     const body = bodySchema.safeParse(req.body);
     if (!body.success) {
       return res.status(400).send({
@@ -51,7 +51,12 @@ export class NotesController {
   async updateNote(req: Request, res: Response) {
     const paramsSchema = z.object({
       noteId: z.string().uuid(),
+      userId: z.string().uuid(),
     });
+
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
 
     const params = paramsSchema.safeParse(req.params);
     if (!params.success) {
@@ -72,7 +77,7 @@ export class NotesController {
     }
 
     try {
-      const note = await this.notesService.updateNote(params.data.noteId, body.data);
+      const note = await this.notesService.updateNote(params.data.noteId, params.data.userId, body.data);
       return res.status(201).send({ data: note });
     } catch (error) {
       console.error(error);
