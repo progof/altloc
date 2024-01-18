@@ -77,6 +77,7 @@ export type User = {
 	username: string;
 	email: string;
 	is_verified: boolean;
+	role: string;
 };
 
 export const getMeQueryOptions = queryOptions({

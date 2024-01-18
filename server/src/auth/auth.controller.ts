@@ -119,14 +119,16 @@ export class AuthController {
           .send({ errors: [{ message: "Invalid password" }] });
       }
 
-      const { session_id } = await this.authService.createSession(user.user_id);
+      const { session_id } = await this.authService.createSession(user.user_id, user.role);
 
       const accessToken = this.authService.generateAccessToken({
         userId: user.user_id,
+        role: user.role
       });
       const refreshToken = this.authService.generateRefreshToken({
         userId: user.user_id,
         sessionId: session_id,
+        role: user.role
       });
 
       res.cookie("access_token", accessToken, {

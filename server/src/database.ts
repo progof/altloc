@@ -12,10 +12,12 @@ export type User = {
   password: string;
   is_verified: boolean;
   created_at: string;
+  role: string;
 };
 export type UserSession = {
   session_id: string;
   user_id: string;
+  user_role: string;
 };
 export type EmailActivation = {
   user_id: string;
@@ -48,12 +50,14 @@ try {
 			email VARCHAR(200) NOT NULL UNIQUE,
 			password VARCHAR(200) NOT NULL,
 			is_verified BOOLEAN DEFAULT FALSE,
-			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			role VARCHAR(50) DEFAULT 'USER' 
 		);
 		
 		CREATE TABLE IF NOT EXISTS user_sessions (
 			session_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
+			user_role VARCHAR(50) NOT NULL,
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 

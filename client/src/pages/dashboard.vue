@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from 'vue-router';
-import { useQuery } from '@tanstack/vue-query';
-import { getMeQueryOptions, useLogoutMutation } from '@/services/auth.service';
+import { useRouter } from "vue-router";
+import { useQuery } from "@tanstack/vue-query";
+import { getMeQueryOptions, useLogoutMutation } from "@/services/auth.service";
 // import NoteForm from '@/components/NoteForm.vue';
-import NoteList from '@/components/NoteList.vue';
-import MyButton from '@/components/UI/MyButton.vue';
-import SearchQuery from '@/components/SearchQuery.vue';
+import NoteList from "@/components/NoteList.vue";
+import MyButton from "@/components/UI/MyButton.vue";
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);
@@ -20,7 +19,7 @@ const router = useRouter();
 const { data: me } = useQuery(getMeQueryOptions);
 const { mutate: logout } = useLogoutMutation();
 
-const searchQuery = ref('');
+const searchQuery = ref("");
 
 const searchNotes = () => {
   // Ваша базовая логика поиска
@@ -31,50 +30,57 @@ const searchNotes = () => {
 </script>
 
 <template>
-	<div class="dashboard">
-		<h1>Hi, {{ me?.username }} 👋</h1>
-	  	<span>Your Email: {{ me?.email }}</span>
-	  	<span>Account status: {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span>
-      <span>Your ID: {{ me?.user_id }}</span>
-	  	<my-button
-			@click="
-		  	logout(undefined, {
-			onSuccess: () => {
-				router.push('/');
-			},
-		  	})
-			"
-	  	>	
-			Logout
-	  	</my-button>
-		<!-- <MyButton @click="toggleModal" type="button">Add note</MyButton> -->
-		<MyButton @click="$router.push(`/notes/add`)">Add note</MyButton>
-		<MyButton @click="$router.push(`/notes/feed`)">Feed</MyButton>
-		
-		<!-- Добавляем компонент поиска -->
-		<!-- <search-query v-model="searchQuery" @search="searchNotes" /> -->
-    
+  <div class="dashboard">
+    <div v-if="me?.role == 'USER'">
+      <p>hi user!</p>
+    </div>
+    <h1>Hi, {{ me?.username }} 👋</h1>
+    <span>Your Email: {{ me?.email }}</span>
+    <span
+      >Account status:
+      {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
+    >
+    <span>Your Role: {{ me?.role }}</span>
+    <span>Your ID: {{ me?.user_id }}</span>
+    <my-button
+      @click="
+        logout(undefined, {
+          onSuccess: () => {
+            router.push('/');
+          },
+        })
+      "
+    >
+      Logout
+    </my-button>
+    <!-- <MyButton @click="toggleModal" type="button">Add note</MyButton> -->
+    <MyButton @click="$router.push(`/notes/add`)">Add note</MyButton>
+    <MyButton @click="$router.push(`/notes/feed`)">Feed</MyButton>
+
+    <!-- Добавляем компонент поиска -->
+    <!-- <search-query v-model="searchQuery" @search="searchNotes" /> -->
+
     <!-- Передаем searchQuery в компонент NoteList -->
     <note-list />
-		<!-- <Modal @close="toggleModal" :modalActive="modalActive">
+    <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
        			 <div class="dialog__content">
          			 <note-form />
        			 </div>
       		</div>
     	</Modal> -->
-	</div>
+  </div>
 </template>
- 
+
 <style scoped>
 * {
-	background-color: rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
 }
 .dashboard {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
 }
 
 h1 {
@@ -118,7 +124,6 @@ note-list {
   margin-top: 10px;
 }
 
-
 .home .modal-content {
   display: flex;
   flex-direction: column;
@@ -136,5 +141,4 @@ note-list {
 .home .modal-content p {
   font-size: 18px;
 }
-
 </style>

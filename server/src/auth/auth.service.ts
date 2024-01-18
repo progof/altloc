@@ -11,7 +11,7 @@ import { Config } from "../config";
 export class AuthService {
   constructor(private readonly config: Config, private readonly db: Pool) {}
 
-  generateAccessToken(payload: { userId: string }) {
+  generateAccessToken(payload: { userId: string, role: string }) {
     return jwt.sign(payload, this.config.ACCESS_TOKEN_SECRET, {
       expiresIn: "15min",
     });
@@ -20,16 +20,17 @@ export class AuthService {
   generateRefreshToken(payload: {
     userId: string;
     sessionId: string;
+    role: string;
   }) {
     return jwt.sign(payload, this.config.REFRESH_TOKEN_SECRET, {
       expiresIn: "30d",
     });
   }
 
-  async createSession(userId: string) {
+  async createSession(userId: string, role: string) {
     const result = await this.db.query<UserSession>(
-      `INSERT INTO user_sessions (user_id) VALUES ($1) RETURNING *;`,
-      [userId],
+      `INSERT INTO user_sessions (user_id, user_role) VALUES ($1, $2) RETURNING *;`,
+      [userId, role],
     );
     return result.rows[0]!;
   }
@@ -103,6 +104,16 @@ export class AuthService {
   async getUserById(userId: string) {
     const result = await this.db.query<User>(
       `SELECT * FROM users WHERE user_id = $1;`,
+      [
+        userId,
+      ],
+    );
+    return result.rows.at(0) || null;
+  }
+
+  async getUserRoleById(userId: string) {
+    const result = await this.db.query<User>(
+      `SELECT role FROM users WHERE user_id = $1;`,
       [
         userId,
       ],
