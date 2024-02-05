@@ -1,5 +1,10 @@
 import { queryOptions, useMutation } from "@tanstack/vue-query";
 import { z } from "zod";
+import { useAuthStore } from "../store/auth.store";
+import { pinia } from "../store/pinia";
+
+const authStore = useAuthStore(pinia);	
+export const isAuthenticated = authStore.isAuthenticated;	
 
 const errorSchema = z.object({
 	errors: z.array(
@@ -32,6 +37,8 @@ export const useRegisterMutation = () =>
 		},
 	});
 
+
+
 export const useLoginMutation = () =>
 	useMutation({
 		mutationFn: async (data: { email: string; password: string }) => {
@@ -48,10 +55,49 @@ export const useLoginMutation = () =>
 				const errors = errorSchema.parse(await res.json()).errors;
 				throw new Error(errors.at(0)?.message);
 			}
+			// Обновляем статус аутентификации через Pinia
+			authStore.isAuthenticated = true;
+			console.log("login pinia", authStore.isAuthenticated);
 			// console.log(await res.json());
 			return;
 		},
 	});
+
+
+	//
+	
+	// export const useLoginMutation = () => {
+	//   const isAuthenticated = ref(false);
+	
+	//   const loginMutation = useMutation({
+	// 	mutationFn: async (data: { email: string; password: string }) => {
+	// 	  const res = await fetch("/api/auth/login", {
+	// 		method: "POST",
+	// 		headers: {
+	// 		  Accept: "application/json",
+	// 		  "Content-Type": "application/json",
+	// 		},
+	// 		body: JSON.stringify(data),
+	// 	  });
+	
+	// 	  if (!res.ok) {
+	// 		const errors = errorSchema.parse(await res.json()).errors;
+	// 		throw new Error(errors.at(0)?.message);
+	// 	  }
+	
+	// 	  // Если успешно авторизован, обновляем isAuthenticated
+	// 	  isAuthenticated.value = true;
+	
+	// 	  // console.log(await res.json());
+	// 	  return;
+	// 	},
+	//   });
+	
+	//   return { loginMutation, isAuthenticated };
+	// };
+	
+//
+
 
 export const useLogoutMutation = () => {
 	return useMutation({
@@ -67,6 +113,9 @@ export const useLogoutMutation = () => {
 				const errors = errorSchema.parse(await res.json()).errors;
 				throw new Error(errors.at(0)?.message);
 			}
+			// Обновляем статус аутентификации через Pinia
+			authStore.isAuthenticated = false;
+			console.log("logout pinia", authStore.isAuthenticated);
 			return;
 		},
 	});
