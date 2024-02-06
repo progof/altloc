@@ -1,28 +1,28 @@
 <template>
-	<button class="btn">
-		<slot />
-	</button>
+  <button class="btn">
+    <slot />
+  </button>
 </template>
 
 <style scoped>
 .btn {
-	background-color: teal;
-	color: white;
-	padding: 10px 15px;
-	border: none;
-	cursor: pointer;
-	margin-top: 10px;
-	border-radius: 5px;
-	margin-left: 6px;
+  background-color: teal;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
+  margin-left: 6px;
 }
 
 .btn.primary {
-	background-color: teal;
-	color: white;
+  background-color: teal;
+  color: white;
 }
 
 .btn.danger {
-	border-color: red;
-	color: red;
+  border-color: red;
+  color: red;
 }
 </style>

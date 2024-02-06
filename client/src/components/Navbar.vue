@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from "vue-router";
-// import { onMounted } from "vue";
-import {
-  useLogoutMutation,
-  useLoginMutation,
-  isAuthenticated,
-} from "@/services/auth.service";
+import { onMounted } from "vue";
+import { useLogoutMutation, useLoginMutation } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 // import { pinia } from "../store/pinia";
+import MyButton from "./UI/MyButton.vue";
 
 const router = useRouter();
 const { mutate: logout } = useLogoutMutation();
@@ -15,10 +12,8 @@ const { mutate: login } = useLoginMutation();
 
 const authStore = useAuthStore();
 // Проверяем значение статуса аутентификации при загрузке компонента
-// onMounted(() => {
-//   authStore.isAuthenticated =
-//     localStorage.getItem("isAuthenticated") === "true";
-// });
+const storedIsAuthenticated = localStorage.getItem("isAuthenticated");
+authStore.isAuthenticated = storedIsAuthenticated === "true";
 
 console.log("default", authStore.isAuthenticated);
 </script>
@@ -35,7 +30,19 @@ console.log("default", authStore.isAuthenticated);
       >
     </div>
     <div v-else class="navbar__btns">
+      <RouterLink style="margin-left: 20px" class="btn" to="/dashboard"
+        >Home</RouterLink
+      >
+
+      <RouterLink style="margin-left: 20px" class="btn" to="/notes/add"
+        >Add note</RouterLink
+      >
+      <RouterLink style="margin-left: 20px" class="btn" to="/notes/feed"
+        >Feed</RouterLink
+      >
+
       <RouterLink
+        style="margin-left: 20px"
         to="/"
         class="btn"
         @click="
@@ -46,13 +53,6 @@ console.log("default", authStore.isAuthenticated);
           })
         "
         >Logout</RouterLink
-      >
-
-      <RouterLink style="margin-left: 20px" class="btn" to="/notes/add"
-        >Add note</RouterLink
-      >
-      <RouterLink style="margin-left: 20px" class="btn" to="/notes/feed"
-        >Feed</RouterLink
       >
     </div>
   </div>
@@ -85,10 +85,10 @@ span {
 .btn {
   background-color: teal;
   color: white;
-  padding: 10px 15px;
+  padding: 10px 10px;
   border: none;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 1px;
   border-radius: 5px;
 }
 </style>

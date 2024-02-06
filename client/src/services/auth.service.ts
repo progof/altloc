@@ -57,46 +57,13 @@ export const useLoginMutation = () =>
 			}
 			// Обновляем статус аутентификации через Pinia
 			authStore.isAuthenticated = true;
+			localStorage.setItem("isAuthenticated", "true");
 			console.log("login pinia", authStore.isAuthenticated);
 			// console.log(await res.json());
 			return;
 		},
 	});
 
-
-	//
-	
-	// export const useLoginMutation = () => {
-	//   const isAuthenticated = ref(false);
-	
-	//   const loginMutation = useMutation({
-	// 	mutationFn: async (data: { email: string; password: string }) => {
-	// 	  const res = await fetch("/api/auth/login", {
-	// 		method: "POST",
-	// 		headers: {
-	// 		  Accept: "application/json",
-	// 		  "Content-Type": "application/json",
-	// 		},
-	// 		body: JSON.stringify(data),
-	// 	  });
-	
-	// 	  if (!res.ok) {
-	// 		const errors = errorSchema.parse(await res.json()).errors;
-	// 		throw new Error(errors.at(0)?.message);
-	// 	  }
-	
-	// 	  // Если успешно авторизован, обновляем isAuthenticated
-	// 	  isAuthenticated.value = true;
-	
-	// 	  // console.log(await res.json());
-	// 	  return;
-	// 	},
-	//   });
-	
-	//   return { loginMutation, isAuthenticated };
-	// };
-	
-//
 
 
 export const useLogoutMutation = () => {
@@ -115,6 +82,7 @@ export const useLogoutMutation = () => {
 			}
 			// Обновляем статус аутентификации через Pinia
 			authStore.isAuthenticated = false;
+			localStorage.setItem("isAuthenticated", "false");
 			console.log("logout pinia", authStore.isAuthenticated);
 			return;
 		},
