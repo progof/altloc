@@ -6,7 +6,7 @@
 
 <style scoped>
 .btn {
-  background-color: teal;
+  background-color: rgb(90, 12, 180);
   color: white;
   padding: 10px 15px;
   border: none;

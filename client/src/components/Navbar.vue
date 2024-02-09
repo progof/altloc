@@ -19,14 +19,14 @@ console.log("default", authStore.isAuthenticated);
 </script>
 
 <template>
-  <div class="navbar">
+  <!-- <div class="navbar">
     <div @click="$router.push('/')">
-      <h1>{Xnote} 📚</h1>
+      <h1>📚 Alteranium</h1>
     </div>
     <div v-if="!authStore.isAuthenticated" class="navbar__btns">
-      <RouterLink to="/register" class="btn">Register</RouterLink>
+      <RouterLink to="/register" class="btn">Sing Up</RouterLink>
       <RouterLink style="margin-left: 20px" to="/login" class="btn"
-        >Login</RouterLink
+        >Log In</RouterLink
       >
     </div>
     <div v-else class="navbar__btns">
@@ -55,20 +55,144 @@ console.log("default", authStore.isAuthenticated);
         >Logout</RouterLink
       >
     </div>
-  </div>
+  </div> -->
+
+  <header v-if="!authStore.isAuthenticated" class="header">
+    <div class="wrapper">
+      <div class="header__wrapper">
+        <div class="header__logo">
+          <a href="/" class="header__logo-link">
+            <img
+              src="../assets/logo.svg"
+              alt="The perfect platform for creating a circle of interest"
+              class="header__logo-img"
+            />
+          </a>
+        </div>
+
+        <div class="header__title">
+          <h2 class="header__title-text">Alteranium</h2>
+        </div>
+
+        <nav class="header__nav">
+          <ul class="header__list">
+            <li class="header__item">
+              <div class="wrapper__join">
+                <!-- <a href="#" class="header__link">Join now</a> -->
+                <RouterLink to="/register" class="header__link"
+                  >Sing up</RouterLink
+                >
+              </div>
+            </li>
+            <li class="header__item">
+              <div class="wrapper__login">
+                <!-- <a href="#" class="header__link">Login</a> -->
+                <RouterLink to="/login" class="header__link">Login</RouterLink>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
 </template>
 
 <style scoped>
-.navbar {
-  height: 50px;
+.wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.header {
+  /* background: #0b020e; */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.header__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: 24px;
+}
+
+.header__title {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.header__title-text {
+  color: #fff;
+  text-align: right;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.header__list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.header__item {
+  margin-right: 40px;
+}
+
+.header__item:last-child {
+  margin-right: 0;
+}
+
+.wrapper__join {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  /* width: 90px;
+  height: 30px; */
+  flex-shrink: 0;
+  background-color: #2925e0;
+  stroke-width: 1px;
+  stroke: #000;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  padding: 5px;
+  color: #000;
+}
+
+.wrapper__login {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  background-color: #181818;
+  padding: 5px;
+  color: #fffefe;
+}
+
+.header__link {
+  color: #fffefe;
+  text-align: center;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  text-decoration: none;
+}
+
+/* .navbar {
   background-color: lightgrey;
   box-shadow: 2px 2px 4px gray;
   display: flex;
   align-items: center;
   padding: 0 15px;
-}
+  background: linear-gradient(180deg, #0b020e 64.5%, rgba(11, 2, 14, 0) 100%);
+  width: 1440px;
+  height: 141px;
+  flex-shrink: 0;
+} */
 
-.navbar__btns {
+/* .navbar__btns {
   margin-left: auto;
 }
 
@@ -80,9 +204,9 @@ span {
   display: block;
   margin-bottom: 10px;
   color: teal;
-}
+} */
 
-.btn {
+/* .btn {
   background-color: teal;
   color: white;
   padding: 10px 10px;
@@ -90,5 +214,5 @@ span {
   cursor: pointer;
   margin-top: 1px;
   border-radius: 5px;
-}
+} */
 </style>

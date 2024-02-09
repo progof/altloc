@@ -1,51 +1,113 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-const slogan = ref("Take notes with ease.");
+import { RouterLink } from "vue-router";
 </script>
 
 <template>
-  <div>
-    <h1>Welcome to Xnote!</h1>
-    <p>{{ slogan }}</p>
+  <main class="main">
+    <section class="intro">
+      <div class="wrapper">
+        <div class="intro__wrapper">
+          <div class="intor__box">
+            <h1 class="intro__title">
+              The perfect platform for creating a circle of interest
+            </h1>
 
-    <section class="about-section">
-      <h2>About Xnote</h2>
-      <p>
-        Xnote is a web application designed for students to easily exchange
-        notes and knowledge with each other. Whether you need to share class
-        notes, collaborate on projects, or simply connect with your peers, Xnote
-        provides a seamless platform for efficient knowledge exchange.
-      </p>
-    </section>
+            <p class="intro__subtitle">
+              Alteranium connects students to each other to create an atmosphere
+              where it is easy to learn and create projects
+            </p>
 
-    <section class="advantages-section">
-      <h2>Why Choose Xnote?</h2>
-      <ul>
-        <li>
-          Effortless Note Sharing: Share your class notes or study materials
-          effortlessly with just a few clicks.
-        </li>
-        <li>
-          Collaborative Learning: Collaborate on projects, assignments, and
-          study sessions with your peers.
-        </li>
-        <li>
-          Community Connection: Connect with other students, join study groups,
-          and expand your academic network.
-        </li>
-        <li>
-          Secure and Private: Your data is kept secure, and you have control
-          over who can access your shared content.
-        </li>
-        <!-- Add more advantages as needed -->
-      </ul>
+            <div class="intro__btn">
+              <RouterLink to="/register" class="intro__submit"
+                >Join now</RouterLink
+              >
+              <RouterLink to="/login" class="intro__submit">Login</RouterLink>
+            </div>
+          </div>
+          <div class="intro__logo">
+            <a href="/">
+              <img
+                src="../assets/object.svg"
+                alt="The perfect platform for creating a circle of interest"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
     </section>
-  </div>
+  </main>
 </template>
 
 <style scoped>
-/* Global styles */
+.intro {
+  height: 100vh;
+  padding-top: 265px;
+}
+
+.intro__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 40px;
+}
+
+.wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+.intro__title {
+  max-width: 619px;
+  color: #fff;
+  text-align: center;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-bottom: 22px;
+}
+
+.intro__subtitle {
+  max-width: 619px;
+  color: #fff;
+  text-align: center;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  margin-bottom: 44px;
+}
+
+.intor__box {
+  padding: 34px;
+  width: 632px;
+  height: 420px;
+  flex-shrink: 0;
+  background: black;
+  opacity: 85%;
+  margin-bottom: 100px;
+}
+
+.intro__btn {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.intro__submit {
+  padding: 15px 39px;
+  margin-right: 60px;
+  color: #0b020e;
+  text-align: center;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  background-color: #2925e0;
+  text-decoration: none;
+}
+
+/* 
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
@@ -53,42 +115,77 @@ body {
   box-sizing: border-box;
 }
 
-/* Page container styles */
+
 div {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Header styles */
+
 h1 {
   color: #333;
 }
 
-/* Slogan styles */
+
 p {
   color: #666;
 }
 
-/* Section styles */
+
 .about-section,
 .advantages-section {
   margin-top: 40px;
 }
 
-/* Section title styles */
 h2 {
   color: #333;
 }
 
-/* List styles */
 ul {
   list-style-type: disc;
   padding-left: 20px;
 }
 
-/* List item styles */
 li {
   color: #666;
+} */
+/* 
+.about-section {
+  width: 732px;
+  height: 540px;
+  flex-shrink: 0;
+  fill: linear-gradient(
+    180deg,
+    rgba(16, 4, 21, 0.15) 47%,
+    rgba(44, 5, 63, 0.15) 100%
+  );
+  color: aliceblue;
 }
+
+.h2 {
+  color: #fff;
+
+  text-align: center;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.p {
+  color: #fff;
+  text-align: center;
+  font-family: Inter;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+} */
+
+/* div {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 20px;
+} */
 </style>

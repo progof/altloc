@@ -107,14 +107,30 @@ import { RouterView } from "vue-router";
 </template>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
+.app {
+  /* padding: 20px; */
+  /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat; */
+  background: url("./assets/bg.jpg") no-repeat center;
+  background-size: cover;
+  min-height: 100vh;
+
+  /* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background-size: auto;
+  display: flex; */
+  /* width: 1440px;
+  height: 1024px; */
+  /* flex-direction: column;
+  align-items: flex-start;
+  gap: 10px; */
   box-sizing: border-box;
-  font-family: "Montserrat", sans-serif;
 }
 
-.app {
-  padding: 20px;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  box-sizing: inherit;
 }
 </style>

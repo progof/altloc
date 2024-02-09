@@ -46,39 +46,48 @@ const submitForm = async (event: Event) => {
 </script>
 
 <template>
-  <form @submit.prevent="submitForm">
-    <fieldset>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" />
-      <span v-if="validationErrors.email">{{ validationErrors.email }}</span>
-    </fieldset>
+  <div class="wrapper">
+    <form @submit.prevent="submitForm">
+      <fieldset>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" />
+        <span v-if="validationErrors.email">{{ validationErrors.email }}</span>
+      </fieldset>
 
-    <fieldset>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" />
-      <span v-if="validationErrors.password">{{
-        validationErrors.password
-      }}</span>
-    </fieldset>
+      <fieldset>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
+        <span v-if="validationErrors.password">{{
+          validationErrors.password
+        }}</span>
+      </fieldset>
 
-    <span v-if="error">{{ error }}</span>
+      <span v-if="error">{{ error }}</span>
 
-    <MyButton type="submit" :disabled="isPending">
-      {{ isPending ? "Fetching..." : "Login" }}
-    </MyButton>
-    <MyButton @click="$router.push(`/recovery-password`)"
-      >Forgot password?</MyButton
-    >
-  </form>
+      <MyButton type="submit" :disabled="isPending">
+        {{ isPending ? "Fetching..." : "Login" }}
+      </MyButton>
+      <MyButton @click="$router.push(`/recovery-password`)"
+        >Forgot password?</MyButton
+      >
+    </form>
+  </div>
 </template>
 
 <style scoped>
+.wrapper {
+  padding-top: 265px;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
 form {
   max-width: 300px;
   margin: auto;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 0px solid #ccc;
+  border-radius: 10px;
+  background-color: black;
 }
 
 label {
