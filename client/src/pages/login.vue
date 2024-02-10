@@ -86,7 +86,7 @@ form {
   margin: auto;
   padding: 20px;
   border: 0px solid #ccc;
-  border-radius: 10px;
+  border-radius: 15px;
   background-color: black;
 }
 

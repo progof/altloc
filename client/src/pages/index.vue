@@ -18,10 +18,14 @@ import { RouterLink } from "vue-router";
             </p>
 
             <div class="intro__btn">
-              <RouterLink to="/register" class="intro__submit"
-                >Join now</RouterLink
-              >
-              <RouterLink to="/login" class="intro__submit">Login</RouterLink>
+              <div class="wrapper__join">
+                <RouterLink to="/register" class="intro__submit"
+                  >Join now</RouterLink
+                >
+              </div>
+              <div class="wrapper__login">
+                <RouterLink to="/login" class="intro__submit">Login</RouterLink>
+              </div>
             </div>
           </div>
           <div class="intro__logo">
@@ -87,6 +91,7 @@ import { RouterLink } from "vue-router";
   background: black;
   opacity: 85%;
   margin-bottom: 100px;
+  border-radius: 15px;
 }
 
 .intro__btn {
@@ -95,97 +100,42 @@ import { RouterLink } from "vue-router";
 }
 
 .intro__submit {
-  padding: 15px 39px;
-  margin-right: 60px;
-  color: #0b020e;
+  /* padding: 15px 39px;
+  margin-right: 60px; */
+  color: #fffefe;
   text-align: center;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
-  background-color: #2925e0;
   text-decoration: none;
 }
 
-/* 
-body {
-  font-family: "Arial", sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-div {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-
-h1 {
-  color: #333;
-}
-
-
-p {
-  color: #666;
-}
-
-
-.about-section,
-.advantages-section {
-  margin-top: 40px;
-}
-
-h2 {
-  color: #333;
-}
-
-ul {
-  list-style-type: disc;
-  padding-left: 20px;
-}
-
-li {
-  color: #666;
-} */
-/* 
-.about-section {
-  width: 732px;
-  height: 540px;
+.wrapper__join {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  /* width: 90px;
+  height: 30px; */
   flex-shrink: 0;
-  fill: linear-gradient(
-    180deg,
-    rgba(16, 4, 21, 0.15) 47%,
-    rgba(44, 5, 63, 0.15) 100%
-  );
-  color: aliceblue;
+  background-color: #2925e0;
+  stroke-width: 1px;
+  stroke: #000;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  padding: 10px;
+  color: #000;
+  border-radius: 10px;
 }
 
-.h2 {
-  color: #fff;
-
-  text-align: center;
-  font-size: 48px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+.wrapper__login {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  background-color: #181818;
+  padding: 10px;
+  border-radius: 10px;
+  padding: 10px;
+  margin-left: 60px;
+  color: #fffefe;
 }
-
-.p {
-  color: #fff;
-  text-align: center;
-  font-family: Inter;
-  font-size: 32px;
-  font-style: normal;
-  font-weight: 300;
-  line-height: normal;
-} */
-
-/* div {
-  max-width: 1060px;
-  margin: 0 auto;
-  padding: 20px;
-} */
 </style>

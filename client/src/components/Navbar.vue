@@ -157,8 +157,9 @@ console.log("default", authStore.isAuthenticated);
   stroke-width: 1px;
   stroke: #000;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  padding: 5px;
+  padding: 10px;
   color: #000;
+  border-radius: 10px;
 }
 
 .wrapper__login {
@@ -168,51 +169,17 @@ console.log("default", authStore.isAuthenticated);
   background-color: #181818;
   padding: 5px;
   color: #fffefe;
+  border-radius: 10px;
+  padding: 10px;
 }
 
 .header__link {
   color: #fffefe;
   text-align: center;
-  font-size: 24px;
+  font-size: 24x;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
   text-decoration: none;
 }
-
-/* .navbar {
-  background-color: lightgrey;
-  box-shadow: 2px 2px 4px gray;
-  display: flex;
-  align-items: center;
-  padding: 0 15px;
-  background: linear-gradient(180deg, #0b020e 64.5%, rgba(11, 2, 14, 0) 100%);
-  width: 1440px;
-  height: 141px;
-  flex-shrink: 0;
-} */
-
-/* .navbar__btns {
-  margin-left: auto;
-}
-
-h1 {
-  color: rgb(51, 101, 101);
-}
-
-span {
-  display: block;
-  margin-bottom: 10px;
-  color: teal;
-} */
-
-/* .btn {
-  background-color: teal;
-  color: white;
-  padding: 10px 10px;
-  border: none;
-  cursor: pointer;
-  margin-top: 1px;
-  border-radius: 5px;
-} */
 </style>
