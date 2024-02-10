@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { RouterLink, useRouter } from "vue-router";
-import { onMounted } from "vue";
-import { useLogoutMutation, useLoginMutation } from "@/services/auth.service";
+// import { useLogoutMutation, useLoginMutation } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 // import { pinia } from "../store/pinia";
-import MyButton from "./UI/MyButton.vue";
 
 const router = useRouter();
-const { mutate: logout } = useLogoutMutation();
-const { mutate: login } = useLoginMutation();
+// const { mutate: logout } = useLogoutMutation();
+// const { mutate: login } = useLoginMutation();
 
 const authStore = useAuthStore();
 // Проверяем значение статуса аутентификации при загрузке компонента

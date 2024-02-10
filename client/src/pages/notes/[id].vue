@@ -2,7 +2,7 @@
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import { getNoteQueryOptions } from "@/services/app.service";
-import MyButton from "@/components/UI/MyButton.vue";
+import UserNav from "@/components/UserNav.vue";
 
 const route = useRoute();
 const noteId: string = Array.isArray(route.params.id)
@@ -24,67 +24,74 @@ function htmlToFormattedText2(html: string) {
 </script>
 
 <template>
-  <div class="wrapper">
-    <MyButton class="note-button" @click="$router.push(`/notes/feed`)"
-      >Back</MyButton
-    >
-
-    <div v-if="note" class="note">
-      <div class="note-header">
-        <h3>{{ note.title }}</h3>
-        <hr />
-      </div>
-
-      <div class="note-info">
-        <div class="note-description">
-          <p><strong>Description:</strong> {{ note.description }}</p>
-        </div>
-
-        <div class="note-category">
-          <p><strong>Category:</strong> {{ note.category }}</p>
-        </div>
-
-        <div class="note-body">
-          <hr />
-          <p>
-            <strong>Body:</strong>
-            <span v-html="htmlToFormattedText2(note.body)"></span>
-          </p>
+  <div class="note-section">
+    <div class="wrapper">
+      <div v-if="note" class="note">
+        <div class="note-header">
+          <h3>{{ note.title }}</h3>
           <hr />
         </div>
 
-        <div class="note-author">
-          <p><strong>Author:</strong> {{ note.username }}</p>
-        </div>
+        <div class="note-info">
+          <div class="note-description">
+            <p><strong>Description:</strong> {{ note.description }}</p>
+          </div>
 
-        <div class="note-created_at">
-          <p>
-            <strong>Created at:</strong> {{ formatCreatedAt(note.created_at) }}
-          </p>
-        </div>
+          <div class="note-category">
+            <p><strong>Category:</strong> {{ note.category }}</p>
+          </div>
 
-        <div v-if="note.edit_at" class="note-edit_at">
-          <p><strong>Edit at:</strong> {{ formatCreatedAt(note.edit_at) }}</p>
-        </div>
+          <div class="note-body">
+            <hr />
+            <p>
+              <strong>Body:</strong>
+              <span v-html="htmlToFormattedText2(note.body)"></span>
+            </p>
+            <hr />
+          </div>
 
-        <div class="noteID">
-          <p><strong>Note ID:</strong> {{ note.note_id }}</p>
+          <div class="note-author">
+            <p><strong>Author:</strong> {{ note.username }}</p>
+          </div>
+
+          <div class="note-created_at">
+            <p>
+              <strong>Created at:</strong>
+              {{ formatCreatedAt(note.created_at) }}
+            </p>
+          </div>
+
+          <div v-if="note.edit_at" class="note-edit_at">
+            <p><strong>Edit at:</strong> {{ formatCreatedAt(note.edit_at) }}</p>
+          </div>
+
+          <div class="noteID">
+            <p><strong>Note ID:</strong> {{ note.note_id }}</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div v-else>
-      <p>Loading...</p>
+      <div v-else>
+        <p>Loading...</p>
+      </div>
     </div>
+    <UserNav />
   </div>
 </template>
 
 <style scoped>
-.wrapper {
+.note {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: "Arial", sans-serif;
+  padding: 40px;
+  background-color: rgb(15, 14, 14);
+  color: azure;
+  height: 100vh;
+}
+
+.wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
 }
 
 h3 {

@@ -261,7 +261,7 @@ fieldset {
 }
 
 .ql-editor {
-  height: 72vh;
+  height: 30vh;
 }
 
 select {

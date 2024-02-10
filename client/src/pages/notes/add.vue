@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import MyButton from '@/components/UI/MyButton.vue';
-import NoteForm from '@/components/NoteForm.vue';
-
+import NoteForm from "@/components/NoteForm.vue";
+import UserNav from "@/components/UserNav.vue";
 </script>
 
 <template>
-    <MyButton @click="$router.push(`/dashboard`)">Back</MyButton>
-    <div class="editor">
-        <note-form />
-    </div>
-  </template>
-  
-  <style scoped>
-  .editor {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-  }
-  </style>
-  
+  <div class="editor">
+    <note-form />
+    <UserNav />
+  </div>
+</template>
+
+<style scoped>
+.editor {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: rgb(15, 14, 14);
+  color: azure;
+  height: 100vh;
+}
+</style>

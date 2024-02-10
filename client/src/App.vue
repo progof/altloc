@@ -62,10 +62,6 @@ export const router = createRouter({
       path: "/notes/editor/:id",
       component: NoteEditor,
     },
-    {
-      path: "/test",
-      component: TestPage,
-    },
   ],
   history: createWebHistory(),
 });

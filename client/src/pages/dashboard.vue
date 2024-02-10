@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import { getMeQueryOptions, useLogoutMutation } from "@/services/auth.service";
+import { getMeQueryOptions } from "@/services/auth.service";
 // import NoteForm from '@/components/NoteForm.vue';
 import NoteList from "@/components/NoteList.vue";
-import MyButton from "@/components/UI/MyButton.vue";
+import UserNav from "@/components/UserNav.vue";
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);
@@ -14,83 +12,64 @@ import MyButton from "@/components/UI/MyButton.vue";
 //   modalActive.value = !modalActive.value;
 // };
 
-const router = useRouter();
-
 const { data: me } = useQuery(getMeQueryOptions);
-const { mutate: logout } = useLogoutMutation();
-
-const searchQuery = ref("");
-
-const searchNotes = () => {
-  // Ваша базовая логика поиска
-  // Например, можно фильтровать заметки по содержанию searchQuery в названии title
-  // Это пример, который можно настроить под ваши нужды
-  NoteList.value.searchNotes(searchQuery.value);
-};
+// const { mutate: logout } = useLogoutMutation();
 </script>
 
 <template>
   <div class="dashboard">
-    <div v-if="me?.role == 'USER'">
+    <div class="wrapper">
+      <!-- <div v-if="me?.role == 'USER'">
       <p>hi user!</p>
-    </div>
-    <h1>Hi, {{ me?.username }} 👋</h1>
-    <span>Your Email: {{ me?.email }}</span>
-    <span
-      >Account status:
-      {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
-    >
-    <span>Your Role: {{ me?.role }}</span>
-    <span>Your ID: {{ me?.user_id }}</span>
-    <my-button
-      @click="
-        logout(undefined, {
-          onSuccess: () => {
-            router.push('/');
-          },
-        })
-      "
-    >
-      Logout
-    </my-button>
-    <!-- <MyButton @click="toggleModal" type="button">Add note</MyButton> -->
-    <MyButton @click="$router.push(`/notes/add`)">Add note</MyButton>
-    <MyButton @click="$router.push(`/notes/feed`)">Feed</MyButton>
+    </div> -->
+      <div class="dashboard__info">
+        <h2>Hi, {{ me?.username }} 👋</h2>
+        <span>Your Email: {{ me?.email }}</span>
+        <span
+          >Account status:
+          {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
+        >
+        <span>Your Role: {{ me?.role }}</span>
+        <span>Your ID: {{ me?.user_id }}</span>
+      </div>
+      <UserNav />
 
-    <!-- Добавляем компонент поиска -->
-    <!-- <search-query v-model="searchQuery" @search="searchNotes" /> -->
+      <note-list />
 
-    <!-- Передаем searchQuery в компонент NoteList -->
-    <note-list />
-    <!-- <Modal @close="toggleModal" :modalActive="modalActive">
+      <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
        			 <div class="dialog__content">
          			 <note-form />
        			 </div>
       		</div>
     	</Modal> -->
+    </div>
   </div>
 </template>
 
 <style scoped>
-* {
-  background-color: rgb(255, 255, 255);
-}
 .dashboard {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: "Arial", sans-serif;
+  padding: 40px;
+  background-color: rgb(15, 14, 14);
+  color: azure;
+  height: 100vh;
 }
 
-h1 {
-  color: teal;
+.wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: azure;
 }
 
 span {
   display: block;
   margin-bottom: 10px;
-  color: teal;
+  color: azure;
 }
 
 note-form,
@@ -112,7 +91,7 @@ note-list {
 }
 
 .dialog__content {
-  background: white;
+  background: rgb(23, 23, 23);
   border-radius: 12px;
   min-height: 50px;
   min-width: 300px;
