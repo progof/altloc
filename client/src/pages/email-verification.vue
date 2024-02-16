@@ -5,11 +5,11 @@ import { z } from "zod";
 const rawParams = Object.fromEntries(new URLSearchParams(location.search));
 
 const parsedParams = z
-	.object({
-		user_id: z.string(),
-		activation_token: z.string(),
-	})
-	.parse(rawParams);
+  .object({
+    user_id: z.string(),
+    activation_token: z.string(),
+  })
+  .parse(rawParams);
 
 const { mutate: verifyEmail, isPending, error } = useVerifyEmailMutation();
 
@@ -17,12 +17,22 @@ verifyEmail(parsedParams);
 </script>
 
 <template>
-	<p v-if="isPending">Verifiying your email...</p>
-	<p v-else-if="error">
-		{{ error }}
-	</p>
-	<div v-else>
-		<h1>Email successfully verified</h1>
-		<RouterLink to="/login">Login</RouterLink>
-	</div>
+  <div class="wrapper">
+    <p v-if="isPending">Verifiying your email...</p>
+    <p v-else-if="error">
+      {{ error }}
+    </p>
+    <div v-else>
+      <h1>Email successfully verified</h1>
+      <RouterLink to="/login">Login</RouterLink>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.wrapper {
+  padding-top: 265px;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+</style>

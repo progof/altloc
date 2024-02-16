@@ -4,6 +4,7 @@ import { getMeQueryOptions } from "@/services/auth.service";
 // import NoteForm from '@/components/NoteForm.vue';
 import NoteList from "@/components/NoteList.vue";
 import UserNav from "@/components/UserNav.vue";
+import SideBar from "@/components/SideBar.vue";
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);
@@ -17,32 +18,37 @@ const { data: me } = useQuery(getMeQueryOptions);
 </script>
 
 <template>
-  <div class="dashboard">
-    <div class="wrapper">
-      <!-- <div v-if="me?.role == 'USER'">
+  <div class="conteiner">
+    <div class="sidebar">
+      <!-- <UserNav /> -->
+      <SideBar />
+    </div>
+    <div class="dashboard">
+      <div class="wrapper">
+        <!-- <div v-if="me?.role == 'USER'">
       <p>hi user!</p>
     </div> -->
-      <div class="dashboard__info">
-        <h2>Hi, {{ me?.username }} 👋</h2>
-        <span>Your Email: {{ me?.email }}</span>
-        <span
-          >Account status:
-          {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
-        >
-        <span>Your Role: {{ me?.role }}</span>
-        <span>Your ID: {{ me?.user_id }}</span>
-      </div>
-      <UserNav />
+        <div class="dashboard__info">
+          <h2>Hi, {{ me?.username }} 👋</h2>
+          <span>Your Email: {{ me?.email }}</span>
+          <span
+            >Account status:
+            {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
+          >
+          <span>Your Role: {{ me?.role }}</span>
+          <span>Your ID: {{ me?.user_id }}</span>
+        </div>
 
-      <note-list />
+        <note-list />
 
-      <!-- <Modal @close="toggleModal" :modalActive="modalActive">
+        <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
        			 <div class="dialog__content">
          			 <note-form />
        			 </div>
       		</div>
     	</Modal> -->
+      </div>
     </div>
   </div>
 </template>
@@ -51,15 +57,30 @@ const { data: me } = useQuery(getMeQueryOptions);
 .dashboard {
   max-width: 800px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 50px;
   background-color: rgb(15, 14, 14);
   color: azure;
   height: 100vh;
+  flex: 1;
+  opacity: 0.9;
 }
+
+/* .sidebar {
+  width: 200px;
+  background-color: #0b020e;
+  padding: 20px;
+} */
 
 .wrapper {
   max-width: 1060px;
   margin: 0 auto;
+}
+
+.conteiner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
 h2 {

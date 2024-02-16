@@ -14,6 +14,7 @@
   margin-top: 10px;
   border-radius: 5px;
   margin-left: 6px;
+  margin: 10px;
 }
 
 .btn.primary {

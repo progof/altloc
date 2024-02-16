@@ -11,7 +11,6 @@ import NoteByIdPage from "@/pages/notes/[id].vue";
 import NoteAdd from "@/pages/notes/add.vue";
 import NoteEditor from "@/pages/notes/editor.vue";
 import NoteFeedPage from "@/pages/notes/feed.vue";
-import TestPage from "@/pages/test.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 

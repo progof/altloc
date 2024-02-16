@@ -123,7 +123,7 @@ const handleDeleteNote = async (noteId: string) => {
 
 .note-lists p {
   margin-bottom: 5px;
-  color: #333;
+  color: #fffcfc;
 }
 
 .delete-button {

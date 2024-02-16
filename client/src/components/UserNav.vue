@@ -31,22 +31,23 @@ const { mutate: logout } = useLogoutMutation();
               >Add note</RouterLink
             >
           </li>
-          <li class="usernav__item">
+          <li class="sidebar__item">
             <RouterLink to="/notes/feed" class="sidebar__link">Feed</RouterLink>
           </li>
           <li>
-            <MyButton
-              class="sidebar__link"
-              @click="
-                logout(undefined, {
-                  onSuccess: () => {
-                    router.push('/');
-                  },
-                })
-              "
-            >
-              Logout
-            </MyButton>
+            <div class="sidebar__link logout-button">
+              <MyButton
+                @click="
+                  logout(undefined, {
+                    onSuccess: () => {
+                      router.push('/');
+                    },
+                  })
+                "
+              >
+                Logout
+              </MyButton>
+            </div>
           </li>
         </ul>
       </nav>
@@ -56,20 +57,31 @@ const { mutate: logout } = useLogoutMutation();
 
 <style scoped>
 .sidebar {
-  margin-left: 100px;
-  height: 100vh;
-  position: fixed;
+  /* margin-left: 100px;
+  height: 100vh; */
+  /* width: 200px; */
+  /* position: fixed;
   z-index: 1;
   top: 0;
-  left: 0;
+  left: 0; */
   background-color: #0b020e;
-  overflow-x: hidden; /* Disable horizontal scroll */
-  padding-top: 60px; /* Place content 60px from the top */
-  padding: 10px;
+  /* padding: 20px;
+  display: flex; */
+  /* overflow-x: hidden; */
+  /* padding-top: 60px; */
+  height: 100vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 170px;
+  background-color: #0b020e;
+  padding: 40px;
 }
 
 .wrapper {
-  display: block;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 .sidebar a {
@@ -87,6 +99,12 @@ const { mutate: logout } = useLogoutMutation();
   height: 64px;
   margin-left: 35px;
   margin-bottom: 35px;
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .sidebar__item {
@@ -109,5 +127,15 @@ const { mutate: logout } = useLogoutMutation();
 
 .sidebar__item a:hover {
   color: mistyrose;
+  background-color: #818181;
+  padding: 10px;
+  border: none;
+  /* cursor: pointer; */
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.logout-button {
+  margin-top: auto;
 }
 </style>
