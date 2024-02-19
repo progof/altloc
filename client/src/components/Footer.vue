@@ -1,7 +1,7 @@
 <template>
   <footer class="footer">
     <div class="footer__content">
-      <p>&copy; {{ currentYear }} Alteranium</p>
+      <p>&copy; {{ currentYear }} AltPlace</p>
     </div>
   </footer>
 </template>

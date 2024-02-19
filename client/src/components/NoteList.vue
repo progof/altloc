@@ -59,7 +59,7 @@ const handleDeleteNote = async (noteId: string) => {
 </script>
 
 <template>
-  <div class="note-lists" v-if="notes">
+  <div class="note-lists" v-if="notes" v-scroll>
     <h2>My Notes</h2>
     <ul v-if="notes.length > 0">
       <li v-for="note in notes" :key="note.note_id">
@@ -97,6 +97,8 @@ const handleDeleteNote = async (noteId: string) => {
 <style scoped>
 .note-lists {
   margin-top: 20px;
+  overflow: scroll;
+  height: 600px;
 }
 
 .note-lists h2 {

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { createRouter, createWebHistory } from "vue-router";
-import MainPage from "@/pages/index.vue";
+import LendingPage from "@/pages/lending.vue";
 import RegisterPage from "@/pages/register.vue";
 import LoginPage from "@/pages/login.vue";
 import DashboardPage from "@/pages/dashboard.vue";
@@ -18,7 +18,7 @@ export const router = createRouter({
   routes: [
     {
       path: "/",
-      component: MainPage,
+      component: LendingPage,
     },
     {
       path: "/register",

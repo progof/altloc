@@ -158,11 +158,6 @@ const submitForm = async (event: Event) => {
 
 <template>
   <div class="conteiner">
-    <span v-if="error">{{ error }}</span>
-
-    <MyButton type="submit" :disabled="isPending">
-      {{ isPending ? "Fetching..." : "Create note" }}
-    </MyButton>
     <form @submit.prevent="submitForm">
       <fieldset>
         <label for="note_title">Title:</label>
@@ -210,6 +205,7 @@ const submitForm = async (event: Event) => {
             v-model:content="noteBodyContent"
             theme="snow"
             id="note_body"
+            placeholder="Description..."
             name="body"
             :options="quillOptions"
             contentType="html"
@@ -233,6 +229,7 @@ const submitForm = async (event: Event) => {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
+  margin: 50px;
 }
 
 h2 {
@@ -256,7 +253,8 @@ label {
 }
 
 input,
-textarea {
+textarea,
+section {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -273,7 +271,8 @@ fieldset {
 }
 
 .ql-editor {
-  height: 30vh;
+  height: 20vh;
+  border-color: black;
 }
 
 select {

@@ -79,6 +79,10 @@ const submitForm = async (event: Event) => {
   padding-top: 265px;
   max-width: 1060px;
   margin: 0 auto;
+  /* display: flex;
+  flex-direction: column; */
+  width: 100vw;
+  height: 100vh;
 }
 
 form {

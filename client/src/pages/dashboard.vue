@@ -36,7 +36,7 @@ const { data: me } = useQuery(getMeQueryOptions);
           <span>Your ID: {{ me?.user_id }}</span>
         </div>
 
-        <note-list />
+        <note-list style="overflow: scroll" />
 
         <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
