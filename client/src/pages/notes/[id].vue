@@ -52,7 +52,12 @@ function htmlToFormattedText2(html: string) {
           </div>
 
           <div class="note-author">
-            <p><strong>Author:</strong> {{ note.username }}</p>
+            <p>
+              <strong>Author:</strong> {{ note.username }} / {{ note.user_id }}
+            </p>
+            <MyButton @click="$router.push(`/users/${note.user_id}`)">
+              Profile
+            </MyButton>
           </div>
 
           <div class="note-created_at">

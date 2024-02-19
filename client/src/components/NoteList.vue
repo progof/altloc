@@ -112,7 +112,7 @@ const handleDeleteNote = async (noteId: string) => {
 }
 
 .note-lists li {
-  border: 1px solid #ddd;
+  border: 2px solid rgb(90, 12, 180);
   margin-bottom: 10px;
   padding: 10px;
   position: relative;
@@ -135,7 +135,8 @@ const handleDeleteNote = async (noteId: string) => {
   background-color: #ff0000;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 5px 15px;
+  margin: 10px;
   cursor: pointer;
 }
 .open-button {

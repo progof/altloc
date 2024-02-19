@@ -11,6 +11,7 @@ import NoteByIdPage from "@/pages/notes/[id].vue";
 import NoteAdd from "@/pages/notes/add.vue";
 import NoteEditor from "@/pages/notes/editor.vue";
 import NoteFeedPage from "@/pages/notes/feed.vue";
+import ProfilePage from "@/pages/profile.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -60,6 +61,10 @@ export const router = createRouter({
     {
       path: "/notes/editor/:id",
       component: NoteEditor,
+    },
+    {
+      path: "/users/:id",
+      component: ProfilePage,
     },
   ],
   history: createWebHistory(),

@@ -193,3 +193,26 @@ export const getAllNotes = async () => {
 	queryKey: ["all-notes"],
 	queryFn: getAllNotes,
   });
+
+
+  const getUser = async (userId: string) => {
+    const res = await fetch(`/api/users/${userId}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+  
+    if (!res.ok) {
+      const errors = errorSchema.parse(await res.json()).errors;
+      throw new Error(errors.at(0)?.message);
+    }
+  
+    const responseData = await res.json();
+    return responseData.data as Note;
+  };
+  
+  export const getUserQueryOptions = (userId: string) =>
+    queryOptions({
+      queryKey: ["users", userId],
+      queryFn: () => getUser(userId),
+    });

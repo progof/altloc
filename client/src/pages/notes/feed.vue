@@ -56,6 +56,8 @@ const formatCreatedAt = (createdAt: string) => {
 }
 .note-lists {
   margin-top: 20px;
+  height: 700px;
+  overflow: scroll;
 }
 
 .note-lists h2 {

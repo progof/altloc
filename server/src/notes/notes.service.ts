@@ -29,7 +29,7 @@ export class NotesService {
 
   async getNoteById(noteId: string) {
     const result = await this.db.query<Note>(
-      `SELECT title, description, body, category, users.username, note_id, notes.created_at, notes.edit_at
+      `SELECT title, description, body, category, users.username, note_id, notes.user_id, notes.created_at, notes.edit_at
       FROM notes JOIN users ON notes.user_id = users.user_id WHERE note_id = $1;`,
       [noteId],
     );

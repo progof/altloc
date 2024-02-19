@@ -38,6 +38,12 @@ export class AuthController {
       blockNotVerifedUser,
       this.getMe.bind(this),
     );
+    this.router.get(
+      "/auth/users/:user_id",
+      blockNotAuthenticated,
+      blockNotVerifedUser,
+      this.getUser.bind(this),
+    );
   }
 
   async userRegister(req: Request, res: Response) {
@@ -283,6 +289,31 @@ export class AuthController {
       return res
         .status(400)
         .send({ errors: [{ message: (error as Error).message }] });
+    }
+  }
+
+  async getUser(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      user_id: z.string(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    try {
+      const user = await this.authService.getUserById(params.data.user_id)
+      return res.status(200).send({
+        data: user,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
     }
   }
 

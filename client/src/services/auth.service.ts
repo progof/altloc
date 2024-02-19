@@ -170,3 +170,25 @@ export const useRecoveryPasswordMutation = () =>
 			},
 		});
 	};
+
+	const getUser = async (user_id: string) => {
+		const res = await fetch(`/api/auth/users/${user_id}/`, {
+		  headers: {
+			Accept: "application/json",
+		  },
+		});
+	  
+		if (!res.ok) {
+		  const errors = errorSchema.parse(await res.json()).errors;
+		  throw new Error(errors.at(0)?.message);
+		}
+	  
+		const responseData = await res.json();
+		return responseData.data as User;
+	  };
+	  
+	  export const getUserQueryOptions = (user_id: string) =>
+		queryOptions({
+		  queryKey: ["/auth/users", user_id],
+		  queryFn: () => getUser(user_id),
+		});
