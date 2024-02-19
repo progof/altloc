@@ -157,63 +157,75 @@ const submitForm = async (event: Event) => {
 </script>
 
 <template>
-  <form @submit.prevent="submitForm">
-    <fieldset>
-      <label for="note_title">Title:</label>
-      <input type="text" id="note_title" name="title" placeholder="Title..." />
-      <span v-if="validationErrors.title">{{ validationErrors.title }}</span>
-    </fieldset>
-
-    <fieldset>
-      <label for="note_category">Category:</label>
-      <select id="note_category" name="category">
-        <option value="" disabled selected>Select a category</option>
-        <option value="IT">🧑‍💻 IT</option>
-        <option value="Eco">🌽 Eco</option>
-        <option value="Build">👷‍♂️ Build</option>
-        <option value="Art">🧑‍🎨 Art</option>
-        <option value="Crypto">🚀 Crypto</option>
-      </select>
-      <span v-if="validationErrors.category">{{
-        validationErrors.category
-      }}</span>
-    </fieldset>
-
-    <fieldset>
-      <label for="note_description">Description:</label>
-      <textarea
-        type="text"
-        id="note_description"
-        name="description"
-        placeholder="Description..."
-      />
-      <span v-if="validationErrors.description">{{
-        validationErrors.description
-      }}</span>
-    </fieldset>
-
-    <div class="editor-container">
-      <fieldset>
-        <label for="note_body">Body:</label>
-        <QuillEditor
-          v-model:content="noteBodyContent"
-          theme="snow"
-          id="note_body"
-          name="body"
-          :options="quillOptions"
-          contentType="html"
-        />
-
-        <span v-if="validationErrors.body">{{ validationErrors.body }}</span>
-      </fieldset>
-    </div>
-
+  <div class="conteiner">
     <span v-if="error">{{ error }}</span>
 
     <MyButton type="submit" :disabled="isPending">
       {{ isPending ? "Fetching..." : "Create note" }}
     </MyButton>
-  </form>
+    <form @submit.prevent="submitForm">
+      <fieldset>
+        <label for="note_title">Title:</label>
+        <input
+          type="text"
+          id="note_title"
+          name="title"
+          placeholder="Title..."
+        />
+        <span v-if="validationErrors.title">{{ validationErrors.title }}</span>
+      </fieldset>
+
+      <fieldset>
+        <label for="note_category">Category:</label>
+        <select id="note_category" name="category">
+          <option value="" disabled selected>Select a category</option>
+          <option value="IT">🧑‍💻 IT</option>
+          <option value="Eco">🌽 Eco</option>
+          <option value="Build">👷‍♂️ Build</option>
+          <option value="Art">🧑‍🎨 Art</option>
+          <option value="Crypto">🚀 Crypto</option>
+        </select>
+        <span v-if="validationErrors.category">{{
+          validationErrors.category
+        }}</span>
+      </fieldset>
+
+      <fieldset>
+        <label for="note_description">Description:</label>
+        <textarea
+          type="text"
+          id="note_description"
+          name="description"
+          placeholder="Description..."
+        />
+        <span v-if="validationErrors.description">{{
+          validationErrors.description
+        }}</span>
+      </fieldset>
+
+      <div class="editor-container">
+        <fieldset>
+          <label for="note_body">Body:</label>
+          <QuillEditor
+            v-model:content="noteBodyContent"
+            theme="snow"
+            id="note_body"
+            name="body"
+            :options="quillOptions"
+            contentType="html"
+          />
+
+          <span v-if="validationErrors.body">{{ validationErrors.body }}</span>
+        </fieldset>
+      </div>
+
+      <span v-if="error">{{ error }}</span>
+
+      <MyButton type="submit" :disabled="isPending">
+        {{ isPending ? "Fetching..." : "Create note" }}
+      </MyButton>
+    </form>
+  </div>
 </template>
 
 <style>

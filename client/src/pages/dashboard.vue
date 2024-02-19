@@ -15,18 +15,16 @@ import SideBarNav from "@/components/SideBarNav.vue";
 // };
 
 const { data: me } = useQuery(getMeQueryOptions);
-// const { mutate: logout } = useLogoutMutation();
 </script>
 
 <template>
   <div class="conteiner">
-    <!-- <SideBar class="joihoop" /> -->
     <SideBarNav />
     <div class="dashboard">
       <div class="wrapper">
-        <!-- <div v-if="me?.role == 'USER'">
-      <p>hi user!</p>
-    </div> -->
+        <div v-if="me?.role == 'USER'">
+          <p>hi user!</p>
+        </div>
         <div class="dashboard__info">
           <h2>Hi, {{ me?.username }} 👋</h2>
           <span>Your Email: {{ me?.email }}</span>

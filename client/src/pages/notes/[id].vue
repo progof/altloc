@@ -2,7 +2,7 @@
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import { getNoteQueryOptions } from "@/services/app.service";
-import UserNav from "@/components/UserNav.vue";
+import SideBarNav from "@/components/SideBarNav.vue";
 
 const route = useRoute();
 const noteId: string = Array.isArray(route.params.id)
@@ -24,6 +24,7 @@ function htmlToFormattedText2(html: string) {
 </script>
 
 <template>
+  <SideBarNav />
   <div class="note-section">
     <div class="wrapper">
       <div v-if="note" class="note">
@@ -75,7 +76,6 @@ function htmlToFormattedText2(html: string) {
         <p>Loading...</p>
       </div>
     </div>
-    <UserNav />
   </div>
 </template>
 
@@ -89,10 +89,10 @@ function htmlToFormattedText2(html: string) {
   height: 100vh;
 }
 
-.wrapper {
+/* .wrapper {
   max-width: 1060px;
   margin: 0 auto;
-}
+} */
 
 h3 {
   color: teal;

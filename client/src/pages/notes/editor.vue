@@ -12,7 +12,7 @@ import MyButton from "@/components/UI/MyButton.vue";
 import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
 import { marked } from "marked";
-import UserNav from "@/components/UserNav.vue";
+import SideBarNav from "@/components/SideBarNav.vue";
 
 const route = useRoute();
 const $router = useRouter();
@@ -169,7 +169,7 @@ const updateNote = async (event: Event) => {
 </script>
 
 <template>
-  <UserNav />
+  <SideBarNav />
   <div class="edit-section">
     <div v-if="noteData" class="note">
       <form @submit.prevent="updateNote">

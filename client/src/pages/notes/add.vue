@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import NoteForm from "@/components/NoteForm.vue";
-import UserNav from "@/components/UserNav.vue";
+import SideBarNav from "@/components/SideBarNav.vue";
 </script>
 
 <template>
+  <div class="conteiner"></div>
+  <SideBarNav />
   <div class="editor">
     <note-form />
-    <UserNav />
   </div>
 </template>
 

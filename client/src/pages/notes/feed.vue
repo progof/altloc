@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { getAllNotesQueryOptions } from "@/services/app.service";
 import { MyButton } from "@/components/UI";
 import SearchBar from "@/components/SearchBar.vue";
-import UserNav from "@/components/UserNav.vue";
+import SideBarNav from "@/components/SideBarNav.vue";
 
 const { data: notes } = useQuery(getAllNotesQueryOptions);
 
@@ -14,9 +14,9 @@ const formatCreatedAt = (createdAt: string) => {
 </script>
 
 <template>
+  <SideBarNav />
   <div class="feed">
     <div class="wrapper">
-      <UserNav />
       <SearchBar />
       <div class="note-lists" v-if="notes">
         <h2>All Notes</h2>

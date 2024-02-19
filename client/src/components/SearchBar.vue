@@ -126,4 +126,14 @@ input {
   margin-bottom: 5px;
   color: #333;
 }
+
+@media only screen and (max-width: 600px) {
+  input {
+    width: 275px;
+  }
+
+  .item {
+    width: 275px;
+  }
+}
 </style>

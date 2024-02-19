@@ -22,7 +22,7 @@ const currentYear = getCurrentYear();
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   flex-shrink: 0;
   padding-bottom: 24px;
 }
