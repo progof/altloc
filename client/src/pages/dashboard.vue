@@ -5,6 +5,7 @@ import { getMeQueryOptions } from "@/services/auth.service";
 import NoteList from "@/components/NoteList.vue";
 import UserNav from "@/components/UserNav.vue";
 import SideBar from "@/components/SideBar.vue";
+import SideBarNav from "@/components/SideBarNav.vue";
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);
@@ -19,10 +20,8 @@ const { data: me } = useQuery(getMeQueryOptions);
 
 <template>
   <div class="conteiner">
-    <div class="sidebar">
-      <!-- <UserNav /> -->
-      <SideBar />
-    </div>
+    <!-- <SideBar class="joihoop" /> -->
+    <SideBarNav />
     <div class="dashboard">
       <div class="wrapper">
         <!-- <div v-if="me?.role == 'USER'">
@@ -55,14 +54,8 @@ const { data: me } = useQuery(getMeQueryOptions);
 
 <style scoped>
 .dashboard {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 50px;
-  background-color: rgb(15, 14, 14);
-  color: azure;
+  flex: 1 1 0%;
   height: 100vh;
-  flex: 1;
-  opacity: 0.9;
 }
 
 /* .sidebar {
@@ -72,14 +65,18 @@ const { data: me } = useQuery(getMeQueryOptions);
 } */
 
 .wrapper {
-  max-width: 1060px;
+  max-width: 1024px;
+  padding: 50px;
+  height: 100%;
+  background-color: rgba(15, 14, 14, 0.9);
+  color: azure;
   margin: 0 auto;
 }
 
 .conteiner {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  width: 100vw;
   height: 100vh;
 }
 

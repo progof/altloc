@@ -107,7 +107,8 @@ import { RouterView } from "vue-router";
   /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat; */
   background: url("./assets/bg.jpg") no-repeat center;
   background-size: cover;
-  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 
   /* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   background-size: auto;

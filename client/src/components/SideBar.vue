@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import BxBxsGridAltIcon from "../assets/icons/BxBxsGridAlt.svg?component";
 
 const isSidebarActive = ref(false);
 
@@ -38,19 +39,7 @@ const toggleSidebar = () => {
       <li>
         <div class="sidebar__link">
           <RouterLink to="/dashboard">
-            <div class="icons">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M4 11h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zm10 0h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zM4 21h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1zm10 0h6a1 1 0 0 0 1-1v-6a1 1 0 0 0-1-1h-6a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div>
+            <BxBxsGridAltIcon style="color: red" />
             <span class="nav-item">Dashboard</span>
           </RouterLink>
         </div>
@@ -75,7 +64,6 @@ const toggleSidebar = () => {
             <span class="nav-item">Add note</span>
           </RouterLink>
         </div>
-        <span class="tooltip">Add note</span>
       </li>
       <li>
         <div class="sidebar__link">
@@ -96,7 +84,6 @@ const toggleSidebar = () => {
             <span class="nav-item">Spaces</span>
           </RouterLink>
         </div>
-        <span class="tooltip">Spaces</span>
       </li>
       <li>
         <div class="sidebar__link">
@@ -121,7 +108,6 @@ const toggleSidebar = () => {
             <span class="nav-item">Feed</span>
           </RouterLink>
         </div>
-        <span class="tooltip">Feed</span>
       </li>
       <li>
         <div class="sidebar__link">
@@ -142,7 +128,6 @@ const toggleSidebar = () => {
             <span class="nav-item">Message</span>
           </RouterLink>
         </div>
-        <span class="tooltip">Message</span>
       </li>
       <li>
         <div class="sidebar__link">
@@ -167,7 +152,6 @@ const toggleSidebar = () => {
             <span class="nav-item">Settings</span>
           </RouterLink>
         </div>
-        <span class="tooltip">Settings</span>
       </li>
       <li>
         <div class="sidebar__link">
@@ -189,7 +173,6 @@ const toggleSidebar = () => {
             <span class="nav-item">Logout</span>
           </RouterLink>
         </div>
-        <span class="tooltip">Logout</span>
       </li>
     </ul>
   </div>
@@ -203,15 +186,14 @@ const toggleSidebar = () => {
 }
 
 .sidebar {
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 100vh;
   width: 80px;
   background-color: rgb(15, 14, 14);
   padding: 0.4rem 0.8rem;
   transition: all 0.5ms ease;
   opacity: 0.9;
+  display: flex;
+  flex-direction: row;
 }
 
 /* .sidebar.active ~ .main-content {
@@ -232,7 +214,7 @@ const toggleSidebar = () => {
 }
 
 .sidebar #btn {
-  position: absolute;
+  /* position: absolute; */
   color: aliceblue;
   top: 0.4rem;
   left: 50%;
