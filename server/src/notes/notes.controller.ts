@@ -14,6 +14,8 @@ export class NotesController {
     this.router.patch("/notes/:userId/:noteId", this.updateNote.bind(this));
     this.router.get("/notes", this.getNotes.bind(this));
     this.router.get("/all-notes", this.getAllNotes.bind(this));
+    this.router.get("/count-notes/:userId", this.getCountNotes.bind(this));
+    this.router.get("/notes/:userId", this.getNotesForUserId.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));
     this.router.delete("/notes/:noteId", this.deleteNote.bind(this));
   }
@@ -98,6 +100,56 @@ export class NotesController {
       );
       return res.status(200).send({
         data: notes,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async getCountNotes(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      userId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    try {
+      const note = await this.notesService.getCountNotesForUser(params.data.userId);
+      return res.status(200).send({
+        data: note,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async getNotesForUserId(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      userId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    try {
+      const note = await this.notesService.getNotesForUser(params.data.userId);
+      return res.status(200).send({
+        data: note,
       });
     } catch (error) {
       console.error(error);

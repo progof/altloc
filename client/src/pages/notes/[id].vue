@@ -29,7 +29,7 @@ function htmlToFormattedText2(html: string) {
     <div class="wrapper">
       <div v-if="note" class="note">
         <div class="note-header">
-          <h3>{{ note.title }}</h3>
+          <h3>Title: {{ note.title }}</h3>
           <hr />
         </div>
 
@@ -51,27 +51,32 @@ function htmlToFormattedText2(html: string) {
             <hr />
           </div>
 
-          <div class="note-author">
-            <p>
-              <strong>Author:</strong> {{ note.username }} / {{ note.user_id }}
-            </p>
-            <MyButton @click="$router.push(`/users/${note.user_id}`)">
-              Profile
+          <div class="note-author" style="color: rgb(91, 92, 93)">
+            <p><strong>Author:</strong> {{ note.username }}</p>
+            <MyButton
+              @click="$router.push(`/users/${note.user_id}`)"
+              style="color: rgb(166, 141, 228)"
+            >
+              Profile(Test)
             </MyButton>
           </div>
 
-          <div class="note-created_at">
+          <div class="note-created_at" style="color: rgb(91, 92, 93)">
             <p>
               <strong>Created at:</strong>
               {{ formatCreatedAt(note.created_at) }}
             </p>
           </div>
 
-          <div v-if="note.edit_at" class="note-edit_at">
+          <div
+            v-if="note.edit_at"
+            class="note-edit_at"
+            style="color: rgb(91, 92, 93)"
+          >
             <p><strong>Edit at:</strong> {{ formatCreatedAt(note.edit_at) }}</p>
           </div>
 
-          <div class="noteID">
+          <div class="noteID" style="color: rgb(91, 92, 93)">
             <p><strong>Note ID:</strong> {{ note.note_id }}</p>
           </div>
         </div>
@@ -99,8 +104,9 @@ function htmlToFormattedText2(html: string) {
   margin: 0 auto;
 } */
 
-h3 {
-  color: teal;
+h3,
+p {
+  color: rgb(157, 89, 235);
   padding-bottom: 10px;
 }
 
@@ -131,7 +137,7 @@ h3 {
   margin-top: 20px;
 }
 .note-header h3 {
-  color: teal;
+  color: rgb(157, 89, 235);
   margin-bottom: 15px;
 }
 

@@ -67,7 +67,9 @@ const handleDeleteNote = async (noteId: string) => {
         <p>Description: {{ note.description }}</p>
         <!-- <p>Body: <span v-html="htmlToFormattedText2(note.body)"></span></p> -->
         <p>Category: {{ note.category }}</p>
-        <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
+        <p style="color: rgb(91, 92, 93)">
+          Created at: {{ formatCreatedAt(note.created_at) }}
+        </p>
         <div v-if="note.edit_at">
           <p>Edit at: {{ formatCreatedAt(note.edit_at) }}</p>
         </div>
@@ -102,7 +104,7 @@ const handleDeleteNote = async (noteId: string) => {
 }
 
 .note-lists h2 {
-  color: teal;
+  color: rgb(90, 12, 180);
   margin-bottom: 10px;
 }
 
@@ -119,7 +121,7 @@ const handleDeleteNote = async (noteId: string) => {
 }
 
 .note-lists h3 {
-  color: teal;
+  color: rgb(157, 89, 235);
   margin-bottom: 5px;
 }
 

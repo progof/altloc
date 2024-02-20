@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
-// import NoteForm from '@/components/NoteForm.vue';
+import { getCountNotesQueryOptions } from "@/services/app.service";
 import NoteList from "@/components/NoteList.vue";
-import UserNav from "@/components/UserNav.vue";
-import SideBar from "@/components/SideBar.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 // import Modal from "@/components/Modal.vue";
 
@@ -15,6 +13,9 @@ import SideBarNav from "@/components/SideBarNav.vue";
 // };
 
 const { data: me } = useQuery(getMeQueryOptions);
+const userId: string = me.value?.user_id;
+const { data: countNotes } = useQuery(getCountNotesQueryOptions(userId));
+console.log(typeof countNotes);
 </script>
 
 <template>
@@ -23,17 +24,17 @@ const { data: me } = useQuery(getMeQueryOptions);
     <div class="dashboard">
       <div class="wrapper">
         <div v-if="me?.role == 'USER'">
-          <p>hi user!</p>
+          <p>hi user!(test msg)</p>
         </div>
         <div class="dashboard__info">
+          <img src="../assets/default_avatar.png" alt="Altplace user avatar" />
           <h2>Hi, {{ me?.username }} 👋</h2>
-          <span>Your Email: {{ me?.email }}</span>
+          <span style="border-color: #3e3d3d">Your Email: {{ me?.email }}</span>
           <span
             >Account status:
             {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
           >
-          <span>Your Role: {{ me?.role }}</span>
-          <span>Your ID: {{ me?.user_id }}</span>
+          <span>Count notes: {{ countNotes }}</span>
         </div>
 
         <note-list style="overflow: scroll" />
@@ -56,12 +57,6 @@ const { data: me } = useQuery(getMeQueryOptions);
   height: 100vh;
 }
 
-/* .sidebar {
-  width: 200px;
-  background-color: #0b020e;
-  padding: 20px;
-} */
-
 .wrapper {
   max-width: 1024px;
   padding: 50px;
@@ -82,10 +77,41 @@ h2 {
   color: azure;
 }
 
+.dashboard__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+img {
+  width: 128px;
+  height: 128px;
+  margin: 20px;
+  border: 2px solid rgb(90, 12, 180);
+  border-radius: 50px;
+}
+
 span {
-  display: block;
+  display: flex;
   margin-bottom: 10px;
   color: azure;
+}
+
+@media only screen and (max-width: 600px) {
+  .dashboard__info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  img {
+    width: 64px;
+    height: 64px;
+    margin: 10px;
+    border: 2px solid rgb(90, 12, 180);
+    border-radius: 50px;
+  }
 }
 
 note-form,

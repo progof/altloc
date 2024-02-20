@@ -19,6 +19,15 @@ export class NotesService {
     return result.rows;
   }
 
+async getCountNotesForUser(userId: string) {
+  const result = await this.db.query<Note>(
+    `SELECT COUNT(*) FROM notes WHERE user_id = $1;`,
+    [userId],
+  );
+  // return result.rows;
+  return result.rows[0];
+}
+
   async getAllNotes(){
     const result = await this.db.query<Note>(
       `SELECT title, description, body, category, users.username, note_id, notes.created_at 

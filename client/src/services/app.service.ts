@@ -60,6 +60,7 @@ export const useCreateNoteMutation = () => {
   });
 };
 
+// ---------- //
 export const useUpdateNoteMutation = () => {
   const queryClient = useQueryClient();
 
@@ -101,6 +102,7 @@ export const useUpdateNoteMutation = () => {
   });
 };
 
+// ---------- //
 export const useDeleteNoteMutation = () => {
   const queryClient = useQueryClient();
 
@@ -131,6 +133,7 @@ export const useDeleteNoteMutation = () => {
   });
 };
 
+// ---------- //
 const getNote = async (noteId: string) => {
   const res = await fetch(`/api/notes/${noteId}`, {
     headers: {
@@ -153,6 +156,7 @@ export const getNoteQueryOptions = (noteId: string) =>
     queryFn: () => getNote(noteId),
   });
 
+// ---------- //
 export const getNotes = async () => {
   const res = await fetch(`/api/notes`, {
     headers: {
@@ -173,7 +177,7 @@ export const getNotesQueryOptions = queryOptions({
   queryFn: getNotes,
 });
 
-
+// ---------- //
 export const getAllNotes = async () => {
 	const res = await fetch(`/api/all-notes`, {
 	  headers: {
@@ -194,7 +198,53 @@ export const getAllNotes = async () => {
 	queryFn: getAllNotes,
   });
 
+// ---------- //
+  const getCountNotes = async (userId: string) => {
+    const res = await fetch(`/api/count-notes/${userId}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+  
+    if (!res.ok) {
+      const errors = errorSchema.parse(await res.json()).errors;
+      throw new Error(errors.at(0)?.message);
+    }
+  
+    const responseData = await res.json();
+    return responseData.data as Note;
+  };
+  
+  export const getCountNotesQueryOptions = (userId: string) =>
+    queryOptions({
+      queryKey: ["count-notes", userId],
+      queryFn: () => getCountNotes(userId),
+    });
 
+// ---------- //
+const getNotesForUser = async (userId: string) => {
+  const res = await fetch(`/api/notes/${userId}`, {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errors = errorSchema.parse(await res.json()).errors;
+    throw new Error(errors.at(0)?.message);
+  }
+
+  const responseData = await res.json();
+  return responseData.data as Note;
+};
+
+export const getNotesForUserQueryOptions = (userId: string) =>
+  queryOptions({
+    queryKey: ["notes", userId],
+    queryFn: () => getNotesForUser(userId),
+  });
+
+// ---------- //
   const getUser = async (userId: string) => {
     const res = await fetch(`/api/users/${userId}`, {
       headers: {
