@@ -223,7 +223,7 @@ export const getAllNotes = async () => {
 
 // ---------- //
 const getNotesForUser = async (userId: string) => {
-  const res = await fetch(`/api/notes/${userId}`, {
+  const res = await fetch(`/api/user-notes/${userId}`, {
     headers: {
       Accept: "application/json",
     },
@@ -240,7 +240,7 @@ const getNotesForUser = async (userId: string) => {
 
 export const getNotesForUserQueryOptions = (userId: string) =>
   queryOptions({
-    queryKey: ["notes", userId],
+    queryKey: ["user-notes", userId],
     queryFn: () => getNotesForUser(userId),
   });
 

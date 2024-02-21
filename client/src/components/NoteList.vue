@@ -104,7 +104,7 @@ const handleDeleteNote = async (noteId: string) => {
 }
 
 .note-lists h2 {
-  color: rgb(90, 12, 180);
+  color: rgb(55, 146, 225);
   margin-bottom: 10px;
 }
 
@@ -114,14 +114,14 @@ const handleDeleteNote = async (noteId: string) => {
 }
 
 .note-lists li {
-  border: 2px solid rgb(90, 12, 180);
+  border: 2px solid rgb(55, 146, 225);
   margin-bottom: 10px;
   padding: 10px;
   position: relative;
 }
 
 .note-lists h3 {
-  color: rgb(157, 89, 235);
+  color: rgb(55, 146, 225);
   margin-bottom: 5px;
 }
 

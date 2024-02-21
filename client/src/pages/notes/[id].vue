@@ -106,7 +106,7 @@ function htmlToFormattedText2(html: string) {
 
 h3,
 p {
-  color: rgb(157, 89, 235);
+  color: rgb(55, 146, 225);
   padding-bottom: 10px;
 }
 
@@ -137,7 +137,7 @@ p {
   margin-top: 20px;
 }
 .note-header h3 {
-  color: rgb(157, 89, 235);
+  color: rgb(55, 146, 225);
   margin-bottom: 15px;
 }
 

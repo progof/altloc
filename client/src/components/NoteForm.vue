@@ -262,7 +262,7 @@ section {
 }
 
 button[type="submit"] {
-  background-color: rgb(136, 56, 215);
+  background-color: rgb(55, 146, 225);
   color: white;
 }
 

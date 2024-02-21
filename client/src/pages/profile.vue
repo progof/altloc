@@ -98,8 +98,8 @@ img {
   width: 128px;
   height: 128px;
   margin: 20px;
-  border: 2px solid rgb(90, 12, 180);
-  border-radius: 50px;
+  border: 2px solid rgb(55, 146, 225);
+  border-radius: 80px;
 }
 
 span {
@@ -116,7 +116,7 @@ span {
 }
 
 .profile__notes h2 {
-  color: teal;
+  color: rgb(55, 146, 225);
   margin-bottom: 10px;
 }
 
@@ -133,7 +133,7 @@ span {
 }
 
 .profile__notes h3 {
-  color: teal;
+  color: rgb(55, 146, 225);
   margin-bottom: 5px;
 }
 

@@ -15,7 +15,7 @@ export class NotesController {
     this.router.get("/notes", this.getNotes.bind(this));
     this.router.get("/all-notes", this.getAllNotes.bind(this));
     this.router.get("/count-notes/:userId", this.getCountNotes.bind(this));
-    this.router.get("/notes/:userId", this.getNotesForUserId.bind(this));
+    this.router.get("/user-notes/:userId", this.getNotesForUserId.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));
     this.router.delete("/notes/:noteId", this.deleteNote.bind(this));
   }
@@ -122,7 +122,7 @@ export class NotesController {
     }
 
     try {
-      const note = await this.notesService.getCountNotesForUser(params.data.userId);
+      const note = await this.notesService.getCountNotesByUserId(params.data.userId);
       return res.status(200).send({
         data: note,
       });
@@ -135,6 +135,7 @@ export class NotesController {
   }
 
   async getNotesForUserId(req: Request, res: Response) {
+
     const paramsSchema = z.object({
       userId: z.string().uuid(),
     });
@@ -148,6 +149,7 @@ export class NotesController {
 
     try {
       const note = await this.notesService.getNotesForUser(params.data.userId);
+      console.log("DEBUG (getNotesForUserId->note):", note);
       return res.status(200).send({
         data: note,
       });
@@ -185,8 +187,8 @@ export class NotesController {
   }
 
   async getAllNotes(req: Request, res: Response) {
-    const note = await this.notesService.getAllNotes();
-      console.log("getAllNotes() data: ", note);
+    // const note = await this.notesService.getAllNotes();
+    //   console.log("getAllNotes() data: ", note);
     try {
       const note = await this.notesService.getAllNotes();
       console.log("getAllNotes() data: ", note);
