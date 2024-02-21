@@ -42,7 +42,9 @@ export type Note = {
 
 export type Space = {
 	space_id: string;
+	user_id: string;
 	title: string;
+	category: string;
 	description: string;
 	created_at: string;
 	edit_at: string;

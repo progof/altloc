@@ -3,11 +3,13 @@ import session from "express-session";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { config } from "./config";
-import { NotesService } from "./notes/notes.service";
 import { pool } from "./database";
 import { AuthService } from "./auth/auth.service";
-import { NotesController } from "./notes/notes.controller";
 import { AuthController } from "./auth/auth.controller";
+import { NotesController } from "./notes/notes.controller";
+import { NotesService } from "./notes/notes.service";
+import { SpacesController } from "./spaces/spaces.controller";
+import { SpacesService } from "./spaces/spaces.service";
 
 const app = express();
 app.use(cors());
@@ -29,6 +31,10 @@ app.use(authController.router);
 export const notesService = new NotesService(pool);
 const notesController = new NotesController(notesService);
 app.use(notesController.router);
+
+export const spacesService = new SpacesService(pool);
+const spacesController = new SpacesController(spacesService);
+app.use(spacesController.router);
 
 app.listen(config.APP_PORT, () => {
   console.log(`Server running on port ${config.APP_PORT}`);

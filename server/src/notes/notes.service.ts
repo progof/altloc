@@ -30,7 +30,7 @@ async getCountNotesByUserId(userId: string) {
 
   async getAllNotes(){
     const result = await this.db.query<Note>(
-      `SELECT title, description, body, category, users.username, note_id, notes.created_at 
+      `SELECT title, description, body, category, users.username, notes.user_id, note_id, notes.created_at 
       FROM notes JOIN users ON notes.user_id = users.user_id`,
     );
     return result.rows;

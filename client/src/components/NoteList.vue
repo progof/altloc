@@ -59,7 +59,7 @@ const handleDeleteNote = async (noteId: string) => {
 </script>
 
 <template>
-  <div class="note-lists" v-if="notes" v-scroll>
+  <div class="note-lists" v-if="notes">
     <h2>My Notes</h2>
     <ul v-if="notes.length > 0">
       <li v-for="note in notes" :key="note.note_id">

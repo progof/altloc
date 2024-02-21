@@ -11,6 +11,8 @@ const formatCreatedAt = (createdAt: string) => {
   const date = new Date(createdAt);
   return date.toLocaleString();
 };
+
+console;
 </script>
 
 <template>
@@ -25,7 +27,19 @@ const formatCreatedAt = (createdAt: string) => {
             <h3>Title: {{ note.title }}</h3>
             <p>Category: {{ note.category }}</p>
             <p>Description: {{ note.description }}</p>
-            <p>Author: {{ note.username }}</p>
+            <!-- <p>Author: {{ note.username }}</p> -->
+            <p>
+              Author:
+              <MyButton
+                @click="$router.push(`/users/${note.user_id}`)"
+                style="
+                  font-weight: bold;
+                  background-color: rgba(50, 51, 52, 0.5);
+                "
+              >
+                {{ note.username }}
+              </MyButton>
+            </p>
             <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
             <MyButton @click="$router.push(`/notes/${note.note_id}`)">
               Full note
@@ -61,7 +75,7 @@ const formatCreatedAt = (createdAt: string) => {
 }
 
 .note-lists h2 {
-  color: teal;
+  color: rgb(55, 146, 225);
   margin-bottom: 10px;
 }
 
@@ -78,7 +92,7 @@ const formatCreatedAt = (createdAt: string) => {
 }
 
 .note-lists h3 {
-  color: teal;
+  color: rgb(55, 146, 225);
   margin-bottom: 5px;
 }
 

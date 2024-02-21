@@ -40,7 +40,7 @@ const toggleSidebar = () => {
         <DashboardIcon class="icons" />
         Dashboard
       </RouterLink>
-      <RouterLink to="#" class="sidebar__item">
+      <RouterLink to="/spaces" class="sidebar__item">
         <SpacesIcon class="icons" />
         Spaces
       </RouterLink>

@@ -26,7 +26,7 @@ const filteredList = computed(() => {
 <template>
   <div>
     <input type="text" v-model="searchValue" placeholder="Search notes..." />
-    <div v-if="searchValue === ''">Niczego</div>
+    <div v-if="searchValue === ''">...</div>
     <div
       v-else-if="filteredList.length > 0"
       class="item note"

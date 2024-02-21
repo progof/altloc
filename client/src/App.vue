@@ -1,17 +1,18 @@
 <script lang="ts">
 import { createRouter, createWebHistory } from "vue-router";
 import LendingPage from "@/pages/lending.vue";
-import RegisterPage from "@/pages/register.vue";
-import LoginPage from "@/pages/login.vue";
+import RegisterPage from "@/pages/auth/register.vue";
+import LoginPage from "@/pages/auth/login.vue";
 import DashboardPage from "@/pages/dashboard.vue";
-import EmailVerificationPage from "@/pages/email-verification.vue";
-import RecoveryPasswordPage from "@/pages/recovery_password.vue";
-import ResetPasswordPage from "@/pages/reset_password.vue";
+import EmailVerificationPage from "@/pages/auth/email-verification.vue";
+import RecoveryPasswordPage from "@/pages/auth/recovery_password.vue";
+import ResetPasswordPage from "@/pages/auth/reset_password.vue";
 import NoteByIdPage from "@/pages/notes/[id].vue";
 import NoteAdd from "@/pages/notes/add.vue";
 import NoteEditor from "@/pages/notes/editor.vue";
 import NoteFeedPage from "@/pages/notes/feed.vue";
 import ProfilePage from "@/pages/profile.vue";
+import SpacesPage from "@/pages/spaces.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -65,6 +66,10 @@ export const router = createRouter({
     {
       path: "/users/:id",
       component: ProfilePage,
+    },
+    {
+      path: "/spaces/",
+      component: SpacesPage,
     },
   ],
   history: createWebHistory(),
