@@ -18,7 +18,6 @@ import SideBarNav from "@/components/SideBarNav.vue";
 
 <style scoped>
 .spaces {
-  display: flex;
   max-width: 800px;
   margin: 0 auto;
   padding: 40px;
@@ -34,8 +33,16 @@ import SideBarNav from "@/components/SideBarNav.vue";
 
 .conteiner {
   display: flex;
-  flex-direction: column;
-  width: 100vw;
+  flex-direction: row;
+  /* width: 100vw; */
+  overflow-x: auto;
   height: 100vh;
+}
+
+.item {
+  margin: 20px;
+  padding: 20px;
+  color: aqua;
+  background-color: rgb(72, 73, 73);
 }
 </style>
