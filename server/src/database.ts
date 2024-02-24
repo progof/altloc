@@ -44,6 +44,9 @@ export type Space = {
 	space_id: string;
 	user_id: string;
 	title: string;
+	country: string; 
+	city: string;
+	university: string;
 	category: string;
 	description: string;
 	created_at: string;
@@ -101,6 +104,10 @@ try {
 			space_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
 			title VARCHAR(200) NOT NULL,
+			country VARCHAR(200) NOT NULL,
+			city VARCHAR(200) NOT NULL,
+			university VARCHAR(200) NOT NULL,
+			category VARCHAR(200) NOT NULL,
 			description VARCHAR(500) NOT NULL,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			edit_at VARCHAR(200),

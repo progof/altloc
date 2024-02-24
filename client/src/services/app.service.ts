@@ -212,7 +212,8 @@ export const getAllNotes = async () => {
     }
   
     const responseData = await res.json();
-    return responseData.data as Note;
+    console.log("getCountNotes:", responseData);
+    return responseData.data as { CountNote: number };
   };
   
   export const getCountNotesQueryOptions = (userId: string) =>

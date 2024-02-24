@@ -13,6 +13,9 @@ export type Space = {
   space_id: string;
   user_id: string;
   title: string;
+  country: string; 
+  city: string;
+  university: string;
   description: string;
   category: string;
   created_at: string;
@@ -26,6 +29,9 @@ export const useCreateSpaceMutation = () => {
   return useMutation({
     mutationFn: async (data: {
       title: string;
+      country: string; 
+      city: string;
+      university: string;
       description: string;
       category: string;
     }) => {
@@ -57,3 +63,23 @@ export const useCreateSpaceMutation = () => {
     },
   });
 };
+
+export const getAllSpaces = async () => {
+	const res = await fetch(`/api/all-spaces`, {
+	  headers: {
+		Accept: "application/json",
+	  },
+	});
+  
+	if (!res.ok) {
+	  const errors = errorSchema.parse(await res.json()).errors;
+	  throw new Error(errors.at(0)?.message);
+	}
+  
+	return (await res.json() as { data: Space[] }).data;
+  };
+
+  export const getAllSpacesQueryOptions = queryOptions({
+	queryKey: ["all-spaces"],
+	queryFn: getAllSpaces,
+  });

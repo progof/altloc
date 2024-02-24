@@ -8,6 +8,10 @@ export type CreateNoteDTO = {
   category: string;
 };
 
+// export type NoteCount = {
+//   CountNote: number;
+// }
+
 export class NotesService {
   constructor(private readonly db: Pool) {}
 
@@ -24,8 +28,18 @@ async getCountNotesByUserId(userId: string) {
     `SELECT COUNT(*) AS CountNote FROM notes WHERE user_id = $1;`,
     [userId],
   );
-  return result.rows[0]?.CountNote;
+  console.log(result.rowCount);
+  return result.rows;
 }
+
+// async getCountNotesByUserId(userId: string){
+//   const result = await this.db.query<NoteCount>(
+//     `SELECT COUNT(*) AS CountNote FROM notes WHERE user_id = $1;`,
+//     [userId],
+//   );
+//   console.log(result.rows[0]);
+//   return result.rows[0]?.CountNote;
+//}
 
   async getAllNotes(){
     const result = await this.db.query<Note>(

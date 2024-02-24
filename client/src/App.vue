@@ -13,6 +13,7 @@ import NoteEditor from "@/pages/notes/editor.vue";
 import NoteFeedPage from "@/pages/notes/feed.vue";
 import ProfilePage from "@/pages/profile.vue";
 import SpacesPage from "@/pages/spaces.vue";
+import SpaceAdd from "@/pages/spaces/add.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -70,6 +71,10 @@ export const router = createRouter({
     {
       path: "/spaces/",
       component: SpacesPage,
+    },
+    {
+      path: "/spaces/add",
+      component: SpaceAdd,
     },
   ],
   history: createWebHistory(),

@@ -12,7 +12,6 @@ const formatCreatedAt = (createdAt: string) => {
   return date.toLocaleString();
 };
 
-console;
 </script>
 
 <template>
