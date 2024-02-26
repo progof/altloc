@@ -7,7 +7,7 @@ import SideBarNav from "@/components/SideBarNav.vue";
   <div class="conteiner"></div>
   <SideBarNav />
   <div class="editor">
-    <h2>Add new note</h2>
+    <h2>Add new space</h2>
     <SpaceForm />
   </div>
 </template>

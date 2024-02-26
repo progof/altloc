@@ -66,6 +66,7 @@ export const useCreateSpaceMutation = () => {
 
 export const getAllSpaces = async () => {
 	const res = await fetch(`/api/all-spaces`, {
+        method: "GET",
 	  headers: {
 		Accept: "application/json",
 	  },
@@ -83,3 +84,29 @@ export const getAllSpaces = async () => {
 	queryKey: ["all-spaces"],
 	queryFn: getAllSpaces,
   });
+
+
+
+
+  const getSpace = async (spaceId: string) => {
+    const res = await fetch(`/api/spaces/${spaceId}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+  
+    if (!res.ok) {
+      const errors = errorSchema.parse(await res.json()).errors;
+      throw new Error(errors.at(0)?.message);
+    }
+  
+    const responseData = await res.json();
+    console.log("getSpace data: ", responseData);
+    return responseData.data as Space;
+  };
+  
+  export const getSpaceQueryOptions = (spaceId: string) =>
+    queryOptions({
+      queryKey: ["spaces", spaceId],
+      queryFn: () => getSpace(spaceId),
+    });

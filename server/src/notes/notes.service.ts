@@ -23,14 +23,24 @@ export class NotesService {
     return result.rows;
   }
 
-async getCountNotesByUserId(userId: string) {
-  const result = await this.db.query<{ CountNote: number }>(
-    `SELECT COUNT(*) AS CountNote FROM notes WHERE user_id = $1;`,
-    [userId],
-  );
-  console.log(result.rowCount);
-  return result.rows;
-}
+
+  async getCountNotesByUserId(userId: string): Promise<number> {
+    const result = await this.db.query<{ countnote: number }>(
+      `SELECT COUNT(*) AS countnote FROM notes WHERE user_id = $1;`,
+      [userId],
+    );
+    return result.rows[0]?.countnote || 0;
+  }
+  
+  
+  // old code
+  // async getCountNotesByUserId(userId: string){
+  //   const result = await this.db.query<Note>(
+  //     `SELECT COUNT(*) AS CountNote FROM notes WHERE user_id = $1;`,
+  //     [userId],
+  //   );
+  //   return result.rows[0];
+  // }
 
 // async getCountNotesByUserId(userId: string){
 //   const result = await this.db.query<NoteCount>(

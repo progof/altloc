@@ -242,7 +242,7 @@ const submitForm = async (event: Event) => {
       <span v-if="error">{{ error }}</span>
 
       <MyButton type="submit" :disabled="isPending">
-        {{ isPending ? "Fetching..." : "Create note" }}
+        {{ isPending ? "Fetching..." : "Create space" }}
       </MyButton>
     </form>
   </div>

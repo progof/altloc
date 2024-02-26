@@ -38,4 +38,23 @@ async getAllSpaces(){
     return result.rows;
   }
 
+
+  async getSpaceById(spaceId: string) {
+    const result = await this.db.query<Space>(
+      `SELECT title, description,  country, city, university, category, users.username, space_id, spaces.user_id, spaces.created_at, spaces.edit_at
+      FROM spaces JOIN users ON spaces.user_id = users.user_id WHERE space_id = $1;`,
+      [spaceId],
+    );
+    return result.rows.at(0) || null;
+  }
+
+
+  // async getNoteById(noteId: string) {
+  //   const result = await this.db.query<Note>(
+  //     `SELECT title, description, body, category, users.username, note_id, notes.user_id, notes.created_at, notes.edit_at
+  //     FROM notes JOIN users ON notes.user_id = users.user_id WHERE note_id = $1;`,
+  //     [noteId],
+  //   );
+  //   return result.rows.at(0) || null;
+  // }
 }

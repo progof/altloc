@@ -41,7 +41,7 @@ const formatCreatedAt = (createdAt: string) => {
             </MyButton>
           </p>
           <p>Created at: {{ formatCreatedAt(space.created_at) }}</p>
-          <MyButton @click="$router.push(`/spaces/${space.user_id}`)">
+          <MyButton @click="$router.push(`/spaces/${space.space_id}`)">
             View space
           </MyButton>
         </div>
