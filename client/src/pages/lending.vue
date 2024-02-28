@@ -86,7 +86,7 @@ import { RouterLink } from "vue-router";
 .intor__box {
   padding: 34px;
   width: 632px;
-  height: 420px;
+  height: 460px;
   flex-shrink: 0;
   background: black;
   opacity: 85%;

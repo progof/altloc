@@ -98,6 +98,10 @@ input {
   padding: 8px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  background-color: rgb(0, 0, 0);
+  color: aliceblue;
+  border: 2px solid rgb(55, 146, 225);
+  border-radius: 4px;
 }
 
 fieldset {

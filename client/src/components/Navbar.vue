@@ -18,122 +18,58 @@ console.log("default", authStore.isAuthenticated);
 
 <template>
   <header v-if="!authStore.isAuthenticated" class="header">
-    <div class="wrapper">
-      <div class="header__wrapper">
-        <div class="header__logo">
-          <a href="/" class="header__logo-link">
-            <LogoIcon class="header__logo-img" />
-          </a>
-        </div>
+    <a href="/" class="header__logo-link">
+      <LogoIcon class="header__logo-img" />
+    </a>
 
-        <div class="header__title">
-          <h2 class="header__title-text">AltPlace</h2>
-        </div>
+    <h2 class="header__title-text">AltPlace</h2>
 
-        <nav class="header__nav">
-          <ul class="header__list">
-            <li class="header__item">
-              <div class="wrapper__join">
-                <RouterLink to="/register" class="header__link"
-                  >Sing up</RouterLink
-                >
-              </div>
-            </li>
-            <li class="header__item">
-              <div class="wrapper__login">
-                <RouterLink to="/login" class="header__link">Login</RouterLink>
-              </div>
-            </li>
-          </ul>
-        </nav>
-      </div>
+    <div class="menu">
+      <RouterLink to="/register" class="item">Sing up</RouterLink>
+      <RouterLink to="/login" class="item">Login</RouterLink>
     </div>
   </header>
 </template>
 
 <style scoped>
-.wrapper {
-  max-width: 1060px;
-  margin: 0 auto;
-}
-
 .header {
-  /* background: #0b020e; */
-  position: fixed;
+  background: #0b020e;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
   top: 0;
   left: 0;
   width: 100%;
-}
-
-.header__wrapper {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
   justify-content: space-between;
-  padding-top: 24px;
+  align-items: center;
+  padding: 20px;
 }
 
-.header__title {
+h2 {
+  color: rgb(55, 146, 225);
+}
+.menu {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
-.header__title-text {
-  color: #fff;
-  text-align: right;
-  font-size: 40px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-}
-
-.header__list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.header__item {
-  margin-right: 40px;
-}
-
-.header__item:last-child {
-  margin-right: 0;
-}
-
-.wrapper__join {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  /* width: 90px;
-  height: 30px; */
-  flex-shrink: 0;
-  background-color: #2925e0;
-  stroke-width: 1px;
-  stroke: #000;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  padding: 10px;
-  color: #000;
-  border-radius: 10px;
-}
-
-.wrapper__login {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+.item {
+  align-items: center;
   background-color: #181818;
   padding: 5px;
-  color: #fffefe;
+  color: rgb(55, 146, 225);
   border-radius: 10px;
   padding: 10px;
+  height: 20px;
+  width: 65px;
+  font-size: 19px;
+  text-align: center;
+  margin-right: 20px;
 }
 
-.header__link {
-  color: #fffefe;
-  text-align: center;
-  font-size: 24x;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  text-decoration: none;
+.item:hover {
+  background-color: rgb(55, 146, 225);
+  color: #12171e;
 }
 </style>

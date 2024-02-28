@@ -30,13 +30,15 @@ const formatCreatedAt = (createdAt: string) => {
           <hr />
         </div>
 
+        <div class="note-category">
+          <p><strong>Category:</strong> {{ space.category }}</p>
+          <p><strong>Country:</strong> {{ space.country }}</p>
+          <p><strong>City:</strong> {{ space.city }}</p>
+        </div>
+
         <div class="note-info">
           <div class="note-description">
             <p><strong>Description:</strong> {{ space.description }}</p>
-          </div>
-
-          <div class="note-category">
-            <p><strong>Category:</strong> {{ space.category }}</p>
           </div>
 
           <div class="note-author" style="color: rgb(91, 92, 93)">
