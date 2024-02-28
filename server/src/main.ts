@@ -4,12 +4,18 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { config } from "./config";
 import { pool } from "./database";
+
 import { AuthService } from "./auth/auth.service";
 import { AuthController } from "./auth/auth.controller";
+
 import { NotesController } from "./notes/notes.controller";
 import { NotesService } from "./notes/notes.service";
+
 import { SpacesController } from "./spaces/spaces.controller";
 import { SpacesService } from "./spaces/spaces.service";
+
+import { PostsController } from "./posts/posts.controller";
+import { PostsService } from "./posts/posts.service";
 
 const app = express();
 app.use(cors());
@@ -31,6 +37,10 @@ app.use(authController.router);
 export const notesService = new NotesService(pool);
 const notesController = new NotesController(notesService);
 app.use(notesController.router);
+
+export const postsService = new PostsService(pool);
+const postsController = new PostsController(postsService);
+app.use(postsController.router);
 
 export const spacesService = new SpacesService(pool);
 const spacesController = new SpacesController(spacesService);

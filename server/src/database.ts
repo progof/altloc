@@ -14,6 +14,8 @@ export type User = {
   created_at: string;
   role: string;
 };
+
+
 export type UserSession = {
   session_id: string;
   user_id: string;
@@ -29,6 +31,30 @@ export type ResetPasswordRequest = {
   reset_token: string;
   created_at: string;
 };
+
+
+export type Post = {
+	post_id: string;
+	user_id: string;
+	title: string;
+	description: string;
+	body: string;
+	category: string;
+	created_at: string;
+	edit_at: string;
+  };
+
+export type University = {
+	university_id: string;
+	fullname: string;
+	shortname: string;
+	country: string; 
+	city: string;
+  	description: string;
+	created_at: string;
+	edit_at: string;
+};
+
 export type Note = {
   note_id: string;
   user_id: string;
@@ -42,6 +68,7 @@ export type Note = {
 
 export type Space = {
 	space_id: string;
+	university_id: string;
 	user_id: string;
 	title: string;
 	country: string; 
@@ -52,6 +79,8 @@ export type Space = {
 	created_at: string;
 	edit_at: string;
   };
+
+
 
 try {
   await pool.connect();
@@ -88,6 +117,17 @@ try {
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 
+		CREATE TABLE IF NOT EXISTS posts (
+			post_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			user_id uuid NOT NULL,
+			title VARCHAR(50) NOT NULL,
+			description VARCHAR(500) NOT NULL,
+			content VARCHAR(10000) NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			edit_at VARCHAR(200),
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
+
 		CREATE TABLE IF NOT EXISTS notes (
 			note_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
@@ -103,6 +143,7 @@ try {
 		CREATE TABLE IF NOT EXISTS spaces (
 			space_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
+			university_id uuid NOT NULL,
 			title VARCHAR(200) NOT NULL,
 			country VARCHAR(200) NOT NULL,
 			city VARCHAR(200) NOT NULL,
@@ -111,7 +152,19 @@ try {
 			description VARCHAR(500) NOT NULL,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			edit_at VARCHAR(200),
-			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+			FOREIGN KEY (university_id) REFERENCES universities(university_id) ON DELETE CASCADE
+		);
+
+		CREATE TABLE IF NOT EXISTS universities (
+			university_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			fullname VARCHAR(200) NOT NULL,
+			shortname VARCHAR(200) NOT NULL,
+			country VARCHAR(200) NOT NULL,
+			city VARCHAR(200) NOT NULL,
+			description VARCHAR(500) NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			edit_at VARCHAR(200)
 		);
 	`);
 
