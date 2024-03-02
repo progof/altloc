@@ -1,24 +1,10 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import { getSpaceQueryOptions } from "@/services/spaces.service";
+import { getAllSpacesQueryOptions } from "@/services/spaces.service.ts";
 import SideBarNav from "@/components/SideBarNav.vue";
+import AddSpaceIcon from "../assets/icons/AddNoteIcon.svg?component";
 
-import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
-import MemberIcon from "@/assets/icons/MemberIcon.svg?component";
-import NoteIcon from "@/assets/icons/NoteIcon.svg?component";
-import EventIcon from "@/assets/icons/EventIcon.svg?component";
-import FollowIcon from "@/assets/icons/FollowIcon.svg?component";
-
-const route = useRoute();
-const spaceId: string = Array.isArray(route.params.id)
-  ? route.params.id[0]
-  : route.params.id;
-
-console.log("spaceId", spaceId);
-const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
-
-console.log("DEBUG", space.value?.title);
+const { data: spaces } = useQuery(getAllSpacesQueryOptions);
 
 const formatCreatedAt = (createdAt: string) => {
   const date = new Date(createdAt);
@@ -27,25 +13,58 @@ const formatCreatedAt = (createdAt: string) => {
 </script>
 
 <template>
+  <!-- <SideBarNav />
+  <div class="conteiner">
+    <div class="spaces">
+      <div class="wrapper">
+        <div class="item add-space">
+          <RouterLink to="/spaces/add" style="color: aliceblue">
+            <AddSpaceIcon class="icons" />
+            Add note
+          </RouterLink>
+        </div>
+        <div
+          class="item space-lists"
+          v-for="space in spaces"
+          :key="space.space_id"
+        >
+          <h3>Title: {{ space.title }}</h3>
+          <p>Category: {{ space.category }}</p>
+          <p>Description: {{ space.description }}</p>
+          <p>
+            Author:
+            <MyButton
+              @click="$router.push(`/users/${space.user_id}`)"
+              style="font-weight: bold; background-color: rgba(50, 51, 52, 0.5)"
+            >
+              {{ space.username }}
+            </MyButton>
+          </p>
+          <p>Created at: {{ formatCreatedAt(space.created_at) }}</p>
+          <MyButton @click="$router.push(`/spaces/${space.space_id}`)">
+            View space
+          </MyButton>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!---->
   <div class="conteiner">
     <SideBarNav />
-    <div class="profile item space-lists">
+    <div
+      class="profile item space-lists"
+      v-for="space in spaces"
+      :key="space.space_id"
+    >
       <div class="wrapper">
         <div class="profile__info">
-          <img src="@/assets/neptune2.jpeg" alt="" />
-          <span>Title: {{ space?.title }}</span>
+          <img src="../assets/default_avatar.png" alt="" />
+          <span>Title: {{ space.title }}</span>
           <span style="border-color: #3e3d3d"
-            >Country: {{ space?.country }}</span
+            >Country: {{ space.country }}</span
           >
-          <span>City: {{ space?.city }}</span>
-          <span>Description: {{ space?.description }}</span>
-        </div>
-        <div class="space__menu">
-          <div class="menu__item"><MemberIcon class="icons" /> Members</div>
-          <div class="menu__item"><EventIcon class="icons" />Events</div>
-          <div class="menu__item"><NoteIcon class="icons" />Notes</div>
-          <div class="menu__item"><ChatIcon class="icons" />Chat</div>
-          <div class="menu__item"><FollowIcon class="icons" />Follow</div>
+          <span>City: {{ space.city }}</span>
+          <span>Description: {{ space.description }}</span>
         </div>
         <!-- <div class="profile__notes" v-if="notes">
           <h2>All Notes</h2>
@@ -68,6 +87,58 @@ const formatCreatedAt = (createdAt: string) => {
 </template>
 
 <style scoped>
+.spaces {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: rgb(15, 14, 14);
+  color: azure;
+  height: 100vh;
+  overflow: scroll;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 1060px;
+  margin: 0 auto;
+}
+/*
+.conteiner {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  overflow-x: auto;
+  height: 100vh;
+} */
+
+.add-space {
+  order: 0;
+  align-items: center;
+  text-align: center;
+}
+
+.item {
+  margin: 10px;
+  padding: 20px;
+  color: aliceblue;
+  width: 195px;
+  height: 195px;
+  text-align: center;
+  background: url(../assets/space_default.jpeg) no-repeat center;
+  border-radius: 60px;
+  border: 1px solid rgb(55, 146, 225);
+}
+
+.icons {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+  color: rgb(236, 236, 239);
+}
+
+/**/
 .profile {
   flex: 1 1 0%;
   height: 100vh;
@@ -85,7 +156,6 @@ const formatCreatedAt = (createdAt: string) => {
 .conteiner {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   width: 100vw;
   height: 100vh;
 }
@@ -98,12 +168,6 @@ const formatCreatedAt = (createdAt: string) => {
   background-color: rgba(32, 32, 32, 0.9);
   border-radius: 60px;
   padding: 10px;
-}
-
-.icons {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
 }
 
 img {
@@ -164,31 +228,5 @@ span {
   padding: 5px 10px;
   cursor: pointer;
   margin-top: 30px;
-}
-
-.space__menu {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
-}
-
-.menu__item {
-  margin: 15px;
-  display: flex;
-  align-items: center;
-  color: aliceblue;
-  padding: 15px;
-  font-size: 15px;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: background-color 0.3s;
-}
-
-.menu__item:hover {
-  background-color: rgb(55, 146, 225);
-  color: #12171e;
 }
 </style>
