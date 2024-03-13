@@ -39,7 +39,7 @@ export class PostsService {
 
   async getPostById(postId: string) {
     const result = await this.db.query<Post>(
-      `SELECT title, description, content  users.username, note_id, posts.user_id, posts.created_at, posts.edit_at
+      `SELECT title, description, content  users.username, post_id, posts.user_id, posts.created_at, posts.edit_at
       FROM posts JOIN users ON posts.user_id = users.user_id WHERE post_id = $1;`,
       [postId],
     );

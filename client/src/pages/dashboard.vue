@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
 import NoteList from "@/components/NoteList.vue";
+import PostList from "@/components/post/PostList.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 // import Modal from "@/components/Modal.vue";
 
@@ -37,7 +38,10 @@ console.log(typeof countNotes);
           <span>Count notes: {{ countNotes }}</span>
         </div>
 
-        <note-list style="overflow: scroll" />
+        <div class="content-box">
+          <post-list style="overflow: scroll" />
+          <note-list style="overflow: scroll" />
+        </div>
 
         <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
@@ -87,7 +91,7 @@ img {
   width: 128px;
   height: 128px;
   margin: 20px;
-  border: 2px solid rgb(90, 12, 180);
+  border: 2px solid rgb(55, 146, 225);
   border-radius: 50px;
 }
 
@@ -97,10 +101,16 @@ span {
   color: azure;
 }
 
+.content-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 @media only screen and (max-width: 600px) {
   .dashboard__info {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
   }
@@ -109,7 +119,7 @@ span {
     width: 64px;
     height: 64px;
     margin: 10px;
-    border: 2px solid rgb(90, 12, 180);
+    border: 2px solid rgb(55, 146, 225);
     border-radius: 50px;
   }
 }

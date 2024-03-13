@@ -37,9 +37,7 @@ export type Post = {
 	post_id: string;
 	user_id: string;
 	title: string;
-	description: string;
-	body: string;
-	category: string;
+	content: string;
 	created_at: string;
 	edit_at: string;
   };
@@ -121,7 +119,6 @@ try {
 			post_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
 			title VARCHAR(50) NOT NULL,
-			description VARCHAR(500) NOT NULL,
 			content VARCHAR(10000) NOT NULL,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			edit_at VARCHAR(200),
@@ -140,6 +137,17 @@ try {
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 
+		CREATE TABLE IF NOT EXISTS universities (
+			university_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			fullname VARCHAR(200) NOT NULL,
+			shortname VARCHAR(200) NOT NULL,
+			country VARCHAR(200) NOT NULL,
+			city VARCHAR(200) NOT NULL,
+			description VARCHAR(500) NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			edit_at VARCHAR(200)
+		);
+
 		CREATE TABLE IF NOT EXISTS spaces (
 			space_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
@@ -154,17 +162,6 @@ try {
 			edit_at VARCHAR(200),
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 			FOREIGN KEY (university_id) REFERENCES universities(university_id) ON DELETE CASCADE
-		);
-
-		CREATE TABLE IF NOT EXISTS universities (
-			university_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-			fullname VARCHAR(200) NOT NULL,
-			shortname VARCHAR(200) NOT NULL,
-			country VARCHAR(200) NOT NULL,
-			city VARCHAR(200) NOT NULL,
-			description VARCHAR(500) NOT NULL,
-			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			edit_at VARCHAR(200)
 		);
 	`);
 

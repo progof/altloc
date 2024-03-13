@@ -15,6 +15,10 @@ import ProfilePage from "@/pages/profile.vue";
 import SpacesPage from "@/pages/spaces.vue";
 import SpaceAdd from "@/pages/spaces/add.vue";
 import SpaceByIdPage from "@/pages/spaces/[id].vue";
+import PostByIdPage from "@/pages/posts/[id].vue";
+import PostAdd from "@/pages/posts/add.vue";
+import PostEditor from "@/pages/posts/editor.vue";
+import PostFeedPage from "@/pages/posts/feed.vue";
 import { User, getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -80,6 +84,22 @@ export const router = createRouter({
     {
       path: "/spaces/:id",
       component: SpaceByIdPage,
+    },
+    {
+      path: "/posts/:id",
+      component: PostByIdPage,
+    },
+    {
+      path: "/posts/add",
+      component: PostAdd,
+    },
+    {
+      path: "/posts/feed",
+      component: PostFeedPage,
+    },
+    {
+      path: "/posts/editor/:id",
+      component: PostEditor,
     },
   ],
   history: createWebHistory(),

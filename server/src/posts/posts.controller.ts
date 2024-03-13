@@ -31,16 +31,16 @@ export class PostsController {
       content: z.string(),
     });
   
-    const body = bodySchema.safeParse(req.body);
-    if (!body.success) {
+    const content = bodySchema.safeParse(req.body);
+    if (!content.success) {
       return res.status(400).send({
-        errors: body.error.issues,
+        errors: content.error.issues,
       });
     }
 
     try {
-      const note = await this.postsService.createPost(userId, body.data);
-      return res.status(201).send({ data: note });
+      const post = await this.postsService.createPost(userId, content.data);
+      return res.status(201).send({ data: post });
     } catch (error) {
       console.error(error);
       return res.status(500).send({
@@ -96,6 +96,7 @@ export class PostsController {
       const posts = await this.postsService.getPostsForUser(
         req.session.user.user_id,
       );
+      console.log("DEBUG getPosts()",posts);
       return res.status(200).send({
         data: posts,
       });

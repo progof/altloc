@@ -52,6 +52,10 @@ const toggleSidebar = () => {
         <AddNoteIcon class="icons" />
         Add note
       </RouterLink>
+      <RouterLink to="/posts/add" class="sidebar__item">
+        <AddNoteIcon class="icons" />
+        Add post
+      </RouterLink>
       <RouterLink to="#" class="sidebar__item">
         <MessageIcon class="icons" />
         Message
