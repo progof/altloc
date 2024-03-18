@@ -163,7 +163,7 @@ export class PostsController {
 
   async getPost(req: Request, res: Response) {
     const paramsSchema = z.object({
-      noteId: z.string(),
+      postId: z.string(),
     });
 
     const params = paramsSchema.safeParse(req.params);
@@ -172,9 +172,10 @@ export class PostsController {
         errors: params.error.issues,
       });
     }
-
+    console.log("getPost.postId", params.data.postId);
     try {
-      const post = await this.postsService.getPostById(params.data.noteId);
+      const post = await this.postsService.getPostById(params.data.postId);
+      console.log("getPost.post", post);
       return res.status(200).send({
         data: post,
       });

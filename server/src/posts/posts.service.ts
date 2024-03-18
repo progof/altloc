@@ -30,7 +30,7 @@ export class PostsService {
 
   async getAllPosts(){
     const result = await this.db.query<Post>(
-      `SELECT title, description, content users.username, posts.user_id, post_id, posts.created_at 
+      `SELECT title, content users.username, posts.user_id, post_id, posts.created_at 
       FROM posts JOIN users ON posts.user_id = users.user_id`,
     );
     return result.rows;
@@ -38,7 +38,7 @@ export class PostsService {
 
   async getPostById(postId: string) {
     const result = await this.db.query<Post>(
-      `SELECT title, description, content  users.username, post_id, posts.user_id, posts.created_at, posts.edit_at
+      `SELECT title, content,  users.username, post_id, posts.user_id, posts.created_at, posts.edit_at
       FROM posts JOIN users ON posts.user_id = users.user_id WHERE post_id = $1;`,
       [postId],
     );
