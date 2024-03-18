@@ -78,6 +78,10 @@ export type Space = {
 	edit_at: string;
   };
 
+  export type Spaces_users = {
+	space_id: string;
+	user_id: string;
+  };
 
 
 try {
@@ -125,18 +129,6 @@ try {
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 
-		CREATE TABLE IF NOT EXISTS notes (
-			note_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-			user_id uuid NOT NULL,
-			title VARCHAR(200) NOT NULL,
-			description VARCHAR(500) NOT NULL,
-			body VARCHAR(10000) NOT NULL,
-			category VARCHAR(200) NOT NULL,
-			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			edit_at VARCHAR(200),
-			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-		);
-
 		CREATE TABLE IF NOT EXISTS universities (
 			university_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			fullname VARCHAR(200) NOT NULL,
@@ -151,7 +143,7 @@ try {
 		CREATE TABLE IF NOT EXISTS spaces (
 			space_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
-			university_id uuid NOT NULL,
+			university_id uuid,
 			title VARCHAR(200) NOT NULL,
 			country VARCHAR(200) NOT NULL,
 			city VARCHAR(200) NOT NULL,
@@ -163,8 +155,30 @@ try {
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 			FOREIGN KEY (university_id) REFERENCES universities(university_id) ON DELETE CASCADE
 		);
-	`);
 
+		CREATE TABLE IF NOT EXISTS notes (
+			note_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			space_id uuid NOT NULL,
+			user_id uuid NOT NULL,
+			title VARCHAR(200) NOT NULL,
+			description VARCHAR(500) NOT NULL,
+			body VARCHAR(10000) NOT NULL,
+			category VARCHAR(200) NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			edit_at VARCHAR(200),
+			FOREIGN KEY (space_id) REFERENCES spaces(space_id) ON DELETE CASCADE,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
+
+		CREATE TABLE IF NOT EXISTS spaces_users (
+			space_id uuid NOT NULL,
+			user_id uuid NOT NULL,
+			FOREIGN KEY (space_id) REFERENCES spaces(space_id) ON DELETE CASCADE,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
+		
+	`);
+// changed table.space university_id
   console.log("Successfully connected to the database and created tables!");
 } catch (error) {
   console.error("Failed to connect to the database!", error);

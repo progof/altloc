@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { Space } from "../database";
+import { Space, Spaces_users } from "../database";
 
 export type CreateSpaceDTO = {
   title: string;
@@ -19,6 +19,14 @@ export class SpacesService {
       [userId, data.title, data.description, data.country, data.city, data.university, data.category],
     );
     return result.rows[0] as Space;
+  }
+
+  async followToSpace(spaceId: string, userId: string) {
+    const result = await this.db.query<Spaces_users>(
+      `INSERT INTO spaces_users (space_id, user_id) VALUES ($1, $2) RETURNING *;`,
+      [spaceId, userId],
+    );
+    return result.rows[0] as Spaces_users;
   }
 
 //   async getAllSpaces(){

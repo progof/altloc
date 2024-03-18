@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import { getSpaceQueryOptions } from "@/services/spaces.service";
+import { z } from "zod";
+import { ref } from "vue";
+import {
+  getSpaceQueryOptions,
+  useFollowToSpaceMutation,
+} from "@/services/spaces.service";
+import { getMeQueryOptions } from "@/services/auth.service";
 import SideBarNav from "@/components/SideBarNav.vue";
 
 import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
@@ -10,13 +16,109 @@ import NoteIcon from "@/assets/icons/NoteIcon.svg?component";
 import EventIcon from "@/assets/icons/EventIcon.svg?component";
 import FollowIcon from "@/assets/icons/FollowIcon.svg?component";
 
+const { data: me } = useQuery(getMeQueryOptions);
+const userId: string = me.value?.user_id || "";
+
 const route = useRoute();
 const spaceId: string = Array.isArray(route.params.id)
   ? route.params.id[0]
   : route.params.id;
 
-console.log("spaceId", spaceId);
+console.log("space_id", spaceId);
+console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
+
+const followToSpace = () => {
+  const { mutate, isPending, error } = useFollowToSpaceMutation();
+
+  // Другая логика вашего компонента
+
+  const rawData = {
+    space_id: spaceId,
+    // user_id: userId,
+  };
+
+  const validationSchema = z.object({
+    space_id: z.string().uuid(),
+    user_id: z.string().uuid(),
+  });
+
+  const validationErrors = ref<{
+    space_id?: string;
+    // user_id?: string;
+  }>({});
+
+  const result = validationSchema.safeParse(rawData);
+
+  if (!result.success) {
+    console.log("Validation failed:", result.error);
+    const error = result.error;
+    validationErrors.value.space_id = error.issues.find(
+      (issue) => issue.path[0] === "space_id"
+    )?.message;
+    // validationErrors.value.user_id = error.issues.find(
+    //   (issue) => issue.path[0] === "user_id"
+    // )?.message;
+    return;
+  }
+
+  validationErrors.value = {};
+
+  mutate(result.data, {
+    onError: (err) => {
+      console.error("Error following to space:", err);
+    },
+  });
+};
+
+// const SpaceFollow = () => {
+//   const validationSchema = z.object({
+//     space_id: z.string().uuid(),
+//     user_id: z.string().uuid(),
+//   });
+
+//   const validationErrors = ref<{
+//     space_id?: string;
+//     user_id?: string;
+//   }>({});
+
+//   console.log("space_id", spaceId);
+//   console.log("user_id", userId);
+//   const rawData = {
+//     space_id: spaceId,
+//     user_id: me.value?.user_id,
+//   };
+
+//   const result = validationSchema.safeParse(rawData);
+
+//   if (!result.success) {
+//     console.log("Validation failed:", result.error);
+//     const error = result.error;
+//     validationErrors.value.space_id = error.issues.find(
+//       (issue) => issue.path[0] === "space_id"
+//     )?.message;
+//     validationErrors.value.user_id = error.issues.find(
+//       (issue) => issue.path[0] === "user_id"
+//     )?.message;
+
+//     return;
+//   }
+//   validationErrors.value = {};
+
+//   const {
+//     mutate: followToSpace,
+//     isPending,
+//     error,
+//   } = useFollowToSpaceMutation();
+//   followToSpace(result.data, {
+//     onError: (err) => {
+//       console.error("Error following to space:", err);
+//     },
+//   });
+// };
+
+// Вызов функции
+// SpaceFollow();
 
 console.log("DEBUG", space.value?.title);
 
@@ -46,6 +148,10 @@ const formatCreatedAt = (createdAt: string) => {
           <div class="menu__item"><NoteIcon class="icons" />Notes</div>
           <div class="menu__item"><ChatIcon class="icons" />Chat</div>
           <div class="menu__item"><FollowIcon class="icons" />Follow</div>
+          <button class="sidebar__item" @click="followToSpace">
+            <FollowIcon class="icons" />
+            Follow
+          </button>
         </div>
         <!-- <div class="profile__notes" v-if="notes">
           <h2>All Notes</h2>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NoteForm from "@/components/NoteForm.vue";
+import NoteForm from "@/components/note/NoteForm.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 </script>
 

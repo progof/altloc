@@ -15,6 +15,8 @@ export class SpacesController {
     this.router.get("/all-spaces", this.getAllSpaces.bind(this));
     this.router.get("/spaces/:spaceId", this.getSpace.bind(this));
     this.router.delete("/spaces/:spacesId", this.deleteNote.bind(this));
+    // this.router.post("/follow/:spaceId/:userId", this.followToSpace.bind(this));
+    this.router.post("/follow", this.followToSpace.bind(this));
   }
 
   async createSpace(req: Request, res: Response) {
@@ -100,5 +102,90 @@ export class SpacesController {
       });
     }
   }
+
+  // async followToSpace(req: Request, res: Response) {
+  //   const paramsSchema = z.object({
+  //     spaceId: z.string().uuid(),
+  //     userId: z.string().uuid(),
+  //   });
+
+  //   if (!req.session.user) {
+  //     return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+  //   }
+
+  //   const params = paramsSchema.safeParse(req.params);
+  //   if (!params.success) {
+  //     return res.status(400).send({ errors: params.error.issues });
+  //   }
+
+  //   console.log('followToSpace.data', params.data.spaceId, params.data.userId )
+
+  //   try {
+  //     const follow = await this.spacesService.followToSpace('3c96528e-6471-49ec-a306-3d82ea57b306', '9134d980-95d6-45eb-84dd-c7e9ce16ede5');
+  //     return res.status(201).send({ data: follow });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(500).send({
+  //       errors: [{ message: "Internal Server Error" }],
+  //     });
+  //   }
+  // }
+
+// async followToSpace(req: Request, res: Response) {
+//   const paramsSchema = z.object({
+//     spaceId: z.string().uuid(),
+//     userId: z.string().uuid(),
+//   });
+
+//   if (!req.session.user) {
+//     return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+//   }
+
+//   const params = paramsSchema.safeParse(req.params);
+//   if (!params.success) {
+//     return res.status(400).send({ errors: params.error.issues });
+//   }
+
+//   console.log('followToSpace.data', params.data.spaceId, params.data.userId )
+
+//   try {
+//     const follow = await this.spacesService.followToSpace(params.data.spaceId, params.data.userId);
+//     return res.status(201).send({ data: follow });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).send({
+//       errors: [{ message: "Internal Server Error" }],
+//     });
+//   }
+// }
+
+async followToSpace(req: Request, res: Response) {
+  if (!req.session.user) {
+    return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+  }
+  const userId = req.session.user.user_id;
+  const bodySchema = z.object({
+    spaceId: z.string().uuid(),
+    // userId: z.string().uuid(),
+  });
+
+  const body = bodySchema.safeParse(req.body);
+  if (!body.success) {
+    return res.status(400).send({
+      errors: body.error.issues,
+    });
+  }
+  console.log('followToSpace.data', body.data.spaceId, userId )
+  try {
+    const follow = await this.spacesService.followToSpace(body.data.spaceId, userId);
+    return res.status(201).send({ data: follow });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      errors: [{ message: "Internal Server Error" }],
+    });
+  }
+}
+
 
 }

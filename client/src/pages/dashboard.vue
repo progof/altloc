@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
-import NoteList from "@/components/NoteList.vue";
+import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 // import Modal from "@/components/Modal.vue";

@@ -23,6 +23,11 @@ export type Space = {
   username: string;
 };
 
+export type Follow = {
+  space_id: string;
+  // user_id: string;
+};
+
 export const useCreateSpaceMutation = () => {
   const queryClient = useQueryClient();
 
@@ -110,3 +115,82 @@ export const getAllSpaces = async () => {
       queryKey: ["spaces", spaceId],
       queryFn: () => getSpace(spaceId),
     });
+
+
+
+    // export const useFollowToSpaceMutation = () => {
+    //   const queryClient = useQueryClient();
+    
+    //   return useMutation({
+    //     mutationFn: async (data: {
+    //       spaceId: string;
+    //       userId: string;
+    //     }) => {
+    //       const res = await fetch(`/api/follow/${data.spaceId}/${data.userId}`, {
+    //         method: "POST",
+    //         headers: {
+    //           Accept: "application/json",
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(data),
+    //       });
+    //       console.log("send id data: ",data)
+    //       if (!res.ok) {
+    //         const errorData = await res.json();
+    //         throw new Error(errorData.errors[0].message);
+    //       }
+    //       return res.json();
+    //     },
+    //     onSuccess: (res) => {
+    //       const spaceId = res.data.space_id; // Проверяем наличие space_id в ответе
+    //       if (spaceId) {
+    //         queryClient.invalidateQueries({
+    //           queryKey: ["follow"],
+    //           exact: true,
+    //           type: "active",
+    //         });
+    //         queryClient.setQueryData(
+    //           ["follow", spaceId],
+    //           res.data,
+    //         );
+    //       }
+    //     },
+    //   });
+    // };
+    
+    export const useFollowToSpaceMutation = () => {
+      const queryClient = useQueryClient();
+    
+      return useMutation({
+        mutationFn: async (data: {
+          space_id: string;
+          // user_id: string; 
+        }) => {
+          const res = await fetch("/api/follow", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) {
+            const errors = errorSchema.parse(await res.json()).errors;
+            throw new Error(errors.at(0)?.message);
+          }
+          return res.json() as Promise<{ data: Follow }>;
+        },
+        onSuccess: (res) => {
+          queryClient.invalidateQueries({
+            queryKey: ["follow"],
+            exact: true,
+            type: "active",
+          });
+          queryClient.setQueryData(
+            ["follow", res.data.space_id],
+            res.data,
+          );
+          return;
+        },
+      });
+    };
