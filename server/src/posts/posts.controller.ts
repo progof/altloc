@@ -27,7 +27,6 @@ export class PostsController {
     const userId = req.session.user.user_id;
     const bodySchema = z.object({
       title: z.string(),
-      description: z.string(),
       content: z.string(),
     });
   
@@ -37,6 +36,8 @@ export class PostsController {
         errors: content.error.issues,
       });
     }
+
+    console.log("Content data from user:", content.data);
 
     try {
       const post = await this.postsService.createPost(userId, content.data);

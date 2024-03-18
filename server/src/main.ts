@@ -46,6 +46,9 @@ export const spacesService = new SpacesService(pool);
 const spacesController = new SpacesController(spacesService);
 app.use(spacesController.router);
 
+
+
+
 app.listen(config.APP_PORT, () => {
   console.log(`Server running on port ${config.APP_PORT}`);
 });

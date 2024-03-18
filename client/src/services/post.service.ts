@@ -27,6 +27,7 @@ export const useCreatePostMutation = () => {
       title: string;
       content: string;
     }) => {
+      console.log("useCreatePostMutation.data()", data.content, data.title)
       const res = await fetch("/api/posts", {
         method: "POST",
         headers: {

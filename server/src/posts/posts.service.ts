@@ -3,7 +3,6 @@ import { Post } from "../database";
 
 export type CreatePostDTO = {
   title: string;
-  description: string;
   content: string;
 };
 
@@ -49,16 +48,16 @@ export class PostsService {
   async updatePost(postId: string, userId: string, data: CreatePostDTO) {
     const nowDate = new Date().toISOString();
     const result = await this.db.query<Post>(
-      `UPDATE posts SET title = $3, description = $4, content = $5 edit_at = $6 WHERE note_id = $1 AND user_id = $2 RETURNING *;`,
-      [postId, userId, data.title, data.description, data.content, nowDate],
+      `UPDATE posts SET title = $3, content = $5 edit_at = $6 WHERE post_id = $1 AND user_id = $2 RETURNING *;`,
+      [postId, userId, data.title,  data.content, nowDate],
     );
     return result.rows[0] as Post;
   }
 
   async createPost(userId: string, data: CreatePostDTO) {
     const result = await this.db.query<Post>(
-      `INSERT INTO posts (user_id, title, description, content) VALUES ($1, $2, $3 ) RETURNING *;`,
-      [userId, data.title, data.description, data.content ],
+      `INSERT INTO posts (user_id, title, content) VALUES ($1, $2, $3 ) RETURNING *;`,
+      [userId, data.title, data.content ],
     );
     return result.rows[0] as Post;
   }
