@@ -48,7 +48,7 @@ export class PostsService {
   async updatePost(postId: string, userId: string, data: CreatePostDTO) {
     const nowDate = new Date().toISOString();
     const result = await this.db.query<Post>(
-      `UPDATE posts SET title = $3, content = $5 edit_at = $6 WHERE post_id = $1 AND user_id = $2 RETURNING *;`,
+      `UPDATE posts SET title = $3, content = $4, edit_at = $5 WHERE post_id = $1 AND user_id = $2 RETURNING *;`,
       [postId, userId, data.title,  data.content, nowDate],
     );
     return result.rows[0] as Post;

@@ -16,6 +16,12 @@ const {
   error: deleteError,
 } = useDeletePostMutation();
 
+function htmlToFormattedText2(html: string) {
+  let tempElement = document.createElement("div");
+  tempElement.innerHTML = html;
+
+  return tempElement.innerHTML;
+}
 //   const md = new MarkdownIt();
 
 // const convertToHtml = (markdown: string) => {
@@ -64,7 +70,10 @@ const handleDeleteNote = async (postId: string) => {
     <ul v-if="posts.length > 0">
       <li v-for="post in posts" :key="post.post_id">
         <h3>Title: {{ post.title }}</h3>
-        <p>Content: {{ post.content }}</p>
+        <p>
+          Content: <span v-html="htmlToFormattedText2(post.content)"></span>
+        </p>
+
         <p style="color: rgb(91, 92, 93)">
           Created at: {{ formatCreatedAt(post.created_at) }}
         </p>

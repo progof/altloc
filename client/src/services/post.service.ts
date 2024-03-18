@@ -89,7 +89,7 @@ export const useUpdatePostMutation = () => {
         type: "active",
       });
       queryClient.setQueryData(
-        ["notes", res.data.post_id],
+        ["posts", res.data.post_id],
         res.data,
       );
       return;

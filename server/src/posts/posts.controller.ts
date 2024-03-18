@@ -66,7 +66,6 @@ export class PostsController {
     }
     const bodySchema = z.object({
       title: z.string(),
-      description: z.string(),
       content: z.string(),
     });
 
@@ -77,9 +76,11 @@ export class PostsController {
       });
     }
 
+    console.log("Data from client:", body)
+
     try {
-      const note = await this.postsService.updatePost(params.data.postId, params.data.userId, body.data);
-      return res.status(201).send({ data: note });
+      const post = await this.postsService.updatePost(params.data.postId, params.data.userId, body.data);
+      return res.status(201).send({ data: post });
     } catch (error) {
       console.error(error);
       return res.status(500).send({

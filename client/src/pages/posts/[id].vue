@@ -30,11 +30,9 @@ function htmlToFormattedText2(html: string) {
       <div v-if="post" class="post">
         <div class="note-header">
           <h3>Title: {{ post.title }}</h3>
-          <hr />
         </div>
 
         <div class="post-info">
-
           <div class="post-content">
             <hr />
             <p>
