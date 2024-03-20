@@ -28,11 +28,9 @@ console.log("space_id", spaceId);
 console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 
-const followToSpace = () => {
-  const { mutate, isPending, error } = useFollowToSpaceMutation();
+const { mutate, isPending, error } = useFollowToSpaceMutation();
 
-  // Другая логика вашего компонента
-
+const followToSpace = async (event: Event) => {
   const rawData = {
     space_id: spaceId,
     // user_id: userId,
@@ -40,7 +38,7 @@ const followToSpace = () => {
 
   const validationSchema = z.object({
     space_id: z.string().uuid(),
-    user_id: z.string().uuid(),
+    // user_id: z.string().uuid(),
   });
 
   const validationErrors = ref<{

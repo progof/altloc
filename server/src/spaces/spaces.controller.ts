@@ -165,7 +165,7 @@ async followToSpace(req: Request, res: Response) {
   }
   const userId = req.session.user.user_id;
   const bodySchema = z.object({
-    spaceId: z.string().uuid(),
+    space_id: z.string().uuid(),
     // userId: z.string().uuid(),
   });
 
@@ -175,9 +175,9 @@ async followToSpace(req: Request, res: Response) {
       errors: body.error.issues,
     });
   }
-  console.log('followToSpace.data', body.data.spaceId, userId )
+  console.log('followToSpace.data', body.data.space_id, userId )
   try {
-    const follow = await this.spacesService.followToSpace(body.data.spaceId, userId);
+    const follow = await this.spacesService.followToSpace(body.data.space_id, userId);
     return res.status(201).send({ data: follow });
   } catch (error) {
     console.error(error);
