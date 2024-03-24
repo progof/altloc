@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { Space, Spaces_users } from "../database";
+import { Space, SpaceMembers } from "../database";
 
 export type CreateSpaceDTO = {
   title: string;
@@ -19,14 +19,6 @@ export class SpacesService {
       [userId, data.title, data.description, data.country, data.city, data.university, data.category],
     );
     return result.rows[0] as Space;
-  }
-
-  async followToSpace(spaceId: string, userId: string) {
-    const result = await this.db.query<Spaces_users>(
-      `INSERT INTO spaces_users (space_id, user_id) VALUES ($1, $2) RETURNING *;`,
-      [spaceId, userId],
-    );
-    return result.rows[0] as Spaces_users;
   }
 
 //   async getAllSpaces(){
@@ -57,12 +49,41 @@ async getAllSpaces(){
   }
 
 
-  // async getNoteById(noteId: string) {
-  //   const result = await this.db.query<Note>(
-  //     `SELECT title, description, body, category, users.username, note_id, notes.user_id, notes.created_at, notes.edit_at
-  //     FROM notes JOIN users ON notes.user_id = users.user_id WHERE note_id = $1;`,
-  //     [noteId],
-  //   );
-  //   return result.rows.at(0) || null;
-  // }
+  async getSpaceMembersById(spaceId: string) {
+    const result = await this.db.query<Space>(
+      `SELECT u.username
+      FROM spaces_users AS sp
+      JOIN users AS u ON sp.user_id = u.user_id
+      WHERE sp.space_id = $1`,
+      [spaceId],
+    );
+    return result.rows.at(0) || null;
+  }
+
+
+  async followToSpace(spaceId: string, userId: string) {
+    const result = await this.db.query<SpaceMembers>(
+      `INSERT INTO spaces_members (space_id, user_id) VALUES ($1, $2) RETURNING *;`,
+      [spaceId, userId],
+    );
+    return result.rows[0] as SpaceMembers;
+  }
+
+  async UnFollowToSpace(spaceId: string, userId: string) {
+    const result = await this.db.query<SpaceMembers>(
+      `DELETE FROM spaces_members WHERE space_id = $1 AND user_id = $2;`,
+      [spaceId, userId],
+    );
+    return result.rows[0] as SpaceMembers;
+  }
+
+  async isUserFollowingSpace(spaceId: string, userId: string) {
+    const result = await this.db.query<{ count: number }>(
+      `SELECT COUNT(*) FROM spaces_members WHERE space_id = $1 AND user_id = $2;`,
+      [spaceId, userId],
+    );
+    return result.rows.at(0) || null;
+  }
+
+
 }

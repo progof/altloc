@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
+import { z } from "zod";
 import { ref } from "vue";
 import {
   getSpaceQueryOptions,
   useFollowToSpaceMutation,
-  useUnFollowToSpaceMutation,
 } from "@/services/spaces.service";
 import { getMeQueryOptions } from "@/services/auth.service";
+import { getSpaceMembersQueryOptions } from "@/services/spaces.service.ts";
 import SideBarNav from "@/components/SideBarNav.vue";
 
 import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
@@ -28,37 +29,47 @@ console.log("space_id", spaceId);
 console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 
-const { mutate: following } = useFollowToSpaceMutation();
-const { mutate: unfollowing } = useUnFollowToSpaceMutation();
+const { data: members } = useQuery(getSpaceMembersQueryOptions(spaceId));
 
-// const isFollowing = ref(false); // Default state
+const { mutate, isPending, error } = useFollowToSpaceMutation();
 
 const followToSpace = async (event: Event) => {
-  const rex = await following({ space_id: spaceId });
-  console.log("unf", rex);
+  const rawData = {
+    space_id: spaceId,
+    // user_id: userId,
+  };
 
-  following(
-    { space_id: spaceId },
-    {
-      onError: (err) => {
-        console.error("Error following to space:", err);
-      },
-    }
-  );
-};
+  const validationSchema = z.object({
+    space_id: z.string().uuid(),
+    // user_id: z.string().uuid(),
+  });
 
-const unfollowToSpace = async (event: Event) => {
-  unfollowing(
-    { space_id: spaceId },
-    {
-      onError: (err) => {
-        console.error("Error unfollowing to space:", err);
-      },
-      onSuccess: () => {
-        console.log();
-      },
-    }
-  );
+  const validationErrors = ref<{
+    space_id?: string;
+    // user_id?: string;
+  }>({});
+
+  const result = validationSchema.safeParse(rawData);
+
+  if (!result.success) {
+    console.log("Validation failed:", result.error);
+    const error = result.error;
+    validationErrors.value.space_id = error.issues.find(
+      (issue) => issue.path[0] === "space_id"
+    )?.message;
+    // validationErrors.value.user_id = error.issues.find(
+    //   (issue) => issue.path[0] === "user_id"
+    // )?.message;
+    return;
+  }
+
+  validationErrors.value = {};
+
+  mutate(result.data, {
+    onError: (err) => {
+      console.error("Error following to space:", err);
+    },
+  });
 };
 
 console.log("DEBUG", space.value?.title);
@@ -84,45 +95,19 @@ const formatCreatedAt = (createdAt: string) => {
           <span>Description: {{ space?.description }}</span>
         </div>
         <div class="space__menu">
-          <RouterLink to="/space/members/${note.note_id}" class="menu__item">
-            <MemberIcon class="icons" />
-            Members
-          </RouterLink>
-          <MyButton
-            class="menu__item"
-            @click="$router.push(`/spaces/members/${space?.space_id}`)"
-          >
-            <MemberIcon class="icons" />
-            Members
-          </MyButton>
+          <div class="menu__item"><MemberIcon class="icons" /> Members</div>
           <div class="menu__item"><EventIcon class="icons" />Events</div>
           <div class="menu__item"><NoteIcon class="icons" />Notes</div>
           <div class="menu__item"><ChatIcon class="icons" />Chat</div>
-          <button class="menu__item" @click="unfollowToSpace">
-            <FollowIcon class="icons" />
-            Unfollow
-          </button>
-          <button class="sidebar__item" @click="followToSpace">
+          <button class="menu__item" @click="followToSpace">
             <FollowIcon class="icons" />
             Follow
           </button>
         </div>
-        <!-- <div class="profile__notes" v-if="notes">
-          <h2>All Notes</h2>
-          <ul v-if="notes.length > 0">
-            <li v-for="note in notes" :key="note.note_id">
-              <h3>Title: {{ note.title }}</h3>
-              <p>Category: {{ note.category }}</p>
-              <p>Description: {{ note.description }}</p>
-              <p>Author: {{ note.username }}</p>
-              <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
-              <MyButton @click="$router.push(`/notes/${note.note_id}`)">
-                Full note
-              </MyButton>
-            </li>
-          </ul>
-        </div> -->
       </div>
+    </div>
+    <div class="dashboard" v-for="member in members" :key="member.username">
+      <h3>Title: {{ member.username }}</h3>
     </div>
   </div>
 </template>

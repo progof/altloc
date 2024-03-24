@@ -25,7 +25,7 @@ export type Space = {
 
 export type Follow = {
   space_id: string;
-  // user_id: string;
+  follow: true | false
 };
 
 export const useCreateSpaceMutation = () => {
@@ -164,9 +164,8 @@ export const getAllSpaces = async () => {
       return useMutation({
         mutationFn: async (data: {
           space_id: string;
-          // user_id: string; 
         }) => {
-          const res = await fetch("/api/follow", {
+          const res = await fetch("/api/spaces/follow", {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -182,15 +181,100 @@ export const getAllSpaces = async () => {
         },
         onSuccess: (res) => {
           queryClient.invalidateQueries({
-            queryKey: ["follow"],
+            queryKey: ["/spaces/follow"],
             exact: true,
             type: "active",
           });
           queryClient.setQueryData(
-            ["follow", res.data.space_id],
+            ["/spaces/follow", res.data.space_id],
             res.data,
           );
           return;
         },
       });
     };
+
+
+    export const useUnFollowToSpaceMutation = () => {
+      const queryClient = useQueryClient();
+    
+      return useMutation({
+        mutationFn: async (data: {
+          space_id: string;
+        }) => {
+          const res = await fetch("/api/spaces/unfollow", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          if (!res.ok) {
+            const errors = errorSchema.parse(await res.json()).errors;
+            throw new Error(errors.at(0)?.message);
+          }
+          return res.json() as Promise<{ data: Follow }>;
+        },
+        onSuccess: (res) => {
+          queryClient.invalidateQueries({
+            queryKey: ["/spaces/unfollow"],
+            exact: true,
+            type: "active",
+          });
+          queryClient.setQueryData(
+            ["/spaces/unfollow", res.data.space_id],
+            res.data,
+          );
+          return;
+        },
+      });
+    };
+
+    const getSpaceMembers = async (spaceId: string) => {
+      const res = await fetch(`/api/spaces/members/${spaceId}`, {
+        headers: {
+          Accept: "application/json",
+        },
+      });
+    
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+    
+      const responseData = await res.json();
+      console.log("getSpaceMembers data: ", responseData);
+      return responseData.data as Space;
+    };
+    
+    export const getSpaceMembersQueryOptions = (spaceId: string) =>
+      queryOptions({
+        queryKey: ["spaces", spaceId],
+        queryFn: () => getSpaceMembers(spaceId),
+      });
+
+
+
+      const getCheckFollowing = async (spaceId: string) => {
+        const res = await fetch(`/api/spaces/check-following/${spaceId}`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+      
+        if (!res.ok) {
+          const errors = errorSchema.parse(await res.json()).errors;
+          throw new Error(errors.at(0)?.message);
+        }
+      
+        const responseData = await res.json();
+        console.log("getCheckFollowing data: ", responseData);
+        return responseData.data as Follow;
+      };
+      
+      export const getCheckFollowingQueryOptions = (spaceId: string) =>
+        queryOptions({
+          queryKey: ["spaces", spaceId],
+          queryFn: () => getCheckFollowing(spaceId),
+        });

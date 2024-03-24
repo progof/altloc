@@ -15,6 +15,7 @@ import ProfilePage from "@/pages/profile.vue";
 import SpacesPage from "@/pages/spaces.vue";
 import SpaceAdd from "@/pages/spaces/add.vue";
 import SpaceByIdPage from "@/pages/spaces/[id].vue";
+import SpaceMember from "@/pages/spaces/members.vue";
 import PostByIdPage from "@/pages/posts/[id].vue";
 import PostAdd from "@/pages/posts/add.vue";
 import PostEditor from "@/pages/posts/editor.vue";
@@ -80,6 +81,10 @@ export const router = createRouter({
     {
       path: "/spaces/add",
       component: SpaceAdd,
+    },
+    {
+      path: "/spaces/members/:id",
+      component: SpaceMember,
     },
     {
       path: "/spaces/:id",

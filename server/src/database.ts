@@ -67,7 +67,8 @@ export type Note = {
 export type Space = {
 	space_id: string;
 	university_id: string;
-	user_id: string;
+	owner: string;
+	members: string;
 	title: string;
 	country: string; 
 	city: string;
@@ -78,7 +79,8 @@ export type Space = {
 	edit_at: string;
   };
 
-  export type Spaces_users = {
+  export type SpaceMembers = {
+	member_id: string;
 	space_id: string;
 	user_id: string;
   };
@@ -170,13 +172,14 @@ try {
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 
-		CREATE TABLE IF NOT EXISTS spaces_users (
-			space_id uuid NOT NULL,
+		CREATE TABLE IF NOT EXISTS spaces_members (
+			member_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			user_id uuid NOT NULL,
-			FOREIGN KEY (space_id) REFERENCES spaces(space_id) ON DELETE CASCADE,
-			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+			space_id uuid NOT NULL,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+			FOREIGN KEY (space_id) REFERENCES spaces(space_id) ON DELETE CASCADE
 		);
-		
+
 	`);
 // changed table.space university_id
   console.log("Successfully connected to the database and created tables!");
