@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import { z } from "zod";
-import { ref } from "vue";
 import {
   getSpaceQueryOptions,
   useFollowToSpaceMutation,
+  useUnFollowToSpaceMutation,
+  getSpaceMembersQueryOptions,
 } from "@/services/spaces.service";
 import { getMeQueryOptions } from "@/services/auth.service";
-import { getSpaceMembersQueryOptions } from "@/services/spaces.service.ts";
 import SideBarNav from "@/components/SideBarNav.vue";
 
 import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
@@ -18,7 +17,6 @@ import EventIcon from "@/assets/icons/EventIcon.svg?component";
 import FollowIcon from "@/assets/icons/FollowIcon.svg?component";
 
 const { data: me } = useQuery(getMeQueryOptions);
-const userId: string = me.value?.user_id || "";
 
 const route = useRoute();
 const spaceId: string = Array.isArray(route.params.id)
@@ -28,48 +26,41 @@ const spaceId: string = Array.isArray(route.params.id)
 console.log("space_id", spaceId);
 console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
-
 const { data: members } = useQuery(getSpaceMembersQueryOptions(spaceId));
 
-const { mutate, isPending, error } = useFollowToSpaceMutation();
+console.log("Received members data:", members.value?.username);
+
+const { mutate: following } = useFollowToSpaceMutation();
+const { mutate: unfollowing } = useUnFollowToSpaceMutation();
+
+// const isFollowing = ref(false); // Default state
 
 const followToSpace = async (event: Event) => {
-  const rawData = {
-    space_id: spaceId,
-    // user_id: userId,
-  };
+  const rex = await following({ space_id: spaceId });
+  console.log("unf", rex);
 
-  const validationSchema = z.object({
-    space_id: z.string().uuid(),
-    // user_id: z.string().uuid(),
-  });
+  following(
+    { space_id: spaceId },
+    {
+      onError: (err) => {
+        console.error("Error following to space:", err);
+      },
+    }
+  );
+};
 
-  const validationErrors = ref<{
-    space_id?: string;
-    // user_id?: string;
-  }>({});
-
-  const result = validationSchema.safeParse(rawData);
-
-  if (!result.success) {
-    console.log("Validation failed:", result.error);
-    const error = result.error;
-    validationErrors.value.space_id = error.issues.find(
-      (issue) => issue.path[0] === "space_id"
-    )?.message;
-    // validationErrors.value.user_id = error.issues.find(
-    //   (issue) => issue.path[0] === "user_id"
-    // )?.message;
-    return;
-  }
-
-  validationErrors.value = {};
-
-  mutate(result.data, {
-    onError: (err) => {
-      console.error("Error following to space:", err);
-    },
-  });
+const unfollowToSpace = async (event: Event) => {
+  unfollowing(
+    { space_id: spaceId },
+    {
+      onError: (err) => {
+        console.error("Error unfollowing to space:", err);
+      },
+      onSuccess: () => {
+        console.log();
+      },
+    }
+  );
 };
 
 console.log("DEBUG", space.value?.title);
@@ -104,10 +95,18 @@ const formatCreatedAt = (createdAt: string) => {
             Follow
           </button>
         </div>
+        <div class="dashboard">
+          <h3>Members:</h3>
+          <div v-if="members && members.length > 0">
+            <div v-for="member in members" :key="member.username">
+              <p>{{ member.username }}</p>
+            </div>
+          </div>
+          <div v-else>
+            <p>No members found</p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="dashboard" v-for="member in members" :key="member.username">
-      <h3>Title: {{ member.username }}</h3>
     </div>
   </div>
 </template>

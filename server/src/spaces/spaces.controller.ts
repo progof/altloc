@@ -19,7 +19,7 @@ export class SpacesController {
     this.router.post("/spaces/follow", this.followToSpace.bind(this));
     this.router.post("/spaces/unfollow", this.UnfollowToSpace.bind(this));
     this.router.get("/spaces/check-following/:spaceId", this.checkFollowingToSpace.bind(this));
-    this.router.get("/spaces/members/:spaceId", this.getSpace.bind(this));
+    this.router.get("/spaces/members/:spaceId", this.getSpaceMembers.bind(this));
   }
 
   async createSpace(req: Request, res: Response) {

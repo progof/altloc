@@ -84,10 +84,6 @@ const formatCreatedAt = (createdAt: string) => {
           <span>Description: {{ space?.description }}</span>
         </div>
         <div class="space__menu">
-          <RouterLink to="/space/members/${note.note_id}" class="menu__item">
-            <MemberIcon class="icons" />
-            Members
-          </RouterLink>
           <MyButton
             class="menu__item"
             @click="$router.push(`/spaces/members/${space?.space_id}`)"

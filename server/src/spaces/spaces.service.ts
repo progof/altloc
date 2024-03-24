@@ -52,12 +52,12 @@ async getAllSpaces(){
   async getSpaceMembersById(spaceId: string) {
     const result = await this.db.query<Space>(
       `SELECT u.username
-      FROM spaces_users AS sp
+      FROM spaces_members AS sp
       JOIN users AS u ON sp.user_id = u.user_id
       WHERE sp.space_id = $1`,
       [spaceId],
     );
-    return result.rows.at(0) || null;
+    return result.rows;
   }
 
 

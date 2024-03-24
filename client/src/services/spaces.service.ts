@@ -28,6 +28,13 @@ export type Follow = {
   follow: true | false
 };
 
+
+export type SpaceMembers = {
+  space_id: string;
+  user_id: string;
+  username: string;
+};
+
 export const useCreateSpaceMutation = () => {
   const queryClient = useQueryClient();
 
@@ -245,12 +252,12 @@ export const getAllSpaces = async () => {
     
       const responseData = await res.json();
       console.log("getSpaceMembers data: ", responseData);
-      return responseData.data as Space;
+      return responseData.data as SpaceMembers;
     };
     
     export const getSpaceMembersQueryOptions = (spaceId: string) =>
       queryOptions({
-        queryKey: ["spaces", spaceId],
+        queryKey: ["spaces/members", spaceId],
         queryFn: () => getSpaceMembers(spaceId),
       });
 
