@@ -104,7 +104,7 @@ span {
 .content-box {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 @media only screen and (max-width: 600px) {

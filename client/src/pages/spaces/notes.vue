@@ -2,15 +2,15 @@
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import { getSpaceQueryOptions } from "@/services/spaces.service";
-
 import { getNotesForSpaceQueryOptions } from "@/services/app.service";
-
 import { getMeQueryOptions } from "@/services/auth.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
 import SapceDashboard from "@/components/space/SapceDashboard.vue";
 import AddNoteIcon from "@/assets/icons/AddNoteIcon.svg?component";
+import MyButton from "@/components/UI/MyButton.vue";
+// import SearchNote from "@/components/note/SearchNote.vue";
 
 const { data: me } = useQuery(getMeQueryOptions);
 
@@ -48,21 +48,22 @@ const formatCreatedAt = (createdAt: string) => {
             <AddNoteIcon class="icons" />
             Add note
           </MyButton>
-          <div class="profile__notes" v-if="notes">
+          <!-- <SearchNote /> -->
+          <!-- <div class="profile__notes">
             <h2>All Notes</h2>
-            <ul v-if="notes.length > 0">
-              <li v-for="note in notes" :key="note.note_id">
-                <h3>Title: {{ note.title }}</h3>
-                <p>Category: {{ note.category }}</p>
-                <p>Description: {{ note.description }}</p>
-                <p>Author: {{ note.username }}</p>
-                <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
-                <MyButton @click="$router.push(`/notes/${note.note_id}`)">
+            <ul>
+              <li>
+                <h3>Title: {{ notes?.title }}</h3>
+                <p>Category: {{ notes?.category }}</p>
+                <p>Description: {{ notes?.description }}</p>
+                <p>Author: {{ notes?.username }}</p>
+                <p>Created at: {{ formatCreatedAt(notes?.created_at) }}</p>
+                <MyButton @click="$router.push(`/notes/${notes?.note_id}`)">
                   Full note
                 </MyButton>
               </li>
             </ul>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

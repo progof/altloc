@@ -55,7 +55,8 @@ const formatCreatedAt = (createdAt: string) => {
   max-width: 800px;
   margin: 0 auto;
   padding: 40px;
-  background-color: rgb(15, 14, 14);
+  /* background-color: rgb(15, 14, 14); */
+  background-color: rgba(15, 14, 14, 0.9);
   color: azure;
   height: 100vh;
   overflow: scroll;
@@ -91,6 +92,7 @@ const formatCreatedAt = (createdAt: string) => {
   height: 195px;
   text-align: center;
   background: url(../assets/space_default.jpeg) no-repeat center;
+  /* background-color: rgba(0, 0, 0, 0.9); */
   border-radius: 60px;
   border: 1px solid rgb(55, 146, 225);
 }

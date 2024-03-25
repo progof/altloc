@@ -9,9 +9,10 @@ import {
 
 import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
 import MemberIcon from "@/assets/icons/MemberIcon.svg?component";
-import NoteIcon from "@/assets/icons/NoteIcon.svg?component";
+import AddNoteIcon from "@/assets/icons/AddNoteIcon.svg?component";
 import EventIcon from "@/assets/icons/EventIcon.svg?component";
 import FollowIcon from "@/assets/icons/FollowIcon.svg?component";
+import MyButton from "@/components/UI/MyButton.vue";
 
 const route = useRoute();
 const spaceId: string = Array.isArray(route.params.id)
@@ -72,17 +73,17 @@ const formatCreatedAt = (createdAt: string) => {
     <div class="menu__item"><EventIcon class="icons" />Events</div>
     <MyButton
       class="menu__item"
-      @click="$router.push(`/spaces/notes/${space?.space_id}`)"
+      @click="$router.push(`/spaces/notes/add/${space?.space_id}`)"
     >
-      <NoteIcon class="icons" />
-      Notes
+      <AddNoteIcon class="icons" />
+      Add note
     </MyButton>
     <div class="menu__item"><ChatIcon class="icons" />Chat</div>
     <button class="menu__item" @click="unfollowToSpace">
       <FollowIcon class="icons" />
       Unfollow
     </button>
-    <button class="sidebar__item" @click="followToSpace">
+    <button class="menu__item" @click="followToSpace">
       <FollowIcon class="icons" />
       Follow
     </button>
