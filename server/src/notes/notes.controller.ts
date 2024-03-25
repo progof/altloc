@@ -16,6 +16,7 @@ export class NotesController {
     this.router.get("/all-notes", this.getAllNotes.bind(this));
     this.router.get("/count-notes/:userId", this.getCountNotes.bind(this));
     this.router.get("/user-notes/:userId", this.getNotesForUserId.bind(this));
+    this.router.get("/space-notes/:spaceId", this.getNotesForSpaceId.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));
     this.router.delete("/notes/:noteId", this.deleteNote.bind(this));
   }
@@ -26,6 +27,7 @@ export class NotesController {
     }
     const userId = req.session.user.user_id;
     const bodySchema = z.object({
+      spaceId: z.string(),
       title: z.string(),
       description: z.string(),
       body: z.string(),
@@ -39,8 +41,10 @@ export class NotesController {
       });
     }
 
+    console.log("createNote -> spaceID", body.data.spaceId)
+
     try {
-      const note = await this.notesService.createNote(userId, body.data);
+      const note = await this.notesService.createNote(userId, body.data.spaceId, body.data);
       return res.status(201).send({ data: note });
     } catch (error) {
       console.error(error);
@@ -150,6 +154,33 @@ export class NotesController {
     try {
       const note = await this.notesService.getNotesForUser(params.data.userId);
       console.log("DEBUG (getNotesForUserId->note):", note);
+      return res.status(200).send({
+        data: note,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async getNotesForSpaceId(req: Request, res: Response) {
+
+    const paramsSchema = z.object({
+      spaceId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    try {
+      const note = await this.notesService.getNotesForSpace(params.data.spaceId);
+      console.log("DEBUG (getNotesForSpaceId->note):", note);
       return res.status(200).send({
         data: note,
       });

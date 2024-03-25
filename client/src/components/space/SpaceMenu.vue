@@ -70,7 +70,13 @@ const formatCreatedAt = (createdAt: string) => {
       Members
     </MyButton>
     <div class="menu__item"><EventIcon class="icons" />Events</div>
-    <div class="menu__item"><NoteIcon class="icons" />Notes</div>
+    <MyButton
+      class="menu__item"
+      @click="$router.push(`/spaces/notes/${space?.space_id}`)"
+    >
+      <NoteIcon class="icons" />
+      Notes
+    </MyButton>
     <div class="menu__item"><ChatIcon class="icons" />Chat</div>
     <button class="menu__item" @click="unfollowToSpace">
       <FollowIcon class="icons" />

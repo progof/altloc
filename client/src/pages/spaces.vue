@@ -20,7 +20,7 @@ const formatCreatedAt = (createdAt: string) => {
         <div class="item add-space">
           <RouterLink to="/spaces/add" style="color: aliceblue">
             <AddSpaceIcon class="icons" />
-            Add note
+            Add Space
           </RouterLink>
         </div>
         <div

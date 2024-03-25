@@ -2,7 +2,6 @@
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import { getNoteQueryOptions } from "@/services/app.service";
-import { getMeQueryOptions } from "@/services/auth.service";
 import SideBarNav from "@/components/SideBarNav.vue";
 
 const route = useRoute();

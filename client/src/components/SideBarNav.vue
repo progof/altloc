@@ -48,10 +48,6 @@ const toggleSidebar = () => {
         <FeedIcon class="icons" />
         Feed
       </RouterLink>
-      <RouterLink to="/notes/add" class="sidebar__item">
-        <AddNoteIcon class="icons" />
-        Add note
-      </RouterLink>
       <RouterLink to="/posts/add" class="sidebar__item">
         <AddNoteIcon class="icons" />
         Add post

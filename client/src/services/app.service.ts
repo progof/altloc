@@ -11,6 +11,7 @@ const errorSchema = z.object({
 
 export type Note = {
   note_id: string;
+  space_id: string;
   user_id: string;
   title: string;
   description: string;
@@ -26,6 +27,7 @@ export const useCreateNoteMutation = () => {
 
   return useMutation({
     mutationFn: async (data: {
+      spaceId: string;
       title: string;
       description: string;
       body: string;
@@ -243,6 +245,28 @@ export const getNotesForUserQueryOptions = (userId: string) =>
   queryOptions({
     queryKey: ["user-notes", userId],
     queryFn: () => getNotesForUser(userId),
+  });
+// ---------- //
+const getNotesForSpace = async (spaceId: string) => {
+  const res = await fetch(`/api/space-notes/${spaceId}`, {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errors = errorSchema.parse(await res.json()).errors;
+    throw new Error(errors.at(0)?.message);
+  }
+
+  const responseData = await res.json();
+  return responseData.data as Note;
+};
+
+export const getNotesForSpaceQueryOptions = (spaceId: string) =>
+  queryOptions({
+    queryKey: ["space-notes", spaceId],
+    queryFn: () => getNotesForSpace(spaceId),
   });
 
 // ---------- //

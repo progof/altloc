@@ -23,6 +23,14 @@ export class NotesService {
     return result.rows;
   }
 
+  async getNotesForSpace(spaceId: string) {
+    const result = await this.db.query<Note>(
+      `SELECT * from notes WHERE space_id = $1;`,
+      [spaceId],
+    );
+    return result.rows;
+  }
+
 
   async getCountNotesByUserId(userId: string): Promise<number> {
     const result = await this.db.query<{ countnote: number }>(
@@ -77,11 +85,12 @@ export class NotesService {
     return result.rows[0] as Note;
   }
 
-  async createNote(userId: string, data: CreateNoteDTO) {
+  async createNote(userId: string, spaceId: string, data: CreateNoteDTO) {
     const result = await this.db.query<Note>(
-      `INSERT INTO notes (user_id, title, description, body, category) VALUES ($1, $2, $3, $4, $5) RETURNING *;`,
-      [userId, data.title, data.description, data.body, data.category],
+      `INSERT INTO notes (user_id, space_id, title, description, body, category) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`,
+      [userId, spaceId, data.title, data.description, data.body, data.category],
     );
+    console.log("createNote spaceID", spaceId);
     return result.rows[0] as Note;
   }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { z } from "zod";
+import { useRoute } from "vue-router";
 import { useCreateNoteMutation } from "@/services/app.service";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { useQuery } from "@tanstack/vue-query";
@@ -9,20 +10,12 @@ import { QuillEditor } from "@vueup/vue-quill";
 import "quill/dist/quill.snow.css";
 import { marked } from "marked";
 import { useRouter } from "vue-router";
-// import MarkdownIt from 'markdown-it';
 const $router = useRouter();
 const { data: me } = useQuery(getMeQueryOptions);
-// const md = new MarkdownIt();
-// const renderMarkdown = (text: string) => {
-//     return md.render(text);
-// };
 
 const convertToMarkdown = (html: string) => {
   return marked(html);
 };
-
-// const result2 = md.render('# markdown-it rulezz!');
-// console.log('result2', result2);
 
 const quillOptions = ref({
   modules: {
@@ -71,6 +64,9 @@ const quillOptions = ref({
 const noteBodyContent = ref<string>("");
 
 const validationSchema = z.object({
+  spaceId: z.string().refine((value) => value.trim() !== "", {
+    message: "Space ID is required",
+  }),
   title: z.string().refine((value) => value.trim() !== "", {
     message: "Title is required",
   }),
@@ -94,11 +90,18 @@ const validationSchema = z.object({
 });
 
 const validationErrors = ref<{
+  spaceId?: string;
   title?: string;
   description?: string;
   body?: string;
   category?: string;
 }>({});
+
+const route = useRoute();
+const spaceId: string = Array.isArray(route.params.id)
+  ? route.params.id[0]
+  : route.params.id;
+console.log("Add note -> spaceID:", spaceId);
 
 const { mutate: noteCreate, isPending, error } = useCreateNoteMutation();
 
@@ -107,20 +110,12 @@ const submitForm = async (event: Event) => {
     new FormData(event.target as HTMLFormElement)
   );
 
+  // Add spaceId to rawData
+  rawData.spaceId = spaceId;
+
   console.log("noteBodyContent", noteBodyContent.value);
   console.log("Raw data:", rawData);
   console.log("My user_id:", me.value?.user_id);
-
-  // const test2 = convertHtmlToMarkdown('<p><strong>dsfsadfa</strong></p>');
-  // console.log("test2 parse MD", test2);
-
-  // convert MD to html
-  // const test = marked.parse("<p><strong>dsfsadfa</strong></p>");
-  // console.log("test parse MD", test);
-
-  //   rawData.note_body = noteBodyContent.value;
-  //   rawData.note_body = marked.parse(noteBodyContent.value);
-  // rawData.original_note_body = noteBodyContent.value;
 
   rawData.body = convertToMarkdown(noteBodyContent.value);
   console.log("rawData.note_body", rawData.body);
@@ -152,7 +147,7 @@ const submitForm = async (event: Event) => {
       console.error("Error creating note:", err);
     },
   });
-  $router.push(`/dashboard`);
+  $router.push(`/spaces/${spaceId}`);
 };
 </script>
 
