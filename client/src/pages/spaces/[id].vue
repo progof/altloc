@@ -1,22 +1,13 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import {
-  getSpaceQueryOptions,
-  useFollowToSpaceMutation,
-  useUnFollowToSpaceMutation,
-} from "@/services/spaces.service";
+import { getSpaceQueryOptions } from "@/services/spaces.service";
 import { getMeQueryOptions } from "@/services/auth.service";
-import SideBarNav from "@/components/SideBarNav.vue";
 
-import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
-import MemberIcon from "@/assets/icons/MemberIcon.svg?component";
-import NoteIcon from "@/assets/icons/NoteIcon.svg?component";
-import EventIcon from "@/assets/icons/EventIcon.svg?component";
-import FollowIcon from "@/assets/icons/FollowIcon.svg?component";
+import SideBarNav from "@/components/SideBarNav.vue";
+import SpaceMenu from "@/components/space/SpaceMenu.vue";
 
 const { data: me } = useQuery(getMeQueryOptions);
-const userId: string = me.value?.user_id || "";
 
 const route = useRoute();
 const spaceId: string = Array.isArray(route.params.id)
@@ -27,45 +18,7 @@ console.log("space_id", spaceId);
 console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 
-const { mutate: following } = useFollowToSpaceMutation();
-const { mutate: unfollowing } = useUnFollowToSpaceMutation();
-
-// const isFollowing = ref(false); // Default state
-
-const followToSpace = async (event: Event) => {
-  const rex = await following({ space_id: spaceId });
-  console.log("unf", rex);
-
-  following(
-    { space_id: spaceId },
-    {
-      onError: (err) => {
-        console.error("Error following to space:", err);
-      },
-    }
-  );
-};
-
-const unfollowToSpace = async (event: Event) => {
-  unfollowing(
-    { space_id: spaceId },
-    {
-      onError: (err) => {
-        console.error("Error unfollowing to space:", err);
-      },
-      onSuccess: () => {
-        console.log("unfollow space");
-      },
-    }
-  );
-};
-
 console.log("DEBUG", space.value?.title);
-
-const formatCreatedAt = (createdAt: string) => {
-  const date = new Date(createdAt);
-  return date.toLocaleString();
-};
 </script>
 
 <template>
@@ -82,26 +35,7 @@ const formatCreatedAt = (createdAt: string) => {
           <span>City: {{ space?.city }}</span>
           <span>Description: {{ space?.description }}</span>
         </div>
-        <div class="space__menu">
-          <MyButton
-            class="menu__item"
-            @click="$router.push(`/spaces/members/${space?.space_id}`)"
-          >
-            <MemberIcon class="icons" />
-            Members
-          </MyButton>
-          <div class="menu__item"><EventIcon class="icons" />Events</div>
-          <div class="menu__item"><NoteIcon class="icons" />Notes</div>
-          <div class="menu__item"><ChatIcon class="icons" />Chat</div>
-          <button class="menu__item" @click="unfollowToSpace">
-            <FollowIcon class="icons" />
-            Unfollow
-          </button>
-          <button class="sidebar__item" @click="followToSpace">
-            <FollowIcon class="icons" />
-            Follow
-          </button>
-        </div>
+        <SpaceMenu />
         <div class="space__content">content</div>
       </div>
     </div>
@@ -139,12 +73,6 @@ const formatCreatedAt = (createdAt: string) => {
   background-color: rgba(32, 32, 32, 0.9);
   border-radius: 60px;
   padding: 10px;
-}
-
-.icons {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
 }
 
 img {
@@ -205,37 +133,5 @@ span {
   padding: 5px 10px;
   cursor: pointer;
   margin-top: 30px;
-}
-
-.space__menu {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
-}
-
-.menu__item {
-  margin: 15px;
-  display: flex;
-  align-items: center;
-  color: aliceblue;
-  padding: 15px;
-  font-size: 15px;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: background-color 0.3s;
-}
-
-.menu__item:hover {
-  background-color: rgb(55, 146, 225);
-  color: #12171e;
-}
-
-button {
-  background-color: rgba(32, 32, 32, 0.9);
-  color: aliceblue;
-  border: none;
 }
 </style>

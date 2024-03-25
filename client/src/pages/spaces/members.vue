@@ -3,20 +3,13 @@ import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import {
   getSpaceQueryOptions,
-  useFollowToSpaceMutation,
-  useUnFollowToSpaceMutation,
   getSpaceMembersQueryOptions,
 } from "@/services/spaces.service";
 import { getMeQueryOptions } from "@/services/auth.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
-
-import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
-import MemberIcon from "@/assets/icons/MemberIcon.svg?component";
-import NoteIcon from "@/assets/icons/NoteIcon.svg?component";
-import EventIcon from "@/assets/icons/EventIcon.svg?component";
-import FollowIcon from "@/assets/icons/FollowIcon.svg?component";
+import SapceDashboard from "@/components/space/SapceDashboard.vue";
 
 const { data: me } = useQuery(getMeQueryOptions);
 
@@ -31,46 +24,7 @@ const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 const { data: members } = useQuery(getSpaceMembersQueryOptions(spaceId));
 
 console.log("Received members data:", members.value?.username);
-
-const { mutate: following } = useFollowToSpaceMutation();
-const { mutate: unfollowing } = useUnFollowToSpaceMutation();
-
-// const isFollowing = ref(false); // Default state
-
-const followToSpace = async (event: Event) => {
-  const rex = await following({ space_id: spaceId });
-  console.log("unf", rex);
-
-  following(
-    { space_id: spaceId },
-    {
-      onError: (err) => {
-        console.error("Error following to space:", err);
-      },
-    }
-  );
-};
-
-const unfollowToSpace = async (event: Event) => {
-  unfollowing(
-    { space_id: spaceId },
-    {
-      onError: (err) => {
-        console.error("Error unfollowing to space:", err);
-      },
-      onSuccess: () => {
-        console.log();
-      },
-    }
-  );
-};
-
 console.log("DEBUG", space.value?.title);
-
-const formatCreatedAt = (createdAt: string) => {
-  const date = new Date(createdAt);
-  return date.toLocaleString();
-};
 </script>
 
 <template>
@@ -78,25 +32,7 @@ const formatCreatedAt = (createdAt: string) => {
     <SideBarNav />
     <div class="profile item space-lists">
       <div class="wrapper">
-        <div class="profile__info">
-          <img src="@/assets/neptune2.jpeg" alt="" />
-          <span>Title: {{ space?.title }}</span>
-          <span style="border-color: #3e3d3d"
-            >Country: {{ space?.country }}</span
-          >
-          <span>City: {{ space?.city }}</span>
-          <span>Description: {{ space?.description }}</span>
-        </div>
-        <!-- <div class="space__menu">
-          <div class="menu__item"><MemberIcon class="icons" /> Members</div>
-          <div class="menu__item"><EventIcon class="icons" />Events</div>
-          <div class="menu__item"><NoteIcon class="icons" />Notes</div>
-          <div class="menu__item"><ChatIcon class="icons" />Chat</div>
-          <button class="menu__item" @click="followToSpace">
-            <FollowIcon class="icons" />
-            Follow
-          </button>
-        </div> -->
+        <SapceDashboard />
         <SpaceMenu />
         <div class="dashboard">
           <h3>Members:</h3>
@@ -135,113 +71,5 @@ const formatCreatedAt = (createdAt: string) => {
   flex-wrap: wrap;
   width: 100vw;
   height: 100vh;
-}
-
-.profile__info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* border: 1px solid aliceblue; */
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
-  padding: 10px;
-}
-
-.icons {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
-
-img {
-  width: 128px;
-  height: 128px;
-  margin: 20px;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 80px;
-}
-
-span {
-  display: flex;
-  flex-direction: row;
-  margin: 10px;
-  color: azure;
-}
-
-.profile__notes {
-  margin-top: 20px;
-  height: 700px;
-  overflow: scroll;
-}
-
-.profile__notes h2 {
-  color: rgb(55, 146, 225);
-  margin-bottom: 10px;
-}
-
-.profile__notes ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.profile__notes li {
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  padding: 10px;
-  position: relative;
-}
-
-.profile__notes h3 {
-  color: rgb(55, 146, 225);
-  margin-bottom: 5px;
-}
-
-.profile__notes p {
-  margin-bottom: 5px;
-  color: #333;
-}
-
-.open-button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #5de1ed;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 30px;
-}
-
-.space__menu {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
-}
-
-.menu__item {
-  margin: 15px;
-  display: flex;
-  align-items: center;
-  color: aliceblue;
-  padding: 15px;
-  font-size: 15px;
-  text-decoration: none;
-  border-radius: 12px;
-  transition: background-color 0.3s;
-}
-
-.menu__item:hover {
-  background-color: rgb(55, 146, 225);
-  color: #12171e;
-}
-
-button {
-  background-color: rgba(32, 32, 32, 0.9);
-  color: aliceblue;
-  border: none;
 }
 </style>
