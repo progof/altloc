@@ -8,7 +8,9 @@ import {
   getSpaceMembersQueryOptions,
 } from "@/services/spaces.service";
 import { getMeQueryOptions } from "@/services/auth.service";
+
 import SideBarNav from "@/components/SideBarNav.vue";
+import SpaceMenu from "@/components/space/SpaceMenu.vue";
 
 import ChatIcon from "@/assets/icons/ChatIcon.svg?component";
 import MemberIcon from "@/assets/icons/MemberIcon.svg?component";
@@ -85,7 +87,7 @@ const formatCreatedAt = (createdAt: string) => {
           <span>City: {{ space?.city }}</span>
           <span>Description: {{ space?.description }}</span>
         </div>
-        <div class="space__menu">
+        <!-- <div class="space__menu">
           <div class="menu__item"><MemberIcon class="icons" /> Members</div>
           <div class="menu__item"><EventIcon class="icons" />Events</div>
           <div class="menu__item"><NoteIcon class="icons" />Notes</div>
@@ -94,7 +96,8 @@ const formatCreatedAt = (createdAt: string) => {
             <FollowIcon class="icons" />
             Follow
           </button>
-        </div>
+        </div> -->
+        <SpaceMenu />
         <div class="dashboard">
           <h3>Members:</h3>
           <div v-if="members && members.length > 0">

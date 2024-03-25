@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import { ref } from "vue";
 import {
   getSpaceQueryOptions,
   useFollowToSpaceMutation,
@@ -55,7 +54,7 @@ const unfollowToSpace = async (event: Event) => {
         console.error("Error unfollowing to space:", err);
       },
       onSuccess: () => {
-        console.log();
+        console.log("unfollow space");
       },
     }
   );
@@ -103,21 +102,7 @@ const formatCreatedAt = (createdAt: string) => {
             Follow
           </button>
         </div>
-        <!-- <div class="profile__notes" v-if="notes">
-          <h2>All Notes</h2>
-          <ul v-if="notes.length > 0">
-            <li v-for="note in notes" :key="note.note_id">
-              <h3>Title: {{ note.title }}</h3>
-              <p>Category: {{ note.category }}</p>
-              <p>Description: {{ note.description }}</p>
-              <p>Author: {{ note.username }}</p>
-              <p>Created at: {{ formatCreatedAt(note.created_at) }}</p>
-              <MyButton @click="$router.push(`/notes/${note.note_id}`)">
-                Full note
-              </MyButton>
-            </li>
-          </ul>
-        </div> -->
+        <div class="space__content">content</div>
       </div>
     </div>
   </div>

@@ -122,19 +122,11 @@ async followToSpace(req: Request, res: Response) {
       errors: body.error.issues,
     });
   }
-  
   console.log('followToSpace.data', body.data.space_id, userId );
+
+  
   
   try {
-    // Check if the user is already subscribed to the group
-    const isFollowing = await this.spacesService.isUserFollowingSpace(body.data.space_id, userId);
-    console.log("conut follow:", isFollowing)
-
-    if (!isFollowing) {
-      // If the user is already subscribed, return an error message
-      console.log("DEBUG: {Error} -> User is already following this space [SpceID/UserID]", body.data.space_id, userId  )
-      return res.status(400).send({ errors: [{ message: "User is already following this space" }] });
-    }
 
     // If the user is not subscribed, perform subscription
     const follow = await this.spacesService.followToSpace(body.data.space_id, userId);
@@ -163,11 +155,12 @@ async UnfollowToSpace(req: Request, res: Response) {
     });
   }
   
-  console.log('followToSpace.data', body.data.space_id, userId );
+  console.log('unfollowToSpace.data', body.data.space_id, userId );
   
   try {
 
     const unfollow = await this.spacesService.UnFollowToSpace(body.data.space_id, userId);
+    console.log('unfollow.data', unfollow );
     return res.status(201).send({ data: unfollow, following: false });
   } catch (error) {
     console.error(error);

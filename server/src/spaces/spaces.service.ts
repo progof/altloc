@@ -74,7 +74,7 @@ async getAllSpaces(){
       `DELETE FROM spaces_members WHERE space_id = $1 AND user_id = $2;`,
       [spaceId, userId],
     );
-    return result.rows[0] as SpaceMembers;
+    return result.rows;
   }
 
   async isUserFollowingSpace(spaceId: string, userId: string) {
