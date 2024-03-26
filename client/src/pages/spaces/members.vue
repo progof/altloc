@@ -23,22 +23,31 @@ console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 const { data: members } = useQuery(getSpaceMembersQueryOptions(spaceId));
 
-console.log("Received members data:", members.value?.username);
+console.log("Received members data:", members.value?.user_id);
 console.log("DEBUG", space.value?.title);
 </script>
 
 <template>
-  <div class="conteiner">
+  <div class="container">
     <SideBarNav />
-    <div class="profile item space-lists">
+    <div class="profile">
       <div class="wrapper">
         <SapceDashboard />
         <SpaceMenu />
-        <div class="dashboard">
+        <div class="members">
           <h3>Members:</h3>
-          <div v-if="members && members.length > 0">
-            <div v-for="member in members" :key="member.username">
-              <p>{{ member.username }}</p>
+          <div class="members-list" v-if="members && members.length > 0">
+            <div
+              class="member-item"
+              v-for="member in members"
+              :key="member.username"
+            >
+              <MyButton
+                @click="$router.push(`/users/${member.user_id}`)"
+                style="color: rgb(166, 141, 228)"
+              >
+                {{ member.username }}
+              </MyButton>
             </div>
           </div>
           <div v-else>
@@ -65,11 +74,36 @@ console.log("DEBUG", space.value?.title);
   margin: 0 auto;
 }
 
-.conteiner {
+.container {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   width: 100vw;
   height: 100vh;
+}
+
+.members {
+  margin: 10px 20px;
+}
+
+.members-list {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  justify-content: space-around;
+}
+
+.member-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  padding: 10px;
+  color: aliceblue;
+  background-color: rgba(15, 14, 14, 0.5);
+  border: 1px solid rgb(55, 146, 225);
+  border-radius: 40px;
+  width: 128px;
+  height: 128px;
 }
 </style>
