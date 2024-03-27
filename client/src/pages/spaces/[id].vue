@@ -185,7 +185,7 @@ span {
 
 .note-lists {
   margin-top: 20px;
-  height: 700px;
+  height: 400px;
   overflow: scroll;
 }
 
