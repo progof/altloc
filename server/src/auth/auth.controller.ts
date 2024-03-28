@@ -10,7 +10,8 @@ import {
 
 export class AuthController {
   public readonly router = Router();
-
+ 
+  // Constructor initialization of routes
   constructor(private readonly authService: AuthService) {
     this.router.post(
       "/auth/verify-email/:user_id/:activation_token",
@@ -46,6 +47,12 @@ export class AuthController {
     );
   }
 
+  /**
+   * Handles user registration.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with user ID if registration is successful, otherwise error messages.
+   */
   async userRegister(req: Request, res: Response) {
     const bodySchema = z.object({
       username: z.string(),
@@ -97,6 +104,12 @@ export class AuthController {
     }
   }
 
+   /**
+   * Handles user login.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with access and refresh tokens if login is successful, otherwise error messages.
+   */
   async userLogin(req: Request, res: Response) {
     try {
       const bodySchema = z.object({
@@ -154,6 +167,12 @@ export class AuthController {
     }
   }
 
+   /**
+   * Handles user logout.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with status 200 if logout is successful, otherwise error messages.
+   */
   async userLogout(req: Request, res: Response) {
     if (!req.session.user) {
       return res.status(401).send();
@@ -186,6 +205,12 @@ export class AuthController {
     return res.status(200).send();
   }
 
+  /**
+   * Handles email verification.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with status 200 if verification is successful, otherwise error messages.
+   */
   async handleVerification(req: Request, res: Response) {
     const bodySchema = z.object({
       activation_token: z.string(),
@@ -227,6 +252,12 @@ export class AuthController {
     }
   }
 
+  /**
+   * Retrieves user information.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with user data if found, otherwise error messages.
+   */
   async getMe(req: Request, res: Response) {
     if (!req.session.user) {
       return res.status(401).send({
@@ -245,6 +276,12 @@ export class AuthController {
     });
   }
 
+  /**
+   * Handles password recovery request.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with status 200 if password recovery request is successful, otherwise error messages.
+   */
   async handleRecoveryPassword(req: Request, res: Response) {
     console.log("Request Body (handleRecoveryPassword):", req.body); // Debug req.body
     const bodySchema = z.object({
@@ -292,6 +329,12 @@ export class AuthController {
     }
   }
 
+  /**
+   * Retrieves user information by user ID.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with user data if found, otherwise error messages.
+   */
   async getUser(req: Request, res: Response) {
     const paramsSchema = z.object({
       user_id: z.string(),
@@ -317,6 +360,12 @@ export class AuthController {
     }
   }
 
+  /**
+   * Handles password reset.
+   * @param req Express request object.
+   * @param res Express response object.
+   * @returns Response with status 200 if password reset is successful, otherwise error messages.
+   */
   async handlePasswordReset(req: Request, res: Response) {
     console.log("handlePasswordReset() data:", req.body);
     const bodySchema = z.object({

@@ -9,6 +9,14 @@ const transporter = nodemailer.createTransport({
 	},
 });
 
+/**
+ * Function to send a verification email to the user.
+ * @param user_id User ID.
+ * @param email User email address.
+ * @param username User username.
+ * @param activation_token Activation token for email verification.
+ * @returns Promise representing the result of sending the email.
+ */
 export const sendVerificationEmail = async ({
 	user_id,
 	email,
@@ -30,7 +38,13 @@ export const sendVerificationEmail = async ({
 	});
 };
 
-
+/**
+ * Function to send a password reset email to the user.
+ * @param user_id User ID.
+ * @param email User email address.
+ * @param reset_token Reset token for password reset.
+ * @returns Promise representing the result of sending the email.
+ */
 export const sendPasswordRestToken = async ({
 	user_id,
 	email,

@@ -3,7 +3,13 @@ import { config } from "../config";
 import jwt from "jsonwebtoken";
 import { authService } from "../main";
 
-// Function that blocks access to the dashboard for unverified users
+/**
+ * Middleware function that blocks access to the dashboard for unverified users.
+ * @param req Express request object.
+ * @param res Express response object.
+ * @param next Express next function.
+ * @returns Response with status 401 and error message if user is not verified, otherwise continues to the next middleware.
+ */
 export async function blockNotVerifedUser(
   req: Request,
   res: Response,
@@ -26,7 +32,13 @@ export async function blockNotVerifedUser(
   next();
 }
 
-// Will renew `access token` with `refresh token` if it was expired or not presented in cookies
+/**
+ * Middleware function that renews access token with refresh token if access token is expired or not presented in cookies.
+ * @param req Express request object.
+ * @param res Express response object.
+ * @param next Express next function.
+ * @returns Response with status 401 and error message if not authorized, otherwise continues to the next middleware.
+ */
 export async function blockNotAuthenticated(
   req: Request,
   res: Response,
@@ -89,7 +101,13 @@ export async function blockNotAuthenticated(
   }
 }
 
-// Function that blocks access to admin panel
+/**
+ * Middleware function that blocks access to admin panel.
+ * @param req Express request object.
+ * @param res Express response object.
+ * @param next Express next function.
+ * @returns Response with status 401 and error message if user is not an admin, otherwise continues to the next middleware.
+ */
 export async function isAdmin(
   req: Request,
   res: Response,

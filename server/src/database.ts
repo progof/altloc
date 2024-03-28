@@ -1,10 +1,16 @@
 import pg from "pg";
 import { config } from "./config";
 
+/**
+ * Create a pool for managing PostgreSQL connections.
+ */
 export const pool = new pg.Pool({
   connectionString: config.DB_CONNECTION_URI,
 });
 
+/**
+ * Definition of the User object.
+ */
 export type User = {
   user_id: string;
   username: string;
@@ -15,24 +21,36 @@ export type User = {
   role: string;
 };
 
-
+/**
+ * Definition of the UserSession object.
+ */
 export type UserSession = {
   session_id: string;
   user_id: string;
   user_role: string;
 };
+
+/**
+ * Definition of the EmailActivation object.
+ */
 export type EmailActivation = {
   user_id: string;
   activation_token: string;
   created_at: string;
 };
+
+/**
+ * Definition of the ResetPasswordRequest object.
+ */
 export type ResetPasswordRequest = {
   user_id: string;
   reset_token: string;
   created_at: string;
 };
 
-
+/**
+ * Definition of the Post object.
+ */
 export type Post = {
 	post_id: string;
 	user_id: string;
@@ -40,8 +58,11 @@ export type Post = {
 	content: string;
 	created_at: string;
 	edit_at: string;
-  };
+};
 
+/**
+ * Definition of the University object.
+ */
 export type University = {
 	university_id: string;
 	fullname: string;
@@ -53,6 +74,9 @@ export type University = {
 	edit_at: string;
 };
 
+/**
+ * Definition of the Note object.
+ */
 export type Note = {
   note_id: string;
   user_id: string;
@@ -64,6 +88,10 @@ export type Note = {
   edit_at: string;
 };
 
+
+/**
+ * Definition of the Space object.
+ */
 export type Space = {
 	space_id: string;
 	university_id: string;
@@ -79,7 +107,10 @@ export type Space = {
 	edit_at: string;
   };
 
-  export type SpaceMembers = {
+/**
+ * Definition of the SpaceMembers object.
+ */
+export type SpaceMembers = {
 	member_id: string;
 	space_id: string;
 	user_id: string;
@@ -88,8 +119,12 @@ export type Space = {
 
 
 try {
-  await pool.connect();
+	//  Attempt to connect to the PostgreSQL database.
+	await pool.connect();
 
+   /**
+   * Create necessary database tables if they don't exist already.
+   */
   await pool.query(`
 		CREATE TABLE IF NOT EXISTS users (
 			user_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -183,7 +218,13 @@ try {
 
 	`);
 // changed table.space university_id
-  console.log("Successfully connected to the database and created tables!");
+	/**
+  	 * Log successful database connection and table creation.
+   	*/
+  	console.log("Successfully connected to the database and created tables!");
 } catch (error) {
-  console.error("Failed to connect to the database!", error);
+	/**
+   	* Log error if failed to connect or create tables.
+   	*/
+	console.error("Failed to connect to the database!", error);
 }
