@@ -26,8 +26,8 @@ const { mutate: following } = useFollowToSpaceMutation();
 const { mutate: unfollowing } = useUnFollowToSpaceMutation();
 
 const followToSpace = async (event: Event) => {
-  const rex = await following({ space_id: spaceId });
-  console.log("unf", rex);
+  // const rex = await following({ space_id: spaceId });
+  // console.log("unf", rex);
 
   following(
     { space_id: spaceId },
