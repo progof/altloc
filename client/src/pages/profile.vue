@@ -6,17 +6,20 @@ import {
   getCountNotesQueryOptions,
   getNotesForUserQueryOptions,
 } from "@/services/app.service";
+import { getCountPostsQueryOptions } from "@/services/post.service";
+
 import SideBarNav from "@/components/SideBarNav.vue";
 import { MyButton } from "@/components/UI";
+import UserProfile from "../assets/icons/UserProfile.svg?component";
 
 const route = useRoute();
 const userId: string = Array.isArray(route.params.id)
   ? route.params.id[0]
   : route.params.id;
+
 const { data: user } = useQuery(getUserQueryOptions(userId));
-
 const { data: countNotes } = useQuery(getCountNotesQueryOptions(userId));
-
+const { data: countPosts } = useQuery(getCountPostsQueryOptions(userId));
 const { data: notes } = useQuery(getNotesForUserQueryOptions(userId));
 
 const formatCreatedAt = (createdAt: string) => {
@@ -30,8 +33,11 @@ const formatCreatedAt = (createdAt: string) => {
     <SideBarNav />
     <div class="profile">
       <div class="wrapper">
+        <div class="profile__face">
+          <UserProfile class="user_icon" />
+          <h2 style="color: aliceblue">Nickname: {{ user?.username }}</h2>
+        </div>
         <div class="profile__info">
-          <img src="../assets/default_avatar.png" alt="" />
           <span>Nickname: {{ user?.username }}</span>
           <span style="border-color: #3e3d3d"
             >Your Email: {{ user?.email }}</span
@@ -40,6 +46,8 @@ const formatCreatedAt = (createdAt: string) => {
             >Account status:
             {{ user?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
           >
+
+          <span>Count posts: {{ countPosts }}</span>
           <span>Count notes: {{ countNotes }}</span>
         </div>
         <div class="profile__notes" v-if="notes">
@@ -86,20 +94,27 @@ const formatCreatedAt = (createdAt: string) => {
 
 .profile__info {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  /* border: 1px solid aliceblue; */
+  margin-top: 20px;
   background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
-  padding: 10px;
+  border-radius: 20px;
+  height: 64px;
+  padding: 20px;
 }
 
-img {
+.profile__face {
+  display: flex;
+  /* background-color: rgb(76, 76, 76); */
+  background: url(../assets/dashboard_bg.jpg) left;
+  align-items: center;
+  border-radius: 20px;
+}
+
+.user_icon {
   width: 128px;
   height: 128px;
   margin: 20px;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 80px;
 }
 
 span {
@@ -139,7 +154,7 @@ span {
 
 .profile__notes p {
   margin-bottom: 5px;
-  color: #333;
+  color: #757474;
 }
 
 .open-button {
