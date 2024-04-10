@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
+import { getCountPostsQueryOptions } from "@/services/post.service";
 import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
@@ -18,6 +19,7 @@ import UserProfile from "../assets/icons/UserProfile.svg?component";
 const { data: me } = useQuery(getMeQueryOptions);
 const userId: string = me.value?.user_id;
 const { data: countNotes } = useQuery(getCountNotesQueryOptions(userId));
+const { data: countPosts } = useQuery(getCountPostsQueryOptions(userId));
 console.log(typeof countNotes);
 </script>
 
@@ -28,16 +30,17 @@ console.log(typeof countNotes);
       <div class="wrapper">
         <div class="dashboard__face">
           <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
-          <UserProfile />
+          <UserProfile class="profile" />
+          <h2>Hi, {{ me?.username }} 👋</h2>
         </div>
         <div class="dashboard__info">
           <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
-          <h2>Hi, {{ me?.username }} 👋</h2>
           <span style="border-color: #3e3d3d">Your Email: {{ me?.email }}</span>
           <span
             >Account status:
             {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
           >
+          <span>Count posts: {{ countPosts }}</span>
           <span>Count notes: {{ countNotes }}</span>
         </div>
         <div v-if="me?.role == 'USER'">
@@ -89,25 +92,32 @@ h2 {
 
 .dashboard__info {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  margin-top: 20px;
+  background-color: rgba(32, 32, 32, 0.9);
+  border-radius: 20px;
+  height: 64px;
+  padding: 20px;
 }
 
 .dashboard__face {
-  background-color: rgb(76, 76, 76);
+  display: flex;
+  /* background-color: rgb(76, 76, 76); */
+  background: url(../assets/dashboard_bg.jpg) left;
+  align-items: center;
+  border-radius: 20px;
 }
 
-img {
+.profile {
   width: 128px;
   height: 128px;
   margin: 20px;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 50px;
 }
 
 span {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   color: azure;
 }
 
@@ -125,12 +135,12 @@ span {
     align-items: center;
   }
 
-  img {
+  .profile {
     width: 64px;
     height: 64px;
     margin: 10px;
-    border: 2px solid rgb(55, 146, 225);
-    border-radius: 50px;
+    /* border: 2px solid rgb(55, 146, 225);
+    border-radius: 50px; */
   }
 }
 
