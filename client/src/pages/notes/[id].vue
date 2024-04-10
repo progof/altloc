@@ -52,12 +52,11 @@ function htmlToFormattedText2(html: string) {
           </div>
 
           <div class="note-author" style="color: rgb(91, 92, 93)">
-            <p><strong>Author:</strong> {{ note.username }}</p>
             <MyButton
               @click="$router.push(`/users/${note.user_id}`)"
-              style="color: rgb(166, 141, 228)"
+              style="color: rgb(55, 146, 225)"
             >
-              Profile(Test)
+              <strong>Author:</strong> {{ note.username }}
             </MyButton>
           </div>
 

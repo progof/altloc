@@ -42,6 +42,7 @@ console.log("DEBUG", space.value?.title);
               v-for="member in members"
               :key="member.username"
             >
+              <img src="@/assets/neptune2.jpeg" alt="" />
               <MyButton
                 @click="$router.push(`/users/${member.user_id}`)"
                 style="color: rgb(166, 141, 228)"
@@ -105,5 +106,13 @@ console.log("DEBUG", space.value?.title);
   border-radius: 40px;
   width: 128px;
   height: 128px;
+}
+
+img {
+  width: 128px;
+  height: 128px;
+  margin: 20px;
+  border: 2px solid rgb(55, 146, 225);
+  border-radius: 80px;
 }
 </style>

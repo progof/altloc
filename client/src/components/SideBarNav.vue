@@ -70,7 +70,7 @@ const toggleSidebar = () => {
 
 <style scoped>
 .sidebar {
-  width: 100vw;
+  width: 100vw; /*  100vw */
   display: flex;
   background-color: rgba(15, 14, 14, 0.9);
   justify-content: space-between;

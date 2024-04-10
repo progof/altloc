@@ -5,6 +5,8 @@ import { getCountNotesQueryOptions } from "@/services/app.service";
 import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
+
+import UserProfile from "../assets/icons/UserProfile.svg?component";
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);
@@ -24,11 +26,12 @@ console.log(typeof countNotes);
     <SideBarNav />
     <div class="dashboard">
       <div class="wrapper">
-        <div v-if="me?.role == 'USER'">
-          <p>hi user!(test msg)</p>
+        <div class="dashboard__face">
+          <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
+          <UserProfile />
         </div>
         <div class="dashboard__info">
-          <img src="../assets/default_avatar.png" alt="Altplace user avatar" />
+          <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
           <h2>Hi, {{ me?.username }} 👋</h2>
           <span style="border-color: #3e3d3d">Your Email: {{ me?.email }}</span>
           <span
@@ -36,6 +39,9 @@ console.log(typeof countNotes);
             {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
           >
           <span>Count notes: {{ countNotes }}</span>
+        </div>
+        <div v-if="me?.role == 'USER'">
+          <p>hi user!(test msg)</p>
         </div>
 
         <div class="content-box">
@@ -85,6 +91,10 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.dashboard__face {
+  background-color: rgb(76, 76, 76);
 }
 
 img {
