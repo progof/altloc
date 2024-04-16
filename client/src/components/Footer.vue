@@ -19,14 +19,12 @@ const currentYear = getCurrentYear();
   background-color: rgba(15, 14, 14, 1);
   padding: 10px;
   text-align: center;
-  /* position: fixed; */
+  position: fixed;
   position: sticky;
-  position: -webkit-sticky;
   bottom: 0;
   left: 0;
   width: 100vw;
   flex-shrink: 0;
-  padding-bottom: 24px;
 }
 
 .footer__content {

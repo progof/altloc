@@ -136,8 +136,8 @@ span {
   }
 
   .profile {
-    width: 64px;
-    height: 64px;
+    width: 44px;
+    height: 44px;
     margin: 10px;
     /* border: 2px solid rgb(55, 146, 225);
     border-radius: 50px; */

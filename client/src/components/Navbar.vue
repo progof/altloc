@@ -6,8 +6,6 @@ import LogoIcon from "@/assets/logo.svg?component";
 // import { pinia } from "../store/pinia";
 
 const router = useRouter();
-// const { mutate: logout } = useLogoutMutation();
-// const { mutate: login } = useLoginMutation();
 
 const authStore = useAuthStore();
 const storedIsAuthenticated = localStorage.getItem("isAuthenticated");
@@ -19,13 +17,13 @@ console.log("default", authStore.isAuthenticated);
 <template>
   <header v-if="!authStore.isAuthenticated" class="header">
     <a href="/" class="header__logo-link">
-      <LogoIcon class="header__logo-img" />
+      <LogoIcon style="width: 54px; height: 54px" />
     </a>
 
     <h2 class="header__title-text">AltPlace</h2>
 
     <div class="menu">
-      <RouterLink to="/register" class="item">Sing up</RouterLink>
+      <RouterLink to="/register" class="item">Sign up</RouterLink>
       <RouterLink to="/login" class="item">Login</RouterLink>
     </div>
   </header>
@@ -34,38 +32,41 @@ console.log("default", authStore.isAuthenticated);
 <style scoped>
 .header {
   background: #0b020e;
-  position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 0;
   top: 0;
   left: 0;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-}
-
-h2 {
-  color: rgb(55, 146, 225);
-}
-.menu {
+  height: 100%;
   display: flex;
   justify-content: space-around;
+  align-items: center;
+  padding: 1% 0 1% 0;
+}
+
+.header__title-text {
+  color: rgb(55, 146, 225);
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: center; /* Добавлено */
 }
 
 .item {
-  align-items: center;
   background-color: #181818;
-  padding: 5px;
+  padding: 10px;
   color: rgb(55, 146, 225);
   border-radius: 10px;
-  padding: 10px;
-  height: 20px;
-  width: 65px;
-  font-size: 19px;
+  font-size: 16px;
   text-align: center;
+  /* display: flex; */
+  align-items: center; /* Добавлено */
   margin-right: 20px;
+  text-decoration: none;
+  width: 70px;
+  height: 20px;
+  font-weight: bold;
 }
 
 .item:hover {

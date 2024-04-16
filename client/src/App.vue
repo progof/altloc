@@ -153,12 +153,13 @@ import { RouterView } from "vue-router";
 
 <style>
 .app {
+  height: 100vh;
   /* padding: 20px; */
   /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat; */
-  background: url("./assets/bg.jpg") no-repeat center;
+  background: url("./assets/bg.jpg") center no-repeat;
   background-size: cover;
   max-height: 100vh;
-  overflow: hidden;
+  overflow: scroll;
 
   /* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   background-size: auto;

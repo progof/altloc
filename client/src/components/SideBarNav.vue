@@ -104,6 +104,8 @@ const toggleSidebar = () => {
   text-decoration: none;
   border-radius: 12px;
   transition: background-color 0.3s;
+  width: 128px;
+  height: 40px;
 }
 
 .sidebar__item:hover {
@@ -123,7 +125,7 @@ button {
   border: none;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1000px) {
   .menu {
     display: flex;
     position: absolute;
