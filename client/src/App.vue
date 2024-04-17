@@ -1,6 +1,6 @@
 <script lang="ts">
 import { createRouter, createWebHistory } from "vue-router";
-import LendingPage from "@/pages/lending.vue";
+import LendingPage from "@/pages/landing.vue";
 import RegisterPage from "@/pages/auth/register.vue";
 import LoginPage from "@/pages/auth/login.vue";
 import DashboardPage from "@/pages/dashboard.vue";
@@ -179,5 +179,7 @@ import { RouterView } from "vue-router";
   padding: 0;
   font-family: "Montserrat", sans-serif;
   box-sizing: inherit;
+  color: inherit;
+  text-decoration: none;
 }
 </style>

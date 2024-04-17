@@ -17,7 +17,7 @@ const currentYear = getCurrentYear();
 <style scoped>
 .footer {
   background-color: rgba(15, 14, 14, 1);
-  padding: 10px;
+  padding: 1% 0 1% 0;
   text-align: center;
   position: fixed;
   position: sticky;
