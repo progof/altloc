@@ -81,7 +81,7 @@ const handleDeleteNote = async (postId: string) => {
           <p>Edit at: {{ formatCreatedAt(post.edit_at) }}</p>
         </div>
         <!-- <p>Author: {{ note.user_id }}</p>
-				<p>Note ID: {{ note.note_id }}</p> -->
+        <p>Note ID: {{ note.note_id }}</p> -->
         <span v-if="deleteError">{{ deleteError }}</span>
         <MyButton @click="$router.push(`/posts/${post.post_id}`)">
           Full post
@@ -99,7 +99,7 @@ const handleDeleteNote = async (postId: string) => {
     </ul>
   </div>
   <div v-else>
-    <p class="no-posts-message">No posts available.</p>
+    <p class="no-post-message">No posts available.</p>
   </div>
 </template>
 

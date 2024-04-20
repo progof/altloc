@@ -73,7 +73,7 @@ const formatCreatedAt = (createdAt: string) => {
 <style scoped>
 .profile {
   flex: 1 1 0%;
-  height: 100vh;
+  min-height: 100vh; /* Change height to min-height */
 }
 
 .wrapper {

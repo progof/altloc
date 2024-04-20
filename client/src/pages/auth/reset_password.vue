@@ -100,8 +100,8 @@ form {
   max-width: 300px;
   margin: auto;
   padding: 20px;
-  border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: black;
 }
 
 label {

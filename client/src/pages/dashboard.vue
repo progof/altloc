@@ -67,7 +67,7 @@ console.log(typeof countNotes);
 <style scoped>
 .dashboard {
   flex: 1 1 0%;
-  height: 100vh;
+  min-height: 100vh; /* Change height to min-height */
 }
 
 .wrapper {
@@ -79,7 +79,7 @@ console.log(typeof countNotes);
   margin: 0 auto;
 }
 
-.conteiner {
+.container {
   display: flex;
   flex-direction: column;
   width: 100vw;
@@ -103,7 +103,6 @@ h2 {
 
 .dashboard__face {
   display: flex;
-  /* background-color: rgb(76, 76, 76); */
   background: url(../assets/dashboard_bg.jpg) left;
   align-items: center;
   border-radius: 20px;
@@ -128,68 +127,38 @@ span {
 }
 
 @media only screen and (max-width: 600px) {
+  .wrapper {
+    padding: 20px; /* Reduce padding for smaller screens */
+  }
+
   .dashboard__info {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    height: auto;
   }
 
   .profile {
     width: 44px;
     height: 44px;
     margin: 10px;
-    /* border: 2px solid rgb(55, 146, 225);
-    border-radius: 50px; */
+  }
+
+  .dashboard__face {
+    background-size: cover;
+    height: 150px; /* Adjust height for smaller screens */
+  }
+
+  .dashboard__face h2 {
+    font-size: 1.5rem; /* Adjust font size for smaller screens */
+  }
+
+  .content-box {
+    flex-direction: column;
   }
 }
 
 note-form,
 note-list {
   margin-top: 20px;
-}
-
-.home {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.dialog {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.dialog__content {
-  background: rgb(23, 23, 23);
-  border-radius: 12px;
-  min-height: 50px;
-  min-width: 300px;
-  padding: 20px;
-  z-index: 9999;
-}
-
-.dialog__content button {
-  margin-top: 10px;
-}
-
-.home .modal-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.home .modal-content h1,
-.home .modal-content p {
-  margin-bottom: 16px;
-}
-
-.home .modal-content h1 {
-  font-size: 32px;
-}
-
-.home .modal-content p {
-  font-size: 18px;
 }
 </style>

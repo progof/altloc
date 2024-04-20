@@ -70,7 +70,7 @@ const submitForm = async (event: Event) => {
   </div>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 .wrapper {
   padding-top: 265px;
   max-width: 1060px;
@@ -106,5 +106,64 @@ input {
 
 fieldset {
   border: none;
+}
+</style> -->
+
+<style scoped>
+.wrapper {
+  padding-top: 20vh;
+  max-width: 1060px;
+  margin: 0 auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  max-width: 300px;
+  width: 90%;
+  padding: 20px;
+  border: 0px solid #ccc;
+  border-radius: 15px;
+  background-color: black;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  background-color: rgb(0, 0, 0);
+  color: aliceblue;
+  border: 2px solid rgb(55, 146, 225);
+  border-radius: 4px;
+}
+
+fieldset {
+  border: none;
+}
+
+/* Media Queries */
+@media screen and (min-width: 600px) {
+  .wrapper {
+    padding-top: 10vh;
+  }
+
+  form {
+    width: 70%;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  form {
+    width: 60%;
+  }
 }
 </style>
