@@ -7,7 +7,7 @@ import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 
-import UserProfile from "../assets/icons/UserProfile.svg?component";
+import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);

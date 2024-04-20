@@ -10,7 +10,7 @@ import ResetPasswordPage from "@/pages/auth/reset_password.vue";
 import NoteByIdPage from "@/pages/notes/[id].vue";
 import NoteAdd from "@/pages/notes/add.vue";
 import NoteEditor from "@/pages/notes/editor.vue";
-import NoteFeedPage from "@/pages/notes/feed.vue";
+import FeedPage from "@/pages/feed.vue";
 import ProfilePage from "@/pages/profile.vue";
 import SpacesPage from "@/pages/spaces.vue";
 import SpaceAdd from "@/pages/spaces/add.vue";
@@ -41,7 +41,6 @@ export const router = createRouter({
     {
       path: "/dashboard",
       component: DashboardPage,
-      meta: { requiresAuth: true },
     },
     {
       path: "/email-verification",
@@ -64,8 +63,9 @@ export const router = createRouter({
       component: NoteAdd,
     },
     {
-      path: "/notes/feed",
-      component: NoteFeedPage,
+      path: "/feed",
+      component: FeedPage,
+      meta: { requiresAuth: true },
     },
     {
       path: "/notes/editor/:id",
@@ -104,10 +104,6 @@ export const router = createRouter({
       component: PostAdd,
     },
     {
-      path: "/posts/feed",
-      component: PostFeedPage,
-    },
-    {
       path: "/posts/editor/:id",
       component: PostEditor,
     },
@@ -119,7 +115,7 @@ router.beforeEach(async (to) => {
   if (to.path === "/login" || to.path === "/register") {
     try {
       await queryClient.ensureQueryData(getMeQueryOptions);
-      return { path: "/dashboard" };
+      return { path: "/feed" };
     } catch (error) {
       // do nothing
     }

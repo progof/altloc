@@ -44,14 +44,14 @@ const toggleSidebar = () => {
         <SpacesIcon class="icons" />
         Spaces
       </RouterLink>
-      <RouterLink to="/notes/feed" class="sidebar__item">
+      <RouterLink to="/feed" class="sidebar__item">
         <FeedIcon class="icons" />
         Feed
       </RouterLink>
-      <RouterLink to="/posts/add" class="sidebar__item">
+      <!-- <RouterLink to="/posts/add" class="sidebar__item">
         <AddNoteIcon class="icons" />
         Add post
-      </RouterLink>
+      </RouterLink> -->
       <RouterLink to="#" class="sidebar__item">
         <MessageIcon class="icons" />
         Message
