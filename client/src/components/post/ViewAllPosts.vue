@@ -2,12 +2,26 @@
 import { useQuery } from "@tanstack/vue-query";
 import { getAllPostsQueryOptions } from "@/services/post.service";
 import { MyButton } from "@/components/UI";
+
+import UserProfile from "@/assets/icons/UserProfile.svg?component";
+import LikeIcon from "@/assets/icons/LikeIcon.svg?component";
+import CommentIcon from "@/assets/icons/CommentIcon.svg?component";
+import ShareIcon from "@/assets/icons/ShareIcon.svg?component";
+import SaveIcon from "@/assets/icons/SaveIcon.svg?component";
+
 const { data: posts } = useQuery(getAllPostsQueryOptions);
 
 const formatCreatedAt = (createdAt: string) => {
   const date = new Date(createdAt);
   return date.toLocaleString();
 };
+
+function htmlToFormattedText2(html: string) {
+  let tempElement = document.createElement("div");
+  tempElement.innerHTML = html;
+
+  return tempElement.innerHTML;
+}
 </script>
 
 <template>
@@ -15,22 +29,34 @@ const formatCreatedAt = (createdAt: string) => {
     <h2>All Posts</h2>
     <ul v-if="posts.length > 0">
       <li v-for="post in posts" :key="post.post_id">
-        <h3>Title: {{ post.title }}</h3>
-        <p>Description: {{ post.content }}</p>
-        <!-- <p>Author: {{ note.username }}</p> -->
-        <p>
-          Author:
-          <MyButton
-            @click="$router.push(`/users/${post.user_id}`)"
-            style="font-weight: bold; background-color: rgba(50, 51, 52, 0.5)"
+        <div class="post-card">
+          <div class="dashboard__face">
+            <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
+            <UserProfile style="width: 32px; height: 32px; margin: 20px" />
+            <MyButton
+              @click="$router.push(`/users/${post.user_id}`)"
+              style="font-weight: bold; background-color: rgba(15, 14, 14, 0.1)"
+            >
+              {{ post.username }}
+            </MyButton>
+          </div>
+          <span
+            class="post-content"
+            v-html="htmlToFormattedText2(post.content)"
+          ></span>
+          <span style="margin-top: 10px; font-size: 12px"
+            >Created at: {{ formatCreatedAt(post.created_at) }}</span
           >
-            {{ post.username }}
-          </MyButton>
-        </p>
-        <p>Created at: {{ formatCreatedAt(post.created_at) }}</p>
-        <MyButton @click="$router.push(`/posts/${post.post_id}`)">
-          Full note
-        </MyButton>
+          <!-- <MyButton @click="$router.push(`/posts/${post.post_id}`)">
+            Full post
+          </MyButton> -->
+          <div class="user-active">
+            <LikeIcon style="width: 24px; height: 24px" />
+            <CommentIcon style="width: 24px; height: 24px" />
+            <SaveIcon style="width: 24px; height: 24px" />
+            <ShareIcon style="width: 24px; height: 24px" />
+          </div>
+        </div>
       </li>
     </ul>
   </div>
@@ -40,14 +66,35 @@ const formatCreatedAt = (createdAt: string) => {
 </template>
 
 <style scoped>
+.post-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.user-active {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.post-content {
+  padding: 10px;
+}
+
 .note-lists {
-  margin-top: 20px;
+  margin-top: 10px;
   height: 700px;
   overflow: scroll;
+  align-items: center;
+  justify-content: center;
 }
 
 .note-lists h2 {
   color: rgb(55, 146, 225);
+  font-size: 16px;
   margin-bottom: 10px;
 }
 
@@ -57,10 +104,10 @@ const formatCreatedAt = (createdAt: string) => {
 }
 
 .note-lists li {
-  border: 1px solid #ddd;
   margin-bottom: 10px;
   padding: 10px;
-  position: relative;
+  /* position: relative; */
+  margin-top: 20px;
 }
 
 .note-lists h3 {
@@ -70,7 +117,7 @@ const formatCreatedAt = (createdAt: string) => {
 
 .note-lists p {
   margin-bottom: 5px;
-  color: #333;
+  color: #959595;
 }
 
 .open-button {
@@ -90,5 +137,10 @@ const formatCreatedAt = (createdAt: string) => {
   font-size: 18px;
   text-align: center;
   margin-top: 20px;
+}
+
+.dashboard__face {
+  display: flex;
+  align-items: center;
 }
 </style>
