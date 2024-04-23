@@ -15,6 +15,7 @@ export type Post = {
   title: string;
   content: string;
   created_at: string;
+  like: number;
   edit_at: string;
   username: string;
 };
@@ -127,6 +128,45 @@ export const useDeletePostMutation = () => {
     },
   });
 };
+
+// ---------- //
+export const useLikePostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      postId: string;
+      likes: number;
+    }) => {
+      const res = await fetch(`/api/like-post/${data.postId}`, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Post }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["like-post"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["like-post", res.data.post_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+
 
 // ---------- //
 const getPost = async (postId: string) => {

@@ -15,6 +15,7 @@ export class PostsController {
     this.router.get("/posts", this.getPosts.bind(this));
     this.router.get("/all-posts", this.getAllPosts.bind(this));
     this.router.get("/count-posts/:userId", this.getCountPosts.bind(this));
+    this.router.patch("/like-post/:postId", this.likeToPost.bind(this));
     this.router.get("/user-posts/:userId", this.getPostsForUserId.bind(this));
     this.router.get("/posts/:postId", this.getPost.bind(this));
     this.router.delete("/posts/:postId", this.deletePost.bind(this));
@@ -187,6 +188,73 @@ export class PostsController {
       });
     }
   }
+
+  async getLikeForPost2(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      postId: z.string(),
+      likes: z.number()
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+    console.log("getLikeForPost.postId", params.data.postId);
+    console.log("getLikeForPost.likes", params.data.likes);
+    try {
+      const like = await this.postsService.likeForPost(params.data.postId, params.data.likes);
+      console.log("getLikeForPost.post", like);
+      return res.status(200).send({
+        data: like,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+
+  async likeToPost(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      postId: z.string().uuid(),
+    });
+
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    const bodySchema = z.object({
+      likes: z.number()
+    });
+
+    const body = bodySchema.safeParse(req.body);
+    if (!body.success) {
+      return res.status(400).send({
+        errors: body.error.issues,
+      });
+    }
+
+    console.log("Data from client:", body)
+
+    try {
+      const like = await this.postsService.likeForPost(params.data.postId, body.data.likes);
+      return res.status(201).send({ data: like });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
 
   async getAllPosts(req: Request, res: Response) {
     // const note = await this.notesService.getAllNotes();

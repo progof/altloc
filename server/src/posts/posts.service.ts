@@ -30,7 +30,7 @@ export class PostsService {
 
   async getAllPosts(){
     const result = await this.db.query<Post>(
-      `SELECT title, content, users.username, posts.user_id, post_id, posts.created_at 
+      `SELECT title, content, users.username, posts.user_id, post_id, posts.created_at, likes 
       FROM posts JOIN users ON posts.user_id = users.user_id`,
     );
     return result.rows;
@@ -38,10 +38,20 @@ export class PostsService {
 
   async getPostById(postId: string) {
     const result = await this.db.query<Post>(
-      `SELECT title, content,  users.username, post_id, posts.user_id, posts.created_at, posts.edit_at
+      `SELECT title, content,  users.username, post_id, posts.user_id, posts.created_at, posts.edit_at, likes
       FROM posts JOIN users ON posts.user_id = users.user_id WHERE post_id = $1;`,
       [postId],
     );
+    return result.rows.at(0) || null;
+  }
+
+
+  async likeForPost(postId: string, likes: number) {
+    const result = await this.db.query<Post>(
+      `UPDATE posts SET likes = $2 WHERE post_id = $1 RETURNING *;`,
+      [postId, likes],
+    );
+    // return result.rows[0] as Post;
     return result.rows.at(0) || null;
   }
 

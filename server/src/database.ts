@@ -57,6 +57,7 @@ export type Post = {
 	title: string;
 	content: string;
 	created_at: string;
+	likes: number;
 	edit_at: string;
 };
 
@@ -162,6 +163,7 @@ try {
 			user_id uuid NOT NULL,
 			title VARCHAR(50) NOT NULL,
 			content VARCHAR(10000) NOT NULL,
+			likes INTEGER NOT NULL DEFAULT 0,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			edit_at VARCHAR(200),
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
