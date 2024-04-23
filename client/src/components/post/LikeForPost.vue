@@ -77,7 +77,7 @@ const post: Post = {
 };
 
 const likes = ref(post.likes);
-const likedPosts = ref<string[]>([]); // Поменяйте тип идентификатора поста на string, если он строковый
+const likedPosts = ref<string[]>([]);
 
 const isLiked = computed(() => likedPosts.value.includes(post.id));
 
@@ -85,7 +85,7 @@ const incrementLikes = () => {
   if (!isLiked.value) {
     likes.value++;
     likedPosts.value.push(post.id);
-    likePost({ postId: props.postId, likes: likes.value }); // Отправляем запрос на сервер при нажатии на кнопку лайка
+    likePost({ postId: props.postId, likes: likes.value });
   }
 };
 </script>
@@ -103,14 +103,13 @@ const incrementLikes = () => {
 
 <style scoped>
 .button {
-  background-color: rgba(0, 0, 0, 0); /* Прозрачный фон кнопки */
-  border: none; /* Удаление границы */
-  cursor: pointer; /* Показать, что кнопка кликабельна */
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  cursor: pointer;
 }
 
-/* Стили для счетчика лайков */
 div {
   display: inline-block;
-  margin-left: 5px; /* Добавляем отступ между иконкой и счетчиком */
+  margin-left: 5px;
 }
 </style>

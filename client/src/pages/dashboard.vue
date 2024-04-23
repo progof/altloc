@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
@@ -6,6 +7,7 @@ import { getCountPostsQueryOptions } from "@/services/post.service";
 import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
+import { MyButton } from "@/components/UI";
 
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // import Modal from "@/components/Modal.vue";
@@ -21,6 +23,12 @@ const userId: string = me.value?.user_id;
 const { data: countNotes } = useQuery(getCountNotesQueryOptions(userId));
 const { data: countPosts } = useQuery(getCountPostsQueryOptions(userId));
 console.log(typeof countNotes);
+
+const activeButton = ref<string>("post-view");
+
+const showContent = (content: string) => {
+  activeButton.value = content;
+};
 </script>
 
 <template>
@@ -43,14 +51,47 @@ console.log(typeof countNotes);
           <span>Count posts: {{ countPosts }}</span>
           <span>Count notes: {{ countNotes }}</span>
         </div>
-        <div v-if="me?.role == 'USER'">
+        <!-- <div v-if="me?.role == 'USER'">
           <p>hi user!(test msg)</p>
-        </div>
+        </div> -->
+        <div class="feed-nav">
+          <MyButton
+            @click="showContent('post-view')"
+            :class="{ active: activeButton === 'post-view' }"
+            class="feed-nav-"
+          >
+            Posts view
+          </MyButton>
+          <RouterLink to="/posts/add" class="sidebar__item" title="Add post">
+            <AddNoteIcon class="icons" />
+          </RouterLink>
 
-        <div class="content-box">
+          <MyButton
+            @click="showContent('note-view')"
+            :class="{ active: activeButton === 'note-view' }"
+          >
+            Note view
+          </MyButton>
+          <MyButton
+            @click="showContent('saved-view')"
+            :class="{ active: activeButton === 'saved-view' }"
+          >
+            Saved view
+          </MyButton>
+        </div>
+        <div v-if="activeButton === 'post-view'" class="post-view">
           <post-list style="overflow: scroll" />
+        </div>
+        <div v-if="activeButton === 'note-view'" class="note-view">
           <note-list style="overflow: scroll" />
         </div>
+        <div v-if="activeButton === 'saved-view'" class="saved-view">
+          soon...
+        </div>
+        <!-- <div class="content-box">
+          <post-list style="overflow: scroll" />
+          <note-list style="overflow: scroll" />
+        </div> -->
 
         <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
@@ -124,6 +165,13 @@ span {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.feed-nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 @media only screen and (max-width: 600px) {
