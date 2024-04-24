@@ -58,33 +58,24 @@ import { ref, computed, defineProps } from "vue";
 import LikeIcon from "@/assets/icons/LikeIcon.svg?component";
 import { useLikePostMutation } from "@/services/post.service";
 
-const { mutate: likePost, isPending, error } = useLikePostMutation();
-
 const props = defineProps({
   postId: String,
+  postLike: Number,
 });
 
-console.log("get postId:", props.postId);
+const { mutate: likePost, isPending, error } = useLikePostMutation();
+// const { data: post } = useQuery(getPostQueryOptions(props.postId));
 
-interface Post {
-  id: string; // Поменяйте на string, если идентификатор поста строковый
-  likes: number;
-}
-
-const post: Post = {
-  id: "2",
-  likes: 0,
-};
-
-const likes = ref(post.likes);
+const likes = ref(props.postLike);
+console.log("likes", props.postId, likes);
 const likedPosts = ref<string[]>([]);
 
-const isLiked = computed(() => likedPosts.value.includes(post.id));
+const isLiked = computed(() => likedPosts.value.includes(props.postId));
 
 const incrementLikes = () => {
   if (!isLiked.value) {
     likes.value++;
-    likedPosts.value.push(post.id);
+    likedPosts.value.push(props.postId);
     likePost({ postId: props.postId, likes: likes.value });
   }
 };

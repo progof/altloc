@@ -53,7 +53,7 @@ function htmlToFormattedText2(html: string) {
           </MyButton> -->
           <div class="user-active">
             <!-- <LikeIcon style="width: 24px; height: 24px" /> -->
-            <LikeForPost :postId="post.post_id" />
+            <LikeForPost :postId="post.post_id" :postLike="post.likes" />
             <CommentIcon style="width: 24px; height: 24px" />
             <SaveIcon style="width: 24px; height: 24px" />
             <ShareIcon style="width: 24px; height: 24px" />

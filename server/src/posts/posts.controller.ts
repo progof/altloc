@@ -189,34 +189,6 @@ export class PostsController {
     }
   }
 
-  async getLikeForPost2(req: Request, res: Response) {
-    const paramsSchema = z.object({
-      postId: z.string(),
-      likes: z.number()
-    });
-
-    const params = paramsSchema.safeParse(req.params);
-    if (!params.success) {
-      return res.status(400).send({
-        errors: params.error.issues,
-      });
-    }
-    console.log("getLikeForPost.postId", params.data.postId);
-    console.log("getLikeForPost.likes", params.data.likes);
-    try {
-      const like = await this.postsService.likeForPost(params.data.postId, params.data.likes);
-      console.log("getLikeForPost.post", like);
-      return res.status(200).send({
-        data: like,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).send({
-        errors: [{ message: "Internal Server Error" }],
-      });
-    }
-  }
-
 
   async likeToPost(req: Request, res: Response) {
     const paramsSchema = z.object({

@@ -15,7 +15,7 @@ export type Post = {
   title: string;
   content: string;
   created_at: string;
-  like: number;
+  likes: number;
   edit_at: string;
   username: string;
 };
