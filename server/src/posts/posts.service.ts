@@ -6,6 +6,9 @@ export type CreatePostDTO = {
   content: string;
 };
 
+export type CreateCommentPostDTO = {
+  comment: string;
+};
 
 export class PostsService {
   constructor(private readonly db: Pool) {}
@@ -72,7 +75,25 @@ export class PostsService {
     return result.rows.at(0) || null;
   }
 
+// Comment of post
 
+async createCommentForPost(postId: string, userId: string, data: CreateCommentPostDTO) {
+  const result = await this.db.query<Post>(
+    `INSERT INTO comments_posts (post_id, user_id, comment) VALUES ($1, $2, $3 ) RETURNING *;`,
+    [postId, userId, data.comment ],
+  );
+  return result.rows[0] as Post;
+}
+
+async getCommentPostById(postId: string) {
+  const result = await this.db.query<Post>(
+    `SELECT comments_posts.comment, users.username, comments_posts.created_at
+    FROM comments_posts JOIN users ON comments_posts.user_id = users.user_id WHERE post_id = $1;`,
+    [postId],
+  );
+  // return result.rows.at(0) || null;
+  return result.rows || [];
+}
 
   async updatePost(postId: string, userId: string, data: CreatePostDTO) {
     const nowDate = new Date().toISOString();

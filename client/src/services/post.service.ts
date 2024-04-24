@@ -20,6 +20,15 @@ export type Post = {
   username: string;
 };
 
+export type Comment = {
+  comment_id: string;
+  post_id: string;
+  user_id: string;
+  comment: string;
+  created_at: string;
+  username: string;
+};
+
 export const useCreatePostMutation = () => {
   const queryClient = useQueryClient();
 
@@ -59,6 +68,69 @@ export const useCreatePostMutation = () => {
 };
 
 // ---------- //
+export const useCreateCommentPostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      postId: string;
+      comment: string;
+    }) => {
+      console.log("useCreateCommentPostMutation.data()", data.comment)
+      const res = await fetch(`/api/comments/${data.postId}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Comment }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["comments"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["comments", res.data.post_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+// ---------- //
+const getCommentsForPost = async (postId: string) => {
+  const res = await fetch(`/api/comments/${postId}`, {
+    headers: {
+      Accept: "application/json",
+      method: "GET",
+    },
+  });
+
+  if (!res.ok) {
+    const errors = errorSchema.parse(await res.json()).errors;
+    throw new Error(errors.at(0)?.message);
+  }
+
+  const responseData = await res.json();
+  return responseData.data as Comment;
+};
+
+export const getCommentsForPostQueryOptions = (postId: string) =>
+  queryOptions({
+    queryKey: ["comments", postId],
+    queryFn: () => getCommentsForPost(postId),
+  });
+
+// ---------- //
+
 export const useUpdatePostMutation = () => {
   const queryClient = useQueryClient();
 

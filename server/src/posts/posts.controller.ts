@@ -11,6 +11,8 @@ export class PostsController {
   ) {
     this.router.use("/posts", blockNotVerifedUser);
     this.router.post("/posts", this.createPost.bind(this));
+    this.router.post("/comments/:postId", this.createComment.bind(this));
+    this.router.get("/comments/:postId", this.getCommentsForPostId.bind(this));
     this.router.patch("/posts/:userId/:postId", this.updatePost.bind(this));
     this.router.get("/posts", this.getPosts.bind(this));
     this.router.get("/all-posts", this.getAllPosts.bind(this));
@@ -228,6 +230,7 @@ export class PostsController {
     return res.status(401).send({ errors: [{ message: "The user has already liked it." }] });
    }
 
+  
     try {
       const like = await this.postsService.likeForPost(params.data.postId, body.data.likes);
       const likeList = await this.postsService.likeToPost(params.data.postId, userId);
@@ -278,4 +281,73 @@ export class PostsController {
       });
     }
   }
+
+  async createComment(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+
+    const paramsSchema = z.object({
+      postId: z.string(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    
+    const userId = req.session.user.user_id;
+    const bodySchema = z.object({
+      comment: z.string(),
+    });
+  
+    const content = bodySchema.safeParse(req.body);
+    if (!content.success) {
+      return res.status(400).send({
+        errors: content.error.issues,
+      });
+    }
+
+    console.log("Content data from user:", content.data);
+
+    try {
+      const post = await this.postsService.createCommentForPost(params.data.postId, userId, content.data);
+      return res.status(201).send({ data: post });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+
+  async getCommentsForPostId(req: Request, res: Response) {
+
+    const paramsSchema = z.object({
+      postId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    console.log("DEBUG getCommentsForPostId() postId:", params.data.postId);
+    try {
+      const comment = await this.postsService.getCommentPostById(params.data.postId);
+      console.log("DEBUG (getCommentsForPostId->comment):", comment);
+      return res.status(200).send({
+        data: comment,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
 }

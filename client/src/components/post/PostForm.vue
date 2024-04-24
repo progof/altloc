@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { z } from "zod";
 import { useCreatePostMutation } from "@/services/post.service";
 import { getMeQueryOptions } from "@/services/auth.service";
@@ -69,6 +69,8 @@ const quillOptions = ref({
 });
 
 const postBodyContent = ref<string>("");
+
+watch(postBodyContent, () => console.log(postBodyContent.value));
 
 const validationSchema = z.object({
   title: z.string().refine((value) => value.trim() !== "", {

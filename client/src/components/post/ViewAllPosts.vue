@@ -1,12 +1,14 @@
 <script setup lang="ts">
+// import { ref } from "vue";
 import { useQuery } from "@tanstack/vue-query";
 import { getAllPostsQueryOptions } from "@/services/post.service";
 import { MyButton } from "@/components/UI";
 import LikeForPost from "@/components/post/LikeForPost.vue";
-
+import CommentForPost from "@/components/post/CommentForPost.vue";
+// import Modal from "@/components/Modal.vue";
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // import LikeIcon from "@/assets/icons/LikeIcon.svg?component";
-import CommentIcon from "@/assets/icons/CommentIcon.svg?component";
+// import CommentIcon from "@/assets/icons/CommentIcon.svg?component";
 import ShareIcon from "@/assets/icons/ShareIcon.svg?component";
 import SaveIcon from "@/assets/icons/SaveIcon.svg?component";
 
@@ -23,6 +25,12 @@ function htmlToFormattedText2(html: string) {
 
   return tempElement.innerHTML;
 }
+
+// const modalActive = ref(false);
+
+// const toggleModal = () => {
+//   modalActive.value = !modalActive.value;
+// };
 </script>
 
 <template>
@@ -54,9 +62,10 @@ function htmlToFormattedText2(html: string) {
           <div class="user-active">
             <!-- <LikeIcon style="width: 24px; height: 24px" /> -->
             <LikeForPost :postId="post.post_id" :postLike="post.likes" />
-            <CommentIcon style="width: 24px; height: 24px" />
+            <CommentForPost :postId="post.post_id" />
             <SaveIcon style="width: 24px; height: 24px" />
             <ShareIcon style="width: 24px; height: 24px" />
+            <!-- <button @click="toggleModal">test</button> -->
           </div>
         </div>
       </li>

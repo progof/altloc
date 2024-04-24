@@ -2,13 +2,13 @@
 import { ref } from "vue";
 // import { useQuery } from "@tanstack/vue-query";
 import { MyButton } from "@/components/UI";
+import Modal from "@/components/Modal.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import SearchPost from "@/components/post/SearchPost.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 import ViewAllPosts from "@/components/post/ViewAllPosts.vue";
 import ViewAllNotes from "@/components/note/ViewAllNotes.vue";
 import SpaceSlider from "@/components/feed/SpaceSlider.vue";
-// import { getAllSpacesQueryOptions } from "@/services/spaces.service.ts";
 
 import AddNoteIcon from "@/assets/icons/AddNoteIcon.svg?component";
 
@@ -17,28 +17,12 @@ const activeButton = ref<string>("post-view");
 const showContent = (content: string) => {
   activeButton.value = content;
 };
-
-// const { data: spaces } = useQuery(getAllSpacesQueryOptions);
-
-// const itemsPerSlide = spaces.value?.length; // Количество элементов на каждом слайде
-
-// const formatCreatedAt = (createdAt: string) => {
-//   const date = new Date(createdAt);
-//   return date.toLocaleString();
-// };
 </script>
 
 <template>
   <SideBarNav />
   <div class="feed">
     <div class="wrapper">
-      <!-- <SpaceSlider :totalSlides="3">
-        <template v-slot="{ index }">
-          <div v-if="index === 0">Slide 1 content</div>
-          <div v-else-if="index === 1">Slide 2 content</div>
-          <div v-else>Slide 3 content</div>
-        </template>
-      </SpaceSlider> -->
       <SpaceSlider />
       <div class="feed-nav">
         <MyButton
@@ -67,6 +51,11 @@ const showContent = (content: string) => {
         <SearchBar />
         <ViewAllNotes />
       </div>
+      <Modal @close="toggleModal" :modalActive="modalActive">
+        <div class="dialog">
+          <div class="dialog__content">test</div>
+        </div>
+      </Modal>
     </div>
   </div>
 </template>

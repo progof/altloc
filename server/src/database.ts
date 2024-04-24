@@ -62,6 +62,18 @@ export type Post = {
 };
 
 /**
+ * Definition of the CommentOfPost object.
+ */
+export type CommentOfPost = {
+	comment_id: string;
+	post_id: string;
+	user_id: string;
+	comment: string;
+	username: string;
+	created_at: string;
+};
+
+/**
  * Definition of the LikesOfUsers object.
  */
 export type LikesOfUsers = {
@@ -180,6 +192,16 @@ try {
 		CREATE TABLE IF NOT EXISTS likes_posts (
 			post_id uuid NOT NULL,
 			user_id uuid NOT NULL,
+			FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
+
+		CREATE TABLE IF NOT EXISTS comments_posts (
+			comment_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			post_id uuid NOT NULL,
+			user_id uuid NOT NULL,
+			comment VARCHAR(10000) NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
