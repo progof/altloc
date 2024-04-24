@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { Post } from "../database";
+import { Post, LikesOfUsers } from "../database";
 
 export type CreatePostDTO = {
   title: string;
@@ -45,7 +45,7 @@ export class PostsService {
     return result.rows.at(0) || null;
   }
 
-
+// Like of post
   async likeForPost(postId: string, likes: number) {
     const result = await this.db.query<Post>(
       `UPDATE posts SET likes = $2 WHERE post_id = $1 RETURNING *;`,
@@ -54,6 +54,25 @@ export class PostsService {
     // return result.rows[0] as Post;
     return result.rows.at(0) || null;
   }
+
+  async likeToPost(postId: string, userId: string) {
+    const result = await this.db.query<LikesOfUsers>(
+      `INSERT INTO likes_posts(post_id, user_id) VALUES ($1, $2) RETURNING *;`,
+      [postId, userId],
+    );
+    return result.rows[0] as LikesOfUsers;
+  }
+
+  async checkLikeOfPost(postId: string, userId: string) {
+    const result = await this.db.query<LikesOfUsers>(
+      `SELECT * FROM likes_posts WHERE post_id = $1 AND user_id = $2 `,
+      [postId, userId],
+    );
+    // return result.rows[0] as Post;
+    return result.rows.at(0) || null;
+  }
+
+
 
   async updatePost(postId: string, userId: string, data: CreatePostDTO) {
     const nowDate = new Date().toISOString();

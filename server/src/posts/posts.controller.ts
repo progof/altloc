@@ -191,6 +191,11 @@ export class PostsController {
 
 
   async likeToPost(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+
     const paramsSchema = z.object({
       postId: z.string().uuid(),
     });
@@ -214,11 +219,19 @@ export class PostsController {
       });
     }
 
-    console.log("Data from client:", body)
+    console.log("Data from client:", body);
+
+    const checkLike = await this.postsService.checkLikeOfPost(params.data.postId, userId);
+   console.log("checkLike", checkLike);
+
+   if(checkLike?.post_id == params.data.postId && checkLike.user_id == userId){
+    return res.status(401).send({ errors: [{ message: "The user has already liked it." }] });
+   }
 
     try {
       const like = await this.postsService.likeForPost(params.data.postId, body.data.likes);
-      return res.status(201).send({ data: like });
+      const likeList = await this.postsService.likeToPost(params.data.postId, userId);
+      return res.status(201).send({ data: like, likeList });
     } catch (error) {
       console.error(error);
       return res.status(500).send({
