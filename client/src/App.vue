@@ -121,9 +121,8 @@ router.beforeEach(async (to) => {
     }
   }
   if (to.meta.requiresAuth) {
-    let me: User;
     try {
-      me = await queryClient.ensureQueryData(getMeQueryOptions);
+      await queryClient.ensureQueryData(getMeQueryOptions);
     } catch (error) {
       return { path: "/login" };
     }

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useQuery } from "@tanstack/vue-query";
+import { computed, ref } from "vue";
+import { useQuery, useQueryClient } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
 import { getCountPostsQueryOptions } from "@/services/post.service";
 import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
+import SavedPostList from "@/components/post/SavedListToPost.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 import { MyButton } from "@/components/UI";
 
@@ -19,10 +20,25 @@ import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // };
 
 const { data: me } = useQuery(getMeQueryOptions);
-const userId: string = me.value?.user_id;
-const { data: countNotes } = useQuery(getCountNotesQueryOptions(userId));
-const { data: countPosts } = useQuery(getCountPostsQueryOptions(userId));
-console.log(typeof countNotes);
+const userId = me.value?.user_id;
+const { data: countNotes } = useQuery(
+  computed(() => {
+    if (me.value) {
+      return getCountNotesQueryOptions(me.value.user_id);
+    }
+
+    return { ...getCountNotesQueryOptions(""), enabled: false };
+  })
+);
+const { data: countPosts } = useQuery(
+  computed(() => {
+    if (me.value) {
+      return getCountPostsQueryOptions(me.value.user_id);
+    }
+
+    return { ...getCountPostsQueryOptions(""), enabled: false };
+  })
+);
 
 const activeButton = ref<string>("post-view");
 
@@ -37,12 +53,10 @@ const showContent = (content: string) => {
     <div class="dashboard">
       <div class="wrapper">
         <div class="dashboard__face">
-          <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
           <UserProfile class="profile" />
           <h2>Hi, {{ me?.username }} 👋</h2>
         </div>
         <div class="dashboard__info">
-          <!-- <img src="../assets/default_avatar.png" alt="Altplace user avatar" /> -->
           <span style="border-color: #3e3d3d">Your Email: {{ me?.email }}</span>
           <span
             >Account status:
@@ -86,7 +100,7 @@ const showContent = (content: string) => {
           <note-list style="overflow: scroll" />
         </div>
         <div v-if="activeButton === 'saved-view'" class="saved-view">
-          soon...
+          <SavedPostList style="overflow: scroll" />
         </div>
         <!-- <div class="content-box">
           <post-list style="overflow: scroll" />

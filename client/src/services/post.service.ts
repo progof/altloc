@@ -129,8 +129,89 @@ export const getCommentsForPostQueryOptions = (postId: string) =>
     queryFn: () => getCommentsForPost(postId),
   });
 
-// ---------- //
 
+// ---------- //
+export const useAddSavedPostMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      postId: string;
+    }) => {
+      const res = await fetch(`/api/saved-posts/${data.postId}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Post }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["saved-posts/"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["saved-posts/", res.data.post_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+// ---------- //
+// const getSavedListToPost = async () => {
+//   const res = await fetch(`/api/saved-posts/`, {
+//     headers: {
+//       Accept: "application/json",
+//       method: "GET",
+//     },
+//   });
+
+//   if (!res.ok) {
+//     const errors = errorSchema.parse(await res.json()).errors;
+//     throw new Error(errors.at(0)?.message);
+//   }
+
+//   const responseData = await res.json();
+//   return responseData.data as Post;
+// };
+
+// export const getSavedListToPostQueryOptions = () =>
+//   queryOptions({
+//     queryKey: ["saved-posts"],
+//     queryFn: () => getSavedListToPost,
+//   });
+
+  export const getSavedListToPost = async () => {
+    const res = await fetch(`/api/saved-posts`, {
+      headers: {
+      Accept: "application/json",
+      },
+    });
+    
+    if (!res.ok) {
+      const errors = errorSchema.parse(await res.json()).errors;
+      throw new Error(errors.at(0)?.message);
+    }
+    
+    return (await res.json() as { data: Post[] }).data;
+    };
+  
+    export const getSavedListToPostQueryOptions = queryOptions({
+    queryKey: ["saved-posts"],
+    queryFn: getSavedListToPost,
+    });
+
+
+// ---------- //
 export const useUpdatePostMutation = () => {
   const queryClient = useQueryClient();
 

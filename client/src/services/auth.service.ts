@@ -98,7 +98,7 @@ export type User = {
 };
 
 export const getMeQueryOptions = queryOptions({
-	queryKey: ["/auth/me"],
+	queryKey: ["/auth/me"] as const,
 	queryFn: async () => {
 		const res = await fetch("/api/auth/me");
 		if (!res.ok) {

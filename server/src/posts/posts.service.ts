@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { Post, LikesOfUsers } from "../database";
+import { Post, LikesOfUsers, SavedPosts } from "../database";
 
 export type CreatePostDTO = {
   title: string;
@@ -74,6 +74,38 @@ export class PostsService {
     // return result.rows[0] as Post;
     return result.rows.at(0) || null;
   }
+
+// Saved of post
+async addSavedPostToList(postId: string, userId: string) {
+  const result = await this.db.query<SavedPosts>(
+    `INSERT INTO saved_posts(post_id, user_id) VALUES ($1, $2) RETURNING *;`,
+    [postId, userId],
+  );
+  return result.rows[0] as SavedPosts;
+}
+
+async checkSavedPost(postId: string, userId: string) {
+  const result = await this.db.query<SavedPosts>(
+    `SELECT * FROM likes_posts WHERE post_id = $1 AND user_id = $2 `,
+    [postId, userId],
+  );
+  // return result.rows[0] as Post;
+  return result.rows.at(0) || null;
+}
+
+async getSavedPostsById(userId: string) {
+  const result = await this.db.query<Post>(
+    `SELECT saved_posts.post_id, saved_posts.user_id,  posts.content, users.username, posts.created_at
+    FROM saved_posts 
+    JOIN posts ON saved_posts.post_id = posts.post_id
+    JOIN users ON posts.user_id = users.user_id 
+    WHERE saved_posts.user_id = $1 `,
+    [userId],
+  );
+  // return result.rows[0] as Post;
+  return result.rows;
+  // return result.rows.at(0) || null;
+}
 
 // Comment of post
 

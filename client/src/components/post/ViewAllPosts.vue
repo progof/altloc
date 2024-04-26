@@ -5,12 +5,13 @@ import { getAllPostsQueryOptions } from "@/services/post.service";
 import { MyButton } from "@/components/UI";
 import LikeForPost from "@/components/post/LikeForPost.vue";
 import CommentForPost from "@/components/post/CommentForPost.vue";
+import SavedPost from "@/components/post/SavedPost.vue";
 // import Modal from "@/components/Modal.vue";
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // import LikeIcon from "@/assets/icons/LikeIcon.svg?component";
 // import CommentIcon from "@/assets/icons/CommentIcon.svg?component";
 import ShareIcon from "@/assets/icons/ShareIcon.svg?component";
-import SaveIcon from "@/assets/icons/SaveIcon.svg?component";
+// import SaveIcon from "@/assets/icons/SaveIcon.svg?component";
 
 const { data: posts } = useQuery(getAllPostsQueryOptions);
 
@@ -63,7 +64,8 @@ function htmlToFormattedText2(html: string) {
             <!-- <LikeIcon style="width: 24px; height: 24px" /> -->
             <LikeForPost :postId="post.post_id" :postLike="post.likes" />
             <CommentForPost :postId="post.post_id" />
-            <SaveIcon style="width: 24px; height: 24px" />
+            <SavedPost :postId="post.post_id" />
+            <!-- <SaveIcon style="width: 24px; height: 24px" /> -->
             <ShareIcon style="width: 24px; height: 24px" />
             <!-- <button @click="toggleModal">test</button> -->
           </div>

@@ -13,6 +13,8 @@ export class PostsController {
     this.router.post("/posts", this.createPost.bind(this));
     this.router.post("/comments/:postId", this.createComment.bind(this));
     this.router.get("/comments/:postId", this.getCommentsForPostId.bind(this));
+    this.router.post("/saved-posts/:postId", this.addSavedPost.bind(this));
+    this.router.get("/saved-posts", this.getSavedPost.bind(this));
     this.router.patch("/posts/:userId/:postId", this.updatePost.bind(this));
     this.router.get("/posts", this.getPosts.bind(this));
     this.router.get("/all-posts", this.getAllPosts.bind(this));
@@ -114,6 +116,11 @@ export class PostsController {
   }
 
   async getCountPosts(req: Request, res: Response) {
+    // if (!req.session.user) {
+    //   return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    // }
+    // const userId = req.session.user.user_id;
+
     const paramsSchema = z.object({
       userId: z.string().uuid(),
     });
@@ -202,9 +209,9 @@ export class PostsController {
       postId: z.string().uuid(),
     });
 
-    if (!req.session.user) {
-      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
-    }
+    // if (!req.session.user) {
+    //   return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    // }
 
     const params = paramsSchema.safeParse(req.params);
     if (!params.success) {
@@ -341,6 +348,76 @@ export class PostsController {
       console.log("DEBUG (getCommentsForPostId->comment):", comment);
       return res.status(200).send({
         data: comment,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+
+  async addSavedPost(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+    console.log("addSavedPost -> userId", userId);
+
+    const paramsSchema = z.object({
+      postId: z.string(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    
+    console.log("DEBUG addSavedPost() postId:", params.data.postId);
+
+    const check = await this.postsService.checkSavedPost(params.data.postId ,userId);
+    console.log("DEBUG addSavedPost() check ->", check);
+ 
+    if(check?.post_id == params.data.postId && check.user_id == userId){
+     return res.status(401).send({ errors: [{ message: "This post has already been added to my list by a user" }] });
+    }
+
+    try {
+      const savedPost = await this.postsService.addSavedPostToList(params.data.postId, userId);
+      return res.status(201).send({ data: savedPost });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async getSavedPost(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+
+    // const paramsSchema = z.object({
+    //   postId: z.string().uuid(),
+    // });
+
+
+    // const params = paramsSchema.safeParse(req.params);
+    // if (!params.success) {
+    //   return res.status(400).send({
+    //     errors: params.error.issues,
+    //   });
+    // }
+
+    // console.log("DEBUG getSavedPostsById() postId:", params.data.postId);
+    try {
+      const savedPosts = await this.postsService.getSavedPostsById(userId);
+      console.log("DEBUG (getSavedPostsById->savedPosts):", savedPosts);
+      return res.status(200).send({
+        data: savedPosts,
       });
     } catch (error) {
       console.error(error);

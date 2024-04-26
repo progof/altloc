@@ -82,6 +82,14 @@ export type LikesOfUsers = {
   };
 
 /**
+ * Definition of the SavedPosts object.
+ */
+export type SavedPosts = {
+	post_id: string;
+	user_id: string;
+  };
+
+/**
  * Definition of the University object.
  */
 export type University = {
@@ -190,6 +198,13 @@ try {
 		);
 
 		CREATE TABLE IF NOT EXISTS likes_posts (
+			post_id uuid NOT NULL,
+			user_id uuid NOT NULL,
+			FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
+		
+		CREATE TABLE IF NOT EXISTS saved_posts (
 			post_id uuid NOT NULL,
 			user_id uuid NOT NULL,
 			FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
