@@ -210,7 +210,36 @@ export const useAddSavedPostMutation = () => {
     queryFn: getSavedListToPost,
     });
 
+// ---------- //
+export const useDeleteSavedPostMutation = () => {
+  const queryClient = useQueryClient();
 
+  return useMutation({
+    mutationFn: async (data: {
+      postId: string;
+    }) => {
+      const res = await fetch(`/api/saved-posts/${data.postId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return;
+    },
+    onSuccess: (_res, { postId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["saved-posts"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.removeQueries({
+        queryKey: ["saved-posts", postId],
+        exact: true,
+      });
+    },
+  });
+};
 // ---------- //
 export const useUpdatePostMutation = () => {
   const queryClient = useQueryClient();

@@ -90,7 +90,7 @@ async checkSavedPost(postId: string, userId: string) {
     [postId, userId],
   );
   // return result.rows[0] as Post;
-  return result.rows.at(0) || null;
+  return result.rows[0] as SavedPosts;
 }
 
 async getSavedPostsById(userId: string) {
@@ -105,6 +105,12 @@ async getSavedPostsById(userId: string) {
   // return result.rows[0] as Post;
   return result.rows;
   // return result.rows.at(0) || null;
+}
+
+async deleteSavedPostsById(postId: string, userId: string) {
+  await this.db.query(`DELETE FROM saved_posts WHERE post_id = $1 AND user_id = $2`, 
+  [postId, userId]
+  );
 }
 
 // Comment of post

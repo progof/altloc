@@ -15,6 +15,7 @@ export class PostsController {
     this.router.get("/comments/:postId", this.getCommentsForPostId.bind(this));
     this.router.post("/saved-posts/:postId", this.addSavedPost.bind(this));
     this.router.get("/saved-posts", this.getSavedPost.bind(this));
+    this.router.delete("/saved-posts/:postId", this.deleteSavedPost.bind(this));
     this.router.patch("/posts/:userId/:postId", this.updatePost.bind(this));
     this.router.get("/posts", this.getPosts.bind(this));
     this.router.get("/all-posts", this.getAllPosts.bind(this));
@@ -377,6 +378,7 @@ export class PostsController {
     console.log("DEBUG addSavedPost() postId:", params.data.postId);
 
     const check = await this.postsService.checkSavedPost(params.data.postId ,userId);
+  
     console.log("DEBUG addSavedPost() check ->", check);
  
     if(check?.post_id == params.data.postId && check.user_id == userId){
@@ -419,6 +421,32 @@ export class PostsController {
       return res.status(200).send({
         data: savedPosts,
       });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async deleteSavedPost(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+    
+    const paramsSchema = z.object({
+      postId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+
+    try {
+      await this.postsService.deleteSavedPostsById(params.data.postId, userId);
+      return res.status(200).send();
     } catch (error) {
       console.error(error);
       return res.status(500).send({

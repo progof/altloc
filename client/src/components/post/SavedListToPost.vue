@@ -1,8 +1,18 @@
 <script setup lang="ts">
+import { reactive } from "vue";
 import { useQuery } from "@tanstack/vue-query";
-import { getSavedListToPostQueryOptions } from "@/services/post.service";
+import {
+  getSavedListToPostQueryOptions,
+  useDeleteSavedPostMutation,
+} from "@/services/post.service";
 
 const { data: savedLists } = useQuery(getSavedListToPostQueryOptions);
+
+const {
+  mutate: savedPostDelete,
+  isPending: isDeleting,
+  error: deleteError,
+} = useDeleteSavedPostMutation();
 
 function htmlToFormattedText2(html: string) {
   let tempElement = document.createElement("div");
@@ -14,6 +24,29 @@ function htmlToFormattedText2(html: string) {
 const formatCreatedAt = (createdAt: string) => {
   const date = new Date(createdAt);
   return date.toLocaleString();
+};
+
+const handleDeleteSavedPost = async (postId: string) => {
+  try {
+    await savedPostDelete({
+      postId,
+    });
+
+    //   if (notes.value) {
+    //     const index = notes.value.findIndex((note) => note.note_id === noteId);
+    //     if (index !== -1) {
+    //       notes.value.splice(index, 1);
+    //     }
+    //   }
+    if (savedLists.value) {
+      const filteredPosts = savedLists.value.filter(
+        (savedList) => savedList.post_id !== postId
+      );
+      savedLists.value = reactive([...filteredPosts]);
+    }
+  } catch (err) {
+    console.error("Error deleting post:", err);
+  }
 };
 </script>
 
@@ -30,6 +63,13 @@ const formatCreatedAt = (createdAt: string) => {
         <p style="color: rgb(91, 92, 93)">
           Created at: {{ formatCreatedAt(savedList.created_at) }}
         </p>
+        <span v-if="deleteError">{{ deleteError }}</span>
+        <button
+          class="delete-button"
+          @click="() => handleDeleteSavedPost(savedList?.post_id)"
+        >
+          {{ isDeleting ? "Fetching..." : " Delete" }}
+        </button>
       </li>
     </ul>
   </div>

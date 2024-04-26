@@ -3,7 +3,7 @@ import { defineProps } from "vue";
 import { useAddSavedPostMutation } from "@/services/post.service";
 import SaveIcon from "@/assets/icons/SaveIcon.svg?component";
 
-const { mutate: savedPost, isPending, error } = useAddSavedPostMutation();
+const { mutate: savedPost, error } = useAddSavedPostMutation();
 
 const props = defineProps({
   postId: String,
@@ -15,6 +15,7 @@ const addPostToList = () => {
 </script>
 
 <template>
+  <span v-if="error">{{ error }}</span>
   <button @click="addPostToList" class="button">
     <SaveIcon style="width: 24px; height: 24px" />
   </button>
