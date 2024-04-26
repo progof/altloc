@@ -6,6 +6,7 @@ import { MyButton } from "@/components/UI";
 import LikeForPost from "@/components/post/LikeForPost.vue";
 import CommentForPost from "@/components/post/CommentForPost.vue";
 import SavedPost from "@/components/post/SavedPost.vue";
+import SharePost from "@/components/post/SharePost.vue";
 // import Modal from "@/components/Modal.vue";
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // import LikeIcon from "@/assets/icons/LikeIcon.svg?component";
@@ -66,7 +67,8 @@ function htmlToFormattedText2(html: string) {
             <CommentForPost :postId="post.post_id" />
             <SavedPost :postId="post.post_id" />
             <!-- <SaveIcon style="width: 24px; height: 24px" /> -->
-            <ShareIcon style="width: 24px; height: 24px" />
+            <!-- <ShareIcon style="width: 24px; height: 24px" /> -->
+            <SharePost :postId="post.post_id" />
             <!-- <button @click="toggleModal">test</button> -->
           </div>
         </div>
