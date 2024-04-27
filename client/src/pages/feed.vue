@@ -2,7 +2,7 @@
 import { ref } from "vue";
 // import { useQuery } from "@tanstack/vue-query";
 import { MyButton } from "@/components/UI";
-import Modal from "@/components/Modal.vue";
+// import Modal from "@/components/Modal.vue";
 import SearchBar from "@/components/SearchBar.vue";
 import SearchPost from "@/components/post/SearchPost.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
@@ -51,11 +51,11 @@ const showContent = (content: string) => {
         <SearchBar />
         <ViewAllNotes />
       </div>
-      <Modal @close="toggleModal" :modalActive="modalActive">
+      <!-- <Modal @close="toggleModal" :modalActive="modalActive">
         <div class="dialog">
           <div class="dialog__content">test</div>
         </div>
-      </Modal>
+      </Modal> -->
     </div>
   </div>
 </template>

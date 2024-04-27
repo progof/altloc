@@ -2,9 +2,7 @@
 import { defineProps, ref } from "vue";
 import ShareIcon from "@/assets/icons/ShareIcon.svg?component";
 
-const props = defineProps({
-  postId: String,
-});
+const props = defineProps<{ postId: string }>();
 
 const isLinkCopied = ref(false);
 

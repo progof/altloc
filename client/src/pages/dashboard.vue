@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useQuery, useQueryClient } from "@tanstack/vue-query";
+import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
 import { getCountPostsQueryOptions } from "@/services/post.service";
@@ -20,7 +20,7 @@ import UserProfile from "@/assets/icons/UserProfile.svg?component";
 // };
 
 const { data: me } = useQuery(getMeQueryOptions);
-const userId = me.value?.user_id;
+// const userId = me.value?.user_id;
 const { data: countNotes } = useQuery(
   computed(() => {
     if (me.value) {
