@@ -18,6 +18,7 @@ export type Note = {
   body: string;
   category: string;
   created_at: string;
+  likes: number;
   edit_at: string;
   username: string;
 };
@@ -291,3 +292,41 @@ export const getNotesForSpaceQueryOptions = (spaceId: string) =>
       queryKey: ["users", userId],
       queryFn: () => getUser(userId),
     });
+
+  // ---------- //
+export const useLikeNoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      noteId: string;
+      likes: number;
+    }) => {
+      const res = await fetch(`/api/like-note/${data.noteId}`, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Note }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["like-note"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["like-note", res.data.note_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};

@@ -44,7 +44,7 @@ const formatCreatedAt = (createdAt: string) => {
 import { useQuery } from "@tanstack/vue-query";
 import { getAllNotesQueryOptions } from "@/services/app.service";
 import { MyButton } from "@/components/UI";
-// import LikeForPost from "@/components/post/LikeForPost.vue";
+import LikeForNote from "@/components/note/LikeForNote.vue";
 // import CommentForPost from "@/components/post/CommentForPost.vue";
 // import SavedPost from "@/components/post/SavedPost.vue";
 // import SharePost from "@/components/post/SharePost.vue";
@@ -90,12 +90,12 @@ function htmlToFormattedText2(html: string) {
           <MyButton @click="$router.push(`/notes/${note.note_id}`)">
             Full post
           </MyButton>
-          <!-- <div class="user-active">
-            <LikeForPost :noteId="note.note_id" :noteLike="note" />
-            <CommentForPost :noteId="post.post_id" />
+          <div class="user-active">
+            <LikeForNote :noteId="note.note_id" :noteLike="note.likes" />
+            <!-- <CommentForPost :noteId="post.post_id" />
             <SavedPost :noteId="note.note_id" />
-            <SharePost :noteId="note.note_id" />
-          </div> -->
+            <SharePost :noteId="note.note_id" /> -->
+          </div>
         </div>
       </li>
     </ul>

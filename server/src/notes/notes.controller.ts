@@ -19,6 +19,7 @@ export class NotesController {
     this.router.get("/space-notes/:spaceId", this.getNotesForSpaceId.bind(this));
     this.router.get("/notes/:noteId", this.getNote.bind(this));
     this.router.delete("/notes/:noteId", this.deleteNote.bind(this));
+    this.router.patch("/like-note/:noteId", this.likeToNote.bind(this));
   }
 
   async createNote(req: Request, res: Response) {
@@ -247,6 +248,57 @@ export class NotesController {
     try {
       await this.notesService.deleteNoteById(params.data.noteId);
       return res.status(200).send();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async likeToNote(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+
+    const paramsSchema = z.object({
+      noteId: z.string().uuid(),
+    });
+
+    // if (!req.session.user) {
+    //   return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    // }
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    const bodySchema = z.object({
+      likes: z.number()
+    });
+
+    const body = bodySchema.safeParse(req.body);
+    if (!body.success) {
+      return res.status(400).send({
+        errors: body.error.issues,
+      });
+    }
+
+    console.log("Data from client:", body);
+
+    const checkLike = await this.notesService.checkLikeOfPost(params.data.noteId, userId);
+   console.log("checkLike", checkLike);
+
+   if(checkLike?.note_id == params.data.noteId && checkLike.user_id == userId){
+    return res.status(401).send({ errors: [{ message: "The user has already liked it." }] });
+   }
+
+  
+    try {
+      const like = await this.notesService.likeForNote(params.data.noteId, body.data.likes);
+      const likeList = await this.notesService.likeToNote(params.data.noteId, userId);
+      return res.status(201).send({ data: like, likeList });
     } catch (error) {
       console.error(error);
       return res.status(500).send({

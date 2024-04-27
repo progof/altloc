@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { Note } from "../database";
+import { Note, LikeNote } from "../database";
 
 export type CreateNoteDTO = {
   title: string;
@@ -61,7 +61,7 @@ export class NotesService {
 
   async getAllNotes(){
     const result = await this.db.query<Note>(
-      `SELECT title, description, body, category, users.username, notes.user_id, note_id, notes.created_at 
+      `SELECT title, description, body, category, users.username, notes.user_id, note_id, notes.created_at, likes 
       FROM notes JOIN users ON notes.user_id = users.user_id`,
     );
     return result.rows;
@@ -69,7 +69,7 @@ export class NotesService {
 
   async getNoteById(noteId: string) {
     const result = await this.db.query<Note>(
-      `SELECT title, description, body, category, users.username, note_id, notes.user_id, notes.created_at, notes.edit_at
+      `SELECT title, description, body, category, users.username, note_id, notes.user_id, notes.created_at, notes.edit_at, likes
       FROM notes JOIN users ON notes.user_id = users.user_id WHERE note_id = $1;`,
       [noteId],
     );
@@ -99,4 +99,32 @@ export class NotesService {
       noteId,
     ]);
   }
+
+  // Like of post
+  async likeForNote(noteId: string, likes: number) {
+    const result = await this.db.query<Note>(
+      `UPDATE notes SET likes = $2 WHERE note_id = $1 RETURNING *;`,
+      [noteId, likes],
+    );
+    // return result.rows[0] as Post;
+    return result.rows.at(0) || null;
+  }
+
+  async likeToNote(noteId: string, userId: string) {
+    const result = await this.db.query<LikeNote>(
+      `INSERT INTO likes_notes(note_id, user_id) VALUES ($1, $2) RETURNING *;`,
+      [noteId, userId],
+    );
+    return result.rows[0] as LikeNote;
+  }
+
+  async checkLikeOfPost(noteId: string, userId: string) {
+    const result = await this.db.query<LikeNote>(
+      `SELECT * FROM likes_notes WHERE note_id = $1 AND user_id = $2 `,
+      [noteId, userId],
+    );
+    // return result.rows[0] as Post;
+    return result.rows.at(0) || null;
+  }
+
 }
