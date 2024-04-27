@@ -40,7 +40,7 @@ const handleDeleteSavedPost = async (noteId: string) => {
     //   }
     if (savedLists.value) {
       const filteredPosts = savedLists.value.filter(
-        (savedList) => savedList.post_id !== noteId
+        (savedList) => savedList.note_id !== noteId
       );
       savedLists.value = reactive([...filteredPosts]);
     }
