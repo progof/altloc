@@ -151,4 +151,43 @@ async getCommentNoteById(noteId: string) {
   return result.rows || [];
   }
 
+
+  // Saved of post
+async addSavedNoteToList(noteId: string, userId: string) {
+  const result = await this.db.query<SavedNotes>(
+    `INSERT INTO saved_notes(note_id, user_id) VALUES ($1, $2) RETURNING *;`,
+    [noteId, userId],
+  );
+  return result.rows[0] as SavedNotes;
+}
+
+async checkSavedNote(noteId: string, userId: string) {
+  const result = await this.db.query<SavedNotes>(
+    `SELECT * FROM saved_notes WHERE note_id = $1 AND user_id = $2 `,
+    [noteId, userId],
+  );
+  // return result.rows[0] as Post;
+  return result.rows[0] as SavedNotes;
+}
+
+async getSavedNotesById(userId: string) {
+  const result = await this.db.query<Note>(
+    `SELECT saved_notes.note_id, saved_notes.user_id,  notes.body, users.username, notes.created_at
+    FROM saved_notes 
+    JOIN notes ON saved_notes.note_id = notes.note_id
+    JOIN users ON notes.user_id = users.user_id 
+    WHERE saved_notes.user_id = $1 `,
+    [userId],
+  );
+  // return result.rows[0] as Post;
+  return result.rows;
+  // return result.rows.at(0) || null;
+}
+
+async deleteSavedNotesById(noteId: string, userId: string) {
+  await this.db.query(`DELETE FROM saved_notes WHERE note_id = $1 AND user_id = $2`, 
+  [noteId, userId]
+  );
+}
+
 }

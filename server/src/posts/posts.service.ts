@@ -86,7 +86,7 @@ async addSavedPostToList(postId: string, userId: string) {
 
 async checkSavedPost(postId: string, userId: string) {
   const result = await this.db.query<SavedPosts>(
-    `SELECT * FROM likes_posts WHERE post_id = $1 AND user_id = $2 `,
+    `SELECT * FROM saved_posts WHERE post_id = $1 AND user_id = $2 `,
     [postId, userId],
   );
   // return result.rows[0] as Post;

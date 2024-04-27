@@ -7,6 +7,7 @@ import { getCountPostsQueryOptions } from "@/services/post.service";
 import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SavedPostList from "@/components/post/SavedListToPost.vue";
+import SavedNoteList from "@/components/note/SavedListToNote.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 import { MyButton } from "@/components/UI";
 
@@ -87,10 +88,16 @@ const showContent = (content: string) => {
             Note view
           </MyButton>
           <MyButton
-            @click="showContent('saved-view')"
-            :class="{ active: activeButton === 'saved-view' }"
+            @click="showContent('saved-post')"
+            :class="{ active: activeButton === 'saved-post' }"
           >
-            Saved view
+            Saved posts
+          </MyButton>
+          <MyButton
+            @click="showContent('saved-note')"
+            :class="{ active: activeButton === 'saved-note' }"
+          >
+            Saved notes
           </MyButton>
         </div>
         <div v-if="activeButton === 'post-view'" class="post-view">
@@ -99,8 +106,11 @@ const showContent = (content: string) => {
         <div v-if="activeButton === 'note-view'" class="note-view">
           <note-list style="overflow: scroll" />
         </div>
-        <div v-if="activeButton === 'saved-view'" class="saved-view">
+        <div v-if="activeButton === 'saved-post'" class="saved-post">
           <SavedPostList style="overflow: scroll" />
+        </div>
+        <div v-if="activeButton === 'saved-note'" class="saved-note">
+          <SavedNoteList style="overflow: scroll" />
         </div>
         <!-- <div class="content-box">
           <post-list style="overflow: scroll" />

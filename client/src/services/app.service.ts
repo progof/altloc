@@ -401,3 +401,94 @@ export const getCommentsForNoteQueryOptions = (noteId: string) =>
     queryKey: ["note-comments", noteId],
     queryFn: () => getCommentsForNote(noteId),
   });
+
+
+// ---------- //
+export const useAddSavedNoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      noteId: string;
+    }) => {
+      const res = await fetch(`/api/saved-notes/${data.noteId}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Note }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["saved-notes/"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["saved-notes/", res.data.note_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+
+// ---------- //
+
+export const getSavedListToNote = async () => {
+  const res = await fetch(`/api/saved-notes`, {
+    headers: {
+    Accept: "application/json",
+    },
+  });
+  
+  if (!res.ok) {
+    const errors = errorSchema.parse(await res.json()).errors;
+    throw new Error(errors.at(0)?.message);
+  }
+  
+  return (await res.json() as { data: Note[] }).data;
+  };
+
+  export const getSavedListToNoteQueryOptions = queryOptions({
+  queryKey: ["saved-notes"],
+  queryFn: getSavedListToNote,
+  });
+
+  // ---------- //
+export const useDeleteSavedNoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      noteId: string;
+    }) => {
+      const res = await fetch(`/api/saved-notes/${data.noteId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return;
+    },
+    onSuccess: (_res, { noteId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["saved-notes"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.removeQueries({
+        queryKey: ["saved-notes", noteId],
+        exact: true,
+      });
+    },
+  });
+};

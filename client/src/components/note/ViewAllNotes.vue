@@ -46,7 +46,7 @@ import { getAllNotesQueryOptions } from "@/services/app.service";
 import { MyButton } from "@/components/UI";
 import LikeForNote from "@/components/note/LikeForNote.vue";
 import CommentForNote from "@/components/note/CommentForNote.vue";
-// import SavedPost from "@/components/post/SavedPost.vue";
+import SavedNote from "@/components/note/SavedNote.vue";
 // import SharePost from "@/components/post/SharePost.vue";
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
 
@@ -93,8 +93,8 @@ function htmlToFormattedText2(html: string) {
           <div class="user-active">
             <LikeForNote :noteId="note.note_id" :noteLike="note.likes" />
             <CommentForNote :noteId="note.note_id" />
-            <!-- <SavedPost :noteId="note.note_id" />
-            <SharePost :noteId="note.note_id" /> -->
+            <SavedNote :noteId="note.note_id" />
+            <!-- <SharePost :noteId="note.note_id" /> -->
           </div>
         </div>
       </li>

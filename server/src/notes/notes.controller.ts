@@ -22,6 +22,9 @@ export class NotesController {
     this.router.patch("/like-note/:noteId", this.likeToNote.bind(this));
     this.router.post("/note-comments/:noteId", this.createNoteComment.bind(this));
     this.router.get("/note-comments/:noteId", this.getCommentsForNoteId.bind(this));
+    this.router.post("/saved-notes/:noteId", this.addSavedNote.bind(this));
+    this.router.get("/saved-notes", this.getSavedNote.bind(this));
+    this.router.delete("/saved-notes/:noteId", this.deleteSavedNote.bind(this));
   }
 
   async createNote(req: Request, res: Response) {
@@ -371,6 +374,103 @@ export class NotesController {
       return res.status(200).send({
         data: comment,
       });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+
+  async addSavedNote(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+    console.log("addSavedNote -> userId", userId);
+
+    const paramsSchema = z.object({
+      noteId: z.string(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    
+    console.log("DEBUG addSavedNote() postId:", params.data.noteId);
+
+    const check = await this.notesService.checkSavedNote(params.data.noteId ,userId);
+  
+    console.log("DEBUG addSavedNote() check ->", check);
+ 
+    if(check?.note_id == params.data.noteId && check.user_id == userId){
+     return res.status(401).send({ errors: [{ message: "This note has already been added to my list by a user" }] });
+    }
+
+    try {
+      const savedNote = await this.notesService.addSavedNoteToList(params.data.noteId, userId);
+      return res.status(201).send({ data: savedNote });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async getSavedNote(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+
+    // const paramsSchema = z.object({
+    //   postId: z.string().uuid(),
+    // });
+
+
+    // const params = paramsSchema.safeParse(req.params);
+    // if (!params.success) {
+    //   return res.status(400).send({
+    //     errors: params.error.issues,
+    //   });
+    // }
+
+    // console.log("DEBUG getSavedPostsById() postId:", params.data.postId);
+    try {
+      const savedNotes = await this.notesService.getSavedNotesById(userId);
+      console.log("DEBUG (getSavedNotesById->savedNotes):", savedNotes);
+      return res.status(200).send({
+        data: savedNotes,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async deleteSavedNote(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+    
+    const paramsSchema = z.object({
+      noteId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+
+    try {
+      await this.notesService.deleteSavedNotesById(params.data.noteId, userId);
+      return res.status(200).send();
     } catch (error) {
       console.error(error);
       return res.status(500).send({
