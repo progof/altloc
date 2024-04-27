@@ -1,11 +1,15 @@
 import type { Pool } from "pg";
-import { Note, LikeNote } from "../database";
+import { Note, LikeNote, SavedNotes } from "../database";
 
 export type CreateNoteDTO = {
   title: string;
   description: string;
   body: string;
   category: string;
+};
+
+export type CreateCommentNoteDTO = {
+  comment: string;
 };
 
 // export type NoteCount = {
@@ -125,6 +129,26 @@ export class NotesService {
     );
     // return result.rows[0] as Post;
     return result.rows.at(0) || null;
+  }
+
+// Comment of post
+
+async createCommentForNote(noteId: string, userId: string, data: CreateCommentNoteDTO) {
+  const result = await this.db.query<Note>(
+    `INSERT INTO comments_notes (note_id, user_id, comment) VALUES ($1, $2, $3 ) RETURNING *;`,
+    [noteId, userId, data.comment ],
+  );
+  return result.rows[0] as Note;
+}
+
+async getCommentNoteById(noteId: string) {
+  const result = await this.db.query<Note>(
+    `SELECT comments_notes.comment, users.username, comments_notes.created_at
+    FROM comments_notes JOIN users ON comments_notes.user_id = users.user_id WHERE note_id = $1;`,
+    [noteId],
+  );
+  // return result.rows.at(0) || null;
+  return result.rows || [];
   }
 
 }

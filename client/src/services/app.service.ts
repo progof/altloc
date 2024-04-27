@@ -23,6 +23,15 @@ export type Note = {
   username: string;
 };
 
+
+export type Comment = {
+  comment_id: string;
+  note_id: string;
+  user_id: string;
+  comment: string;
+  created_at: string;
+  username: string;
+};
 export const useCreateNoteMutation = () => {
   const queryClient = useQueryClient();
 
@@ -330,3 +339,65 @@ export const useLikeNoteMutation = () => {
     },
   });
 };
+
+// ---------- //
+export const useCreateCommentNoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      noteId: string;
+      comment: string;
+    }) => {
+      console.log("useCreateCommentPostMutation.data()", data.comment)
+      const res = await fetch(`/api/note-comments/${data.noteId}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: Comment }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["note-comments"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["note-comments", res.data.note_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+// ---------- //
+const getCommentsForNote = async (noteId: string) => {
+  const res = await fetch(`/api/note-comments/${noteId}`, {
+    headers: {
+      Accept: "application/json",
+      method: "GET",
+    },
+  });
+
+  if (!res.ok) {
+    const errors = errorSchema.parse(await res.json()).errors;
+    throw new Error(errors.at(0)?.message);
+  }
+
+  const responseData = await res.json();
+  return responseData.data as Comment;
+};
+
+export const getCommentsForNoteQueryOptions = (noteId: string) =>
+  queryOptions({
+    queryKey: ["note-comments", noteId],
+    queryFn: () => getCommentsForNote(noteId),
+  });

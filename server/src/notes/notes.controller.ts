@@ -20,6 +20,8 @@ export class NotesController {
     this.router.get("/notes/:noteId", this.getNote.bind(this));
     this.router.delete("/notes/:noteId", this.deleteNote.bind(this));
     this.router.patch("/like-note/:noteId", this.likeToNote.bind(this));
+    this.router.post("/note-comments/:noteId", this.createNoteComment.bind(this));
+    this.router.get("/note-comments/:noteId", this.getCommentsForNoteId.bind(this));
   }
 
   async createNote(req: Request, res: Response) {
@@ -299,6 +301,76 @@ export class NotesController {
       const like = await this.notesService.likeForNote(params.data.noteId, body.data.likes);
       const likeList = await this.notesService.likeToNote(params.data.noteId, userId);
       return res.status(201).send({ data: like, likeList });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+
+
+  async createNoteComment(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+
+    const paramsSchema = z.object({
+      noteId: z.string(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    
+    const userId = req.session.user.user_id;
+    const bodySchema = z.object({
+      comment: z.string(),
+    });
+  
+    const content = bodySchema.safeParse(req.body);
+    if (!content.success) {
+      return res.status(400).send({
+        errors: content.error.issues,
+      });
+    }
+
+    console.log("Content data from user:", content.data);
+
+    try {
+      const commentOfNote = await this.notesService.createCommentForNote(params.data.noteId, userId, content.data);
+      return res.status(201).send({ data: commentOfNote });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+
+  async getCommentsForNoteId(req: Request, res: Response) {
+
+    const paramsSchema = z.object({
+      noteId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    console.log("DEBUG getCommentsForNoteId() noteId:", params.data.noteId);
+    try {
+      const comment = await this.notesService.getCommentNoteById(params.data.noteId);
+      console.log("DEBUG (getCommentsForNoteId->comment):", comment);
+      return res.status(200).send({
+        data: comment,
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).send({

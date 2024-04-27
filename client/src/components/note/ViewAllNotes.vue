@@ -45,7 +45,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { getAllNotesQueryOptions } from "@/services/app.service";
 import { MyButton } from "@/components/UI";
 import LikeForNote from "@/components/note/LikeForNote.vue";
-// import CommentForPost from "@/components/post/CommentForPost.vue";
+import CommentForNote from "@/components/note/CommentForNote.vue";
 // import SavedPost from "@/components/post/SavedPost.vue";
 // import SharePost from "@/components/post/SharePost.vue";
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
@@ -92,8 +92,8 @@ function htmlToFormattedText2(html: string) {
           </MyButton>
           <div class="user-active">
             <LikeForNote :noteId="note.note_id" :noteLike="note.likes" />
-            <!-- <CommentForPost :noteId="post.post_id" />
-            <SavedPost :noteId="note.note_id" />
+            <CommentForNote :noteId="note.note_id" />
+            <!-- <SavedPost :noteId="note.note_id" />
             <SharePost :noteId="note.note_id" /> -->
           </div>
         </div>
