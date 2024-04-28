@@ -17,6 +17,10 @@ import { SpacesService } from "./spaces/spaces.service";
 import { PostsController } from "./posts/posts.controller";
 import { PostsService } from "./posts/posts.service";
 
+
+import { EventsController } from "./events/events.controller";
+import { EventsSercice } from "./events/events.service";
+
 // Create an instance of the Express application
 const app = express();
 // Middleware setup
@@ -56,6 +60,13 @@ export const spacesService = new SpacesService(pool);
 const spacesController = new SpacesController(spacesService);
 // Mount route for spaces onto the Express application
 app.use(spacesController.router);
+
+
+// Initialize services with database pool and configuration for PostsService
+export const eventsService = new EventsSercice(pool);
+const EventsController = new EventsController(eventsService);
+// Mount route for posts onto the Express application
+app.use(EventsController.router);
 
 // Start the Express server, listening on the specified port
 app.listen(config.APP_PORT, () => {

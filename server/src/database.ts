@@ -174,6 +174,19 @@ export type SpaceMembers = {
 	username: string;
   };
 
+/**
+ * Definition of the Space object.
+ */
+export type SpaceEvents = {
+	event_id: string;
+	space_id: string;
+	user_id: string;
+	title: string;
+	description: string;
+	start_time: string;
+	end_time: string;
+	date: string;
+  };
 
 try {
 	//  Attempt to connect to the PostgreSQL database.
@@ -321,6 +334,20 @@ try {
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (note_id) REFERENCES notes(note_id) ON DELETE CASCADE,
 			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+		);
+
+		CREATE TABLE IF NOT EXISTS space_events (
+			event_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			space_id uuid NOT NULL,
+			creator uuid NOT NULL,
+			title VARCHAR(200) NOT NULL,
+			description VARCHAR(500) NOT NULL,
+			start_time TIME NOT NULL,
+			end_time TIME NOT NULL,
+			date DATE NOT NULL,
+			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY (creator) REFERENCES users(user_id) ON DELETE CASCADE,
+			FOREIGN KEY (space_id) REFERENCES spaces(space_id) ON DELETE CASCADE
 		);
 
 	`);
