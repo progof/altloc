@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-// import { getSpaceQueryOptions } from "@/services/spaces.service";
-import { getNotesForSpaceQueryOptions } from "@/services/app.service";
 import { getMeQueryOptions } from "@/services/auth.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
 import SpaceDashboard from "@/components/space/SapceDashboard.vue";
-import SearchBar from "@/components/SearchBar.vue";
-// import { MyButton } from "@/components/UI";
-// import UserProfile from "@/assets/icons/UserProfile.svg?component";
 
 const { data: me } = useQuery(getMeQueryOptions);
 
@@ -21,14 +16,6 @@ const spaceId: string = Array.isArray(route.params.id)
 
 console.log("space_id", spaceId);
 console.log("user_id", me.value?.user_id);
-// const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
-
-const { data: notes } = useQuery(getNotesForSpaceQueryOptions(spaceId));
-
-const formatCreatedAt = (createdAt: string) => {
-  const date = new Date(createdAt);
-  return date.toLocaleString();
-};
 </script>
 
 <template>

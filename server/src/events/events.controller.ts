@@ -10,7 +10,7 @@ export class EventsController {
     private readonly eventsService: EventsService,
   ) {
     this.router.use("/events", blockNotVerifedUser);
-    this.router.post("/events/:spaceId", this.createEvent.bind(this));
+    this.router.post("/events", this.createEvent.bind(this));
   }
 
   async createEvent(req: Request, res: Response) {
@@ -34,10 +34,10 @@ export class EventsController {
         errors: body.error.issues,
       });
     }
-    console.log("createSpace: ", body)
+    console.log("createEvent: ", body)
     try {
-      const note = await this.eventsService.createEvent(body.data.space_id, userId, body.data);
-      return res.status(201).send({ data: note });
+      const event = await this.eventsService.createEvent(body.data.space_id, userId, body.data);
+      return res.status(201).send({ data: event });
     } catch (error) {
       console.error(error);
       return res.status(500).send({
