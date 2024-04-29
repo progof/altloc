@@ -18,14 +18,14 @@ export class EventsController {
       return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
     }
     const userId = req.session.user.user_id;
+
     const bodySchema = z.object({
       space_id: z.string().uuid(),
       title: z.string(),
       description: z.string(),
-      country: z.string(),
-      city: z.string(),
-      university: z.string(),
-      category: z.string(),
+      start_time: z.string(),
+      end_time: z.string(),
+      date: z.string(),
     });
   
     const body = bodySchema.safeParse(req.body);

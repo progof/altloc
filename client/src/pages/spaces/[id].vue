@@ -9,6 +9,7 @@ import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
 import SearchBar from "@/components/SearchBar.vue";
 // import { MyButton } from "@/components/UI";
+// import UserProfile from "@/assets/icons/UserProfile.svg?component";
 
 const { data: me } = useQuery(getMeQueryOptions);
 
@@ -34,9 +35,11 @@ const formatCreatedAt = (createdAt: string) => {
     <SideBarNav />
     <div class="profile item space-lists">
       <div class="wrapper">
-        <div class="profile__info" v-if="space">
+        <div class="space__face">
           <img src="@/assets/neptune2.jpeg" alt="" />
-          <span>Title: {{ space?.title }}</span>
+          <h2 style="color: aliceblue">Space: {{ space?.title }} 👋</h2>
+        </div>
+        <div class="space__info" v-if="space">
           <span style="border-color: #3e3d3d"
             >Country: {{ space?.country }}</span
           >
@@ -84,7 +87,7 @@ const formatCreatedAt = (createdAt: string) => {
 <style scoped>
 .profile {
   flex: 1 1 0%;
-  height: 100vh;
+  min-height: 100vh; /* Change height to min-height */
 }
 
 .wrapper {
@@ -99,19 +102,58 @@ const formatCreatedAt = (createdAt: string) => {
 .container {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   width: 100vw;
   height: 100vh;
 }
 
-.profile__info {
+.space__info {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  /* border: 1px solid aliceblue; */
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
+  /* background-color: rgba(32, 32, 32, 0.9); */
+  background: url(@/assets/dashboard_bg.jpg) left;
+  border-radius: 20px;
+  margin-top: 20px;
   padding: 10px;
+}
+
+.space__face {
+  display: flex;
+  background: url(@/assets/dashboard_bg.jpg) left;
+  align-items: center;
+  border-radius: 20px;
+  color: aliceblue;
+}
+
+/* .dashboard__info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  background-color: rgba(32, 32, 32, 0.9);
+  border-radius: 20px;
+  height: 64px;
+  padding: 20px;
+} */
+
+/* .profile__info {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 20px;
+  background: url(../assets/dashboard_bg.jpg) left;
+  background-color: rgba(32, 32, 32, 0.9);
+  border-radius: 20px;
+  height: 64px;
+  padding: 20px;
+} */
+
+.dashboard__face {
+  display: flex;
+  background: url(../assets/dashboard_bg.jpg) left;
+  align-items: center;
+  border-radius: 20px;
 }
 
 img {
@@ -178,9 +220,9 @@ span {
   max-width: 800px;
   margin: 0 auto;
   padding: 40px;
-  background-color: rgb(15, 14, 14);
+  /* background-color: rgba(15, 14, 14, 0.9); */
   color: azure;
-  height: 100vh;
+  /* height: 100vh; */
 }
 
 .note-lists {

@@ -54,11 +54,6 @@ const unfollowToSpace = async (event: Event) => {
 };
 
 console.log("DEBUG", space.value?.title);
-
-const formatCreatedAt = (createdAt: string) => {
-  const date = new Date(createdAt);
-  return date.toLocaleString();
-};
 </script>
 
 <template>
@@ -91,23 +86,19 @@ const formatCreatedAt = (createdAt: string) => {
 </template>
 
 <style scoped>
-.icons {
-  width: 24px;
-  height: 24px;
-  margin-right: 10px;
-}
-
 .space__menu {
   margin-top: 20px;
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
   background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
+  border-radius: 20px;
 }
 
 .menu__item {
-  margin: 15px;
+  margin: 10px;
   display: flex;
   align-items: center;
   color: aliceblue;
@@ -116,6 +107,10 @@ const formatCreatedAt = (createdAt: string) => {
   text-decoration: none;
   border-radius: 12px;
   transition: background-color 0.3s;
+  font-size: 13px;
+  width: 120px;
+  height: 40px;
+  text-align: center;
 }
 
 .menu__item:hover {
@@ -127,5 +122,11 @@ button {
   background-color: rgba(32, 32, 32, 0.9);
   color: aliceblue;
   border: none;
+}
+
+.icons {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
 </style>

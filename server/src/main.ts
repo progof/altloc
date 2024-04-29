@@ -19,7 +19,7 @@ import { PostsService } from "./posts/posts.service";
 
 
 import { EventsController } from "./events/events.controller";
-import { EventsSercice } from "./events/events.service";
+import { EventsService } from "./events/events.service";
 
 // Create an instance of the Express application
 const app = express();
@@ -63,10 +63,10 @@ app.use(spacesController.router);
 
 
 // Initialize services with database pool and configuration for PostsService
-export const eventsService = new EventsSercice(pool);
-const EventsController = new EventsController(eventsService);
+export const eventsService = new EventsService(pool);
+const eventsController = new EventsController(eventsService);
 // Mount route for posts onto the Express application
-app.use(EventsController.router);
+app.use(eventsController.router);
 
 // Start the Express server, listening on the specified port
 app.listen(config.APP_PORT, () => {
