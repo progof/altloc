@@ -58,6 +58,7 @@ async getAllSpaces(){
       [spaceId],
     );
     return result.rows;
+    // return result.rows[0] as SpaceMembers;
   }
 
 

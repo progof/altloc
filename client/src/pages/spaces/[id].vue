@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
-import { getSpaceQueryOptions } from "@/services/spaces.service";
+// import { getSpaceQueryOptions } from "@/services/spaces.service";
 import { getNotesForSpaceQueryOptions } from "@/services/app.service";
 import { getMeQueryOptions } from "@/services/auth.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
+import SpaceDashboard from "@/components/space/SapceDashboard.vue";
 import SearchBar from "@/components/SearchBar.vue";
 // import { MyButton } from "@/components/UI";
 // import UserProfile from "@/assets/icons/UserProfile.svg?component";
@@ -20,7 +21,7 @@ const spaceId: string = Array.isArray(route.params.id)
 
 console.log("space_id", spaceId);
 console.log("user_id", me.value?.user_id);
-const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
+// const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 
 const { data: notes } = useQuery(getNotesForSpaceQueryOptions(spaceId));
 
@@ -33,19 +34,9 @@ const formatCreatedAt = (createdAt: string) => {
 <template>
   <div class="conteiner">
     <SideBarNav />
-    <div class="profile item space-lists">
+    <div class="profile">
       <div class="wrapper">
-        <div class="space__face">
-          <img src="@/assets/neptune2.jpeg" alt="" />
-          <h2 style="color: aliceblue">Space: {{ space?.title }} 👋</h2>
-        </div>
-        <div class="space__info" v-if="space">
-          <span style="border-color: #3e3d3d"
-            >Country: {{ space?.country }}</span
-          >
-          <span>City: {{ space?.city }}</span>
-          <span>Description: {{ space?.description }}</span>
-        </div>
+        <SpaceDashboard />
         <SpaceMenu />
         <div class="feed">
           <SearchBar />
@@ -102,118 +93,8 @@ const formatCreatedAt = (createdAt: string) => {
 .container {
   display: flex;
   flex-direction: column;
-  /* flex-wrap: wrap; */
   width: 100vw;
   height: 100vh;
-}
-
-.space__info {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  /* background-color: rgba(32, 32, 32, 0.9); */
-  background: url(@/assets/dashboard_bg.jpg) left;
-  border-radius: 20px;
-  margin-top: 20px;
-  padding: 10px;
-}
-
-.space__face {
-  display: flex;
-  background: url(@/assets/dashboard_bg.jpg) left;
-  align-items: center;
-  border-radius: 20px;
-  color: aliceblue;
-}
-
-/* .dashboard__info {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 20px;
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 20px;
-  height: 64px;
-  padding: 20px;
-} */
-
-/* .profile__info {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 20px;
-  background: url(../assets/dashboard_bg.jpg) left;
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 20px;
-  height: 64px;
-  padding: 20px;
-} */
-
-.dashboard__face {
-  display: flex;
-  background: url(../assets/dashboard_bg.jpg) left;
-  align-items: center;
-  border-radius: 20px;
-}
-
-img {
-  width: 128px;
-  height: 128px;
-  margin: 20px;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 80px;
-}
-
-span {
-  display: flex;
-  flex-direction: row;
-  margin: 10px;
-  color: azure;
-}
-
-.profile__notes {
-  margin-top: 20px;
-  height: 700px;
-  overflow: scroll;
-}
-
-.profile__notes h2 {
-  color: rgb(55, 146, 225);
-  margin-bottom: 10px;
-}
-
-.profile__notes ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.profile__notes li {
-  border: 1px solid #ddd;
-  margin-bottom: 10px;
-  padding: 10px;
-  position: relative;
-}
-
-.profile__notes h3 {
-  color: rgb(55, 146, 225);
-  margin-bottom: 5px;
-}
-
-.profile__notes p {
-  margin-bottom: 5px;
-  color: #333;
-}
-
-.open-button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: #5de1ed;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  margin-top: 30px;
 }
 
 .feed {

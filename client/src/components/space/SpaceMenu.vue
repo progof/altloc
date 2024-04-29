@@ -65,7 +65,12 @@ console.log("DEBUG", space.value?.title);
       <MemberIcon class="icons" />
       Members
     </MyButton>
-    <div class="menu__item"><EventIcon class="icons" />Events</div>
+    <div
+      class="menu__item"
+      @click="$router.push(`/spaces/events/${space?.space_id}`)"
+    >
+      <EventIcon class="icons" />Events
+    </div>
     <MyButton
       class="menu__item"
       @click="$router.push(`/spaces/notes/add/${space?.space_id}`)"
@@ -73,7 +78,12 @@ console.log("DEBUG", space.value?.title);
       <AddNoteIcon class="icons" />
       Add note
     </MyButton>
-    <div class="menu__item"><ChatIcon class="icons" />Chat</div>
+    <div
+      class="menu__item"
+      @click="$router.push(`/spaces/chat/${space?.space_id}`)"
+    >
+      <ChatIcon class="icons" />Chat
+    </div>
     <button class="menu__item" @click="unfollowToSpace">
       <FollowIcon class="icons" />
       Unfollow

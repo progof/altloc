@@ -16,12 +16,15 @@ import SpacesPage from "@/pages/spaces.vue";
 import SpaceAdd from "@/pages/spaces/add.vue";
 import SpaceByIdPage from "@/pages/spaces/[id].vue";
 import SpaceMembers from "@/pages/spaces/members.vue";
+import SpaceEvents from "@/pages/spaces/events.vue";
+import SpaceChat from "@/pages/spaces/chat.vue";
 import SpaceNotes from "@/pages/spaces/notes.vue";
 import PostByIdPage from "@/pages/posts/[id].vue";
 import PostAdd from "@/pages/posts/add.vue";
 import PostEditor from "@/pages/posts/editor.vue";
-import PostFeedPage from "@/pages/posts/feed.vue";
-import { User, getMeQueryOptions } from "@/services/auth.service";
+// import PostFeedPage from "@/pages/posts/feed.vue";
+// import { User, getMeQueryOptions } from "@/services/auth.service";
+import { getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
 export const router = createRouter({
@@ -86,6 +89,14 @@ export const router = createRouter({
     {
       path: "/spaces/members/:id",
       component: SpaceMembers,
+    },
+    {
+      path: "/spaces/events/:id",
+      component: SpaceEvents,
+    },
+    {
+      path: "/spaces/chat/:id",
+      component: SpaceChat,
     },
     {
       path: "/spaces/notes/:id",

@@ -5,13 +5,13 @@ import {
   getSpaceQueryOptions,
   getSpaceMembersQueryOptions,
 } from "@/services/spaces.service";
-import { getMeQueryOptions } from "@/services/auth.service";
+// import { getMeQueryOptions } from "@/services/auth.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
-import SapceDashboard from "@/components/space/SapceDashboard.vue";
+import SpaceDashboard from "@/components/space/SapceDashboard.vue";
 
-const { data: me } = useQuery(getMeQueryOptions);
+// const { data: me } = useQuery(getMeQueryOptions);
 
 const route = useRoute();
 const spaceId: string = Array.isArray(route.params.id)
@@ -19,7 +19,7 @@ const spaceId: string = Array.isArray(route.params.id)
   : route.params.id;
 
 console.log("space_id", spaceId);
-console.log("user_id", me.value?.user_id);
+// console.log("user_id", me.value?.user_id);
 const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 const { data: members } = useQuery(getSpaceMembersQueryOptions(spaceId));
 
@@ -28,11 +28,11 @@ console.log("DEBUG", space.value?.title);
 </script>
 
 <template>
-  <div class="container">
+  <div class="conteiner">
     <SideBarNav />
     <div class="profile">
       <div class="wrapper">
-        <SapceDashboard />
+        <SpaceDashboard />
         <SpaceMenu />
         <div class="members">
           <h3>Members:</h3>
@@ -78,19 +78,22 @@ console.log("DEBUG", space.value?.title);
 .container {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   width: 100vw;
   height: 100vh;
 }
 
 .members {
-  margin: 10px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  color: azure;
+  /* min-height: 100vh; */
 }
 
 .members-list {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px;
+  padding: 10px;
   justify-content: space-around;
 }
 
@@ -103,14 +106,14 @@ console.log("DEBUG", space.value?.title);
   color: aliceblue;
   background-color: rgba(15, 14, 14, 0.5);
   border: 1px solid rgb(55, 146, 225);
-  border-radius: 40px;
-  width: 128px;
+  border-radius: 20px;
+  width: 170px;
   height: 128px;
 }
 
 img {
-  width: 128px;
-  height: 128px;
+  width: 64px;
+  height: 64px;
   margin: 20px;
   border: 2px solid rgb(55, 146, 225);
   border-radius: 80px;

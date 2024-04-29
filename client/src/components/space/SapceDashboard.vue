@@ -12,9 +12,11 @@ const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 </script>
 
 <template>
-  <div class="profile__info">
+  <div class="space__face">
     <img src="@/assets/neptune2.jpeg" alt="" />
-    <span>Title: {{ space?.title }}</span>
+    <h2 style="color: aliceblue">Space: {{ space?.title }} 👋</h2>
+  </div>
+  <div class="space__info" v-if="space">
     <span style="border-color: #3e3d3d">Country: {{ space?.country }}</span>
     <span>City: {{ space?.city }}</span>
     <span>Description: {{ space?.description }}</span>
@@ -22,13 +24,23 @@ const { data: space } = useQuery(getSpaceQueryOptions(spaceId));
 </template>
 
 <style scoped>
-.profile__info {
+.space__info {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
-  background-color: rgba(32, 32, 32, 0.9);
-  border-radius: 60px;
+  /* background-color: rgba(32, 32, 32, 0.9); */
+  background: url(@/assets/dashboard_bg.jpg) left;
+  border-radius: 20px;
+  margin-top: 20px;
   padding: 10px;
+}
+
+.space__face {
+  display: flex;
+  background: url(@/assets/dashboard_bg.jpg) left;
+  align-items: center;
+  border-radius: 20px;
+  color: aliceblue;
 }
 
 img {
