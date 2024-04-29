@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { Space, SpaceMembers } from "../database";
+import { Space, SpaceMembers, SpaceFollow } from "../database";
 
 export type CreateSpaceDTO = {
   title: string;
@@ -83,6 +83,15 @@ async getAllSpaces(){
       [spaceId, userId],
     );
     return result.rows.at(0) || null;
+  }
+
+  async checkFollowingToSpace(spaceId: string, userId: string) {
+    const result = await this.db.query<SpaceFollow>(
+      `SELECT * FROM spaces_members WHERE space_id = $1 AND user_id = $2;`,
+      [spaceId, userId],
+    );
+    // return result.rows.at(0) || null;
+    return result.rows[0] as SpaceFollow;
   }
 
 

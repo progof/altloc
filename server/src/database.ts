@@ -188,6 +188,15 @@ export type SpaceEvents = {
 	date: string;
   };
 
+
+/**
+ * Definition of the SpaceFollow object.
+ */
+export type SpaceFollow = {
+	space_id: string;
+	user_id: string;
+  };
+
 try {
 	//  Attempt to connect to the PostgreSQL database.
 	await pool.connect();

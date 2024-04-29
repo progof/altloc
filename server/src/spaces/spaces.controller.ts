@@ -124,6 +124,12 @@ async followToSpace(req: Request, res: Response) {
   }
   console.log('followToSpace.data', body.data.space_id, userId );
 
+  const checkFollow = await this.spacesService.checkFollowingToSpace(body.data.space_id, userId);
+  console.log("checkFollow", checkFollow);
+
+  if(checkFollow?.space_id == body.data.space_id && checkFollow.user_id == userId){
+   return res.status(401).send({ errors: [{ message: "The user is already following an eye on this space" }] });
+  }
   
   
   try {
