@@ -20,4 +20,18 @@ export class EventsService {
     return result.rows[0] as SpaceEvents;
   }
 
+  async getSpaceEvemtBySpaceId(spaceId: string) {
+    const result = await this.db.query<SpaceEvents>(
+      `SELECT se.title, se.description, se.start_time, se.end_time, se.date, se.creator, se.created_at, se.space_id, users.username, spaces.title as spacename
+      FROM space_events AS se 
+      JOIN users ON se.creator = users.user_id 
+      JOIN spaces ON se.space_id = spaces.space_id
+      WHERE se.space_id = $1;`,
+      [spaceId],
+    );
+    // return result.rows.at(0) || null;
+    // return result.rows[0] as SpaceEvents;
+    return result.rows;
+  }
+
 }  

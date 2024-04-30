@@ -11,8 +11,10 @@ export class EventsController {
   ) {
     this.router.use("/events", blockNotVerifedUser);
     this.router.post("/events", this.createEvent.bind(this));
+    this.router.get("/events/:spaceId", this.getSpaceEvent.bind(this));
   }
 
+  // The create a new event
   async createEvent(req: Request, res: Response) {
     if (!req.session.user) {
       return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
@@ -38,6 +40,36 @@ export class EventsController {
     try {
       const event = await this.eventsService.createEvent(body.data.space_id, userId, body.data);
       return res.status(201).send({ data: event });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  // Get event by spaceId
+  async getSpaceEvent(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      spaceId: z.string(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    console.log("getSpaceEvent() params: ", params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    
+    try {
+      console.log("getSpaceEvent() params.data.spaceId): ", params.data.spaceId);
+      const spaceEvent = await this.eventsService.getSpaceEvemtBySpaceId(params.data.spaceId);
+      console.log("getSpaceEvent() data: ", spaceEvent);
+      return res.status(200).send({
+        data: spaceEvent,
+      });
     } catch (error) {
       console.error(error);
       return res.status(500).send({

@@ -12,7 +12,7 @@ const errorSchema = z.object({
 export type SpaceEvent = {
     event_id: string;
     space_id: string;
-    owner: string;
+    creator: string;
     title: string;
     description: string;
     start_time: string;
@@ -21,6 +21,7 @@ export type SpaceEvent = {
     created_at: string;
     edit_at: string;
     username: string;
+    spacename: string;
   };
 
 
@@ -65,3 +66,29 @@ export type SpaceEvent = {
       },
     });
   };
+
+  // Get event for space by spaceId
+
+  const getSpaceEvent = async (spaceId: string) => {
+    const res = await fetch(`/api/events/${spaceId}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    });
+  
+    if (!res.ok) {
+      const errors = errorSchema.parse(await res.json()).errors;
+      throw new Error(errors.at(0)?.message);
+    }
+  
+    const responseData = await res.json();
+    console.log("getSpaceEvent data: ", responseData);
+    // return (await res.json() as { data: SpaceEvent[] }).data;
+    return responseData.data as SpaceEvent;
+  };
+  
+  export const getSpaceEventQueryOptions = (spaceId: string) =>
+    queryOptions({
+      queryKey: ["events", spaceId],
+      queryFn: () => getSpaceEvent(spaceId),
+    });

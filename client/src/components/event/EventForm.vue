@@ -279,6 +279,9 @@ const submitForm = async (event: Event) => {
   background-color: rgba(0, 0, 0, 0);
   border: none;
   cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .container {
