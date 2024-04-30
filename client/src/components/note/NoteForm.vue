@@ -167,7 +167,7 @@ const submitForm = async (event: Event) => {
 
       <fieldset>
         <label for="note_category">Category:</label>
-        <select id="note_category" name="category">
+        <select id="note_category" name="category" style="color: black">
           <option value="" disabled selected>Select a category</option>
           <option value="IT">🧑‍💻 IT</option>
           <option value="Eco">🌽 Eco</option>
@@ -254,6 +254,7 @@ section {
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  color: black;
 }
 
 button[type="submit"] {

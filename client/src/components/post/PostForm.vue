@@ -222,6 +222,7 @@ section {
   padding: 10px;
   margin-bottom: 10px;
   box-sizing: border-box;
+  color: black;
 }
 
 button[type="submit"] {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SpaceForm from "@/components/SpaceForm.vue";
+import SpaceForm from "@/components/space/SpaceForm.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 </script>
 

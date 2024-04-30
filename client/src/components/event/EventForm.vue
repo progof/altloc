@@ -312,7 +312,7 @@ const submitForm = async (event: Event) => {
 
 .editor-container {
   margin-bottom: 20px;
-  color: black;
+  color: rgb(254, 250, 250);
 }
 
 .error-message {
