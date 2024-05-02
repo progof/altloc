@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { reactive } from "vue";
 import { useRoute } from "vue-router";
 import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
-import { getSpaceEventQueryOptions } from "@/services/event.service";
+import {
+  getSpaceEventQueryOptions,
+  useDeleteEventMutation,
+} from "@/services/event.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
 import SpaceMenu from "@/components/space/SpaceMenu.vue";
@@ -25,6 +29,12 @@ console.log("Event page user_id", me.value?.user_id);
 const { data: spaceEvents } = useQuery(getSpaceEventQueryOptions(spaceId));
 console.log("Event page data:", spaceEvents);
 
+const {
+  mutate: eventDelete,
+  isPending: isDeleting,
+  error: deleteError,
+} = useDeleteEventMutation();
+
 const formatCreatedAt = (createdAt: string) => {
   const date = new Date(createdAt);
   return date.toLocaleString();
@@ -36,6 +46,23 @@ function htmlToFormattedText2(html: string) {
 
   return tempElement.innerHTML;
 }
+
+const handleDeleteEvent = async (eventId: string) => {
+  try {
+    await eventDelete({
+      eventId,
+    });
+
+    if (spaceEvents.value) {
+      const filteredEvents = spaceEvents.value.filter(
+        (spaceEvent?) => spaceEvent.event_id !== eventId
+      );
+      spaceEvents.value = reactive([...filteredEvents]);
+    }
+  } catch (err) {
+    console.error("Error deleting post:", err);
+  }
+};
 </script>
 
 <template>
@@ -96,6 +123,13 @@ function htmlToFormattedText2(html: string) {
                     >Created at:
                     {{ formatCreatedAt(spaceEvent.created_at) }}</span
                   >
+                  <span v-if="deleteError">{{ deleteError }}</span>
+                  <button
+                    class="delete-button"
+                    @click="() => handleDeleteEvent(spaceEvent?.event_id)"
+                  >
+                    {{ isDeleting ? "Fetching..." : " Delete" }}
+                  </button>
                   <!-- <div class="user-active">
                     <LikeForNote
                       :noteId="note.note_id"
@@ -245,5 +279,17 @@ function htmlToFormattedText2(html: string) {
   flex-direction: row;
   justify-content: left;
   align-items: center;
+}
+
+.delete-button {
+  top: 5px;
+  right: 5px;
+  align-items: right;
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  margin: 10px;
+  cursor: pointer;
 }
 </style>

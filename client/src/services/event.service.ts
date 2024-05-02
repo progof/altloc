@@ -92,3 +92,36 @@ export type SpaceEvent = {
       queryKey: ["events", spaceId],
       queryFn: () => getSpaceEvent(spaceId),
     });
+
+
+
+  // Delete event 
+  export const useDeleteEventMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      eventId: string;
+    }) => {
+      const res = await fetch(`/api/events/${data.eventId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return;
+    },
+    onSuccess: (_res, { eventId }) => {
+      queryClient.invalidateQueries({
+        queryKey: ["events"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.removeQueries({
+        queryKey: ["events", eventId],
+        exact: true,
+      });
+    },
+  });
+};

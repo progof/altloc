@@ -20,9 +20,15 @@ export class EventsService {
     return result.rows[0] as SpaceEvents;
   }
 
+  async deleteEventById(eventId: string) {
+    await this.db.query(`DELETE FROM space_events WHERE event_id = $1;`, [
+      eventId,
+    ]);
+  }
+
   async getSpaceEvemtBySpaceId(spaceId: string) {
     const result = await this.db.query<SpaceEvents>(
-      `SELECT se.title, se.description, se.start_time, se.end_time, se.date, se.creator, se.created_at, se.space_id, users.username, spaces.title as spacename
+      `SELECT se.title, se.description, se.start_time, se.end_time, se.date, se.creator, se.created_at, se.space_id, se.event_id, users.username, spaces.title as spacename
       FROM space_events AS se 
       JOIN users ON se.creator = users.user_id 
       JOIN spaces ON se.space_id = spaces.space_id

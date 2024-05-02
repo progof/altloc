@@ -11,6 +11,7 @@ export class EventsController {
   ) {
     this.router.use("/events", blockNotVerifedUser);
     this.router.post("/events", this.createEvent.bind(this));
+    this.router.delete("/events/:eventId", this.deleteEvent.bind(this));
     this.router.get("/events/:spaceId", this.getSpaceEvent.bind(this));
   }
 
@@ -70,6 +71,28 @@ export class EventsController {
       return res.status(200).send({
         data: spaceEvent,
       });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  // Delete event by eventId
+  async deleteEvent(req: Request, res: Response) {
+    const paramsSchema = z.object({
+      eventId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+
+    try {
+      await this.eventsService.deleteEventById(params.data.eventId);
+      return res.status(200).send();
     } catch (error) {
       console.error(error);
       return res.status(500).send({
