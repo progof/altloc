@@ -188,6 +188,15 @@ export type SpaceEvents = {
 	date: string;
   };
 
+/**
+ * Definition of the SpaceMembers object.
+ */
+export type EventMembers = {
+	event_id: string;
+	user_id: string;
+	username: string;
+  };
+
 
 /**
  * Definition of the SpaceFollow object.
@@ -357,6 +366,13 @@ try {
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (creator) REFERENCES users(user_id) ON DELETE CASCADE,
 			FOREIGN KEY (space_id) REFERENCES spaces(space_id) ON DELETE CASCADE
+		);
+
+		CREATE TABLE IF NOT EXISTS event_members (
+			user_id uuid NOT NULL,
+			event_id uuid NOT NULL,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+			FOREIGN KEY (event_id) REFERENCES space_events(event_id) ON DELETE CASCADE
 		);
 
 	`);

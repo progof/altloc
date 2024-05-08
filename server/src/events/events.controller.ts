@@ -13,6 +13,7 @@ export class EventsController {
     this.router.post("/events", this.createEvent.bind(this));
     this.router.delete("/events/:eventId", this.deleteEvent.bind(this));
     this.router.get("/events/:spaceId", this.getSpaceEvent.bind(this));
+    this.router.post("/follow-events/:eventId", this.followToEvents.bind(this));
   }
 
   // The create a new event
@@ -93,6 +94,55 @@ export class EventsController {
     try {
       await this.eventsService.deleteEventById(params.data.eventId);
       return res.status(200).send();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
+
+  async followToEvents(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+
+    const paramsSchema = z.object({
+      eventId: z.string().uuid(),
+    });
+
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({ errors: params.error.issues });
+    }
+    
+    // const bodySchema = z.object({
+    //   likes: z.number()
+    // });
+
+    // const body = bodySchema.safeParse(req.body);
+    // if (!body.success) {
+    //   return res.status(400).send({
+    //     errors: body.error.issues,
+    //   });
+    // }
+
+    // console.log("Data from client:", body);
+
+    const checkEventMembers = await this.eventsService.checkEventList(params.data.eventId, userId);
+   console.log("checkLike", checkEventMembers);
+
+   if(checkEventMembers?.event_id == params.data.eventId && checkEventMembers.user_id == userId){
+    return res.status(401).send({ errors: [{ message: "The user has already followed it." }] });
+   }
+
+  
+    try {
+      const EventMembers = await this.eventsService.followToEvent(params.data.eventId, userId);
+  
+      return res.status(201).send({ data: EventMembers });
     } catch (error) {
       console.error(error);
       return res.status(500).send({

@@ -1,5 +1,5 @@
 import type { Pool } from "pg";
-import { SpaceEvents } from "../database";
+import { SpaceEvents, EventMembers } from "../database";
 
 export type CreateSpaceEventDTO = {
     title: string;
@@ -38,6 +38,23 @@ export class EventsService {
     // return result.rows.at(0) || null;
     // return result.rows[0] as SpaceEvents;
     return result.rows;
+  }
+
+  async followToEvent(eventId: string, userId: string) {
+    const result = await this.db.query<EventMembers>(
+      `INSERT INTO event_members(event_id, user_id) VALUES ($1, $2) RETURNING *;`,
+      [eventId, userId],
+    );
+    return result.rows[0] as EventMembers;
+  }
+
+  async checkEventList(eventId: string, userId: string) {
+    const result = await this.db.query<EventMembers>(
+      `SELECT * FROM  event_members WHERE event_id = $1 AND user_id = $2 `,
+      [eventId, userId],
+    );
+    // return result.rows[0] as Post;
+    return result.rows.at(0) || null;
   }
 
 }  

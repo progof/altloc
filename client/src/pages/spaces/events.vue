@@ -6,6 +6,7 @@ import { getMeQueryOptions } from "@/services/auth.service";
 import {
   getSpaceEventQueryOptions,
   useDeleteEventMutation,
+  useFollowEventMutation,
 } from "@/services/event.service";
 
 import SideBarNav from "@/components/SideBarNav.vue";
@@ -18,6 +19,21 @@ import SpacesIcon from "@/assets/icons/SpacesIcon.svg?component";
 import { MyButton } from "@/components/UI";
 
 const { data: me } = useQuery(getMeQueryOptions);
+const { mutate: following } = useFollowEventMutation();
+
+const followToEvent = async (eventId: string) => {
+  // const rex = await following({ space_id: spaceId });
+  // console.log("unf", rex);
+
+  following(
+    { eventId: eventId },
+    {
+      onError: (err) => {
+        console.error("Error following to event:", err);
+      },
+    }
+  );
+};
 
 const route = useRoute();
 const spaceId: string = Array.isArray(route.params.id)
@@ -129,6 +145,13 @@ const handleDeleteEvent = async (eventId: string) => {
                     @click="() => handleDeleteEvent(spaceEvent?.event_id)"
                   >
                     {{ isDeleting ? "Fetching..." : " Delete" }}
+                  </button>
+                  <button
+                    class="bg-indigo-600 text-base text-white"
+                    @click="() => followToEvent(spaceEvent?.event_id)"
+                  >
+                    <!-- <FollowIcon class="icons" /> -->
+                    Follow
                   </button>
                   <!-- <div class="user-active">
                     <LikeForNote

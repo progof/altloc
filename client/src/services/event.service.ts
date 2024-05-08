@@ -125,3 +125,43 @@ export type SpaceEvent = {
     },
   });
 };
+
+// Follow to event
+
+// ---------- //
+export const useFollowEventMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      eventId: string;
+    }) => {
+      const res = await fetch(`/api/follow-events/${data.eventId}`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) {
+        const errors = errorSchema.parse(await res.json()).errors;
+        throw new Error(errors.at(0)?.message);
+      }
+      return res.json() as Promise<{ data: SpaceEvent }>;
+    },
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({
+        queryKey: ["follow-events"],
+        exact: true,
+        type: "active",
+      });
+      queryClient.setQueryData(
+        ["follow-events", res.data.event_id],
+        res.data,
+      );
+      return;
+    },
+  });
+};
+
