@@ -165,3 +165,29 @@ export const useFollowEventMutation = () => {
   });
 };
 
+
+// Count event members 
+
+// ---------- //
+const getCountEventMembers = async (eventId: string) => {
+  const res = await fetch(`/api/count-events/${eventId}`, {
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errors = errorSchema.parse(await res.json()).errors;
+    throw new Error(errors.at(0)?.message);
+  }
+
+  const responseData = await res.json();
+  console.log("getCountEventMembers:", responseData);
+  return responseData.data as { CountMembers: number };
+};
+
+export const getCountEventMembersQueryOptions = (eventId: string) =>
+  queryOptions({
+    queryKey: ["count-events", eventId],
+    queryFn: () => getCountEventMembers(eventId),
+  });

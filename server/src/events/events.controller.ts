@@ -14,6 +14,7 @@ export class EventsController {
     this.router.delete("/events/:eventId", this.deleteEvent.bind(this));
     this.router.get("/events/:spaceId", this.getSpaceEvent.bind(this));
     this.router.post("/follow-events/:eventId", this.followToEvents.bind(this));
+    this.router.get("/count-events/:eventId", this.getCountEventMembers.bind(this));
   }
 
   // The create a new event
@@ -151,5 +152,40 @@ export class EventsController {
     }
   }
 
+  // Count members for event
+
+  async getCountEventMembers(req: Request, res: Response) {
+    if (!req.session.user) {
+      return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
+    }
+    const userId = req.session.user.user_id;
+
+    const paramsSchema = z.object({
+      eventId: z.string().uuid(),
+    });
+
+    const params = paramsSchema.safeParse(req.params);
+    if (!params.success) {
+      return res.status(400).send({
+        errors: params.error.issues,
+      });
+    }
+
+    console.log("DEBUG getCountEventMembers() eventId", params.data.eventId);
+    console.log("DEBUG getCountEventMembers() userId", userId);
+
+    try {
+      const eventMembers = await this.eventsService.getCountEventMember(params.data.eventId, userId);
+      console.log("DEBUG getCountEventMembers()", eventMembers);
+      return res.status(200).send({
+        data: eventMembers,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send({
+        errors: [{ message: "Internal Server Error" }],
+      });
+    }
+  }
 
 }

@@ -1,18 +1,10 @@
 <template>
   <footer class="footer">
     <div class="footer__content">
-      <p>&copy; {{ currentYear }} AltPlace</p>
+      <p>&copy; {{ new Date().getFullYear() }} AltPlace</p>
     </div>
   </footer>
 </template>
-
-<script setup lang="ts">
-const getCurrentYear = () => {
-  return new Date().getFullYear();
-};
-
-const currentYear = getCurrentYear();
-</script>
 
 <style scoped>
 .footer {
