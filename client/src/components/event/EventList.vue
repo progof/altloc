@@ -68,19 +68,80 @@ const handleDeleteEvent = async (eventId: string) => {
   }
 };
 
+// const eventMembersCount = (eventId: string) => {
+//   const cachedCount = localStorage.getItem(`eventMembersCount_${eventId}`);
+//   if (cachedCount !== null) {
+//     console.log("eventMembersCount ->  cachedCount", Number(cachedCount));
+//     return Number(cachedCount);
+//   } else {
+//     const { data: CountMembers } = useQuery(
+//       getCountEventMembersQueryOptions(eventId)
+//     );
+//     const count: number = CountMembers.value;
+//     console.log("localStorage -> eventMembersCount:", count);
+//     localStorage.setItem(`eventMembersCount_${eventId}`, String(count));
+//     return count;
+//   }
+// };
+
+// const eventMembersCount = (eventId: string) => {
+//   const cachedCount = localStorage.getItem(`eventMembersCount_${eventId}`);
+//   if (cachedCount !== null) {
+//     const parsedCount = Number(cachedCount);
+//     if (!isNaN(parsedCount)) {
+//       return parsedCount;
+//     }
+//   } else {
+//     const { data: CountMembers } = useQuery(
+//       getCountEventMembersQueryOptions(eventId)
+//     );
+//     if (typeof CountMembers.value === "number") {
+//       const count: number = CountMembers.value;
+//       localStorage.setItem(`eventMembersCount_${eventId}`, String(count));
+//       return count;
+//     }
+//   }
+//   // Возвращаем значение по умолчанию, если не удалось получить корректное значение
+//   return 0;
+// };
+
 const eventMembersCount = (eventId: string) => {
-  const cachedCount = localStorage.getItem(`eventMembersCount_${eventId}`);
-  if (cachedCount !== null) {
-    return Number(cachedCount);
-  } else {
+  const updateInterval = 1 * 60 * 1000; // 10 минут в миллисекундах
+
+  const updateCachedCount = () => {
     const { data: CountMembers } = useQuery(
       getCountEventMembersQueryOptions(eventId)
     );
-    const count: number = CountMembers.value;
-    console.log("localStorage -> eventMembersCount:", count);
-    localStorage.setItem(`eventMembersCount_${eventId}`, String(count));
-    return count;
+    if (typeof CountMembers.value === "number") {
+      const count: number = CountMembers.value;
+      localStorage.setItem(`eventMembersCount_${eventId}`, String(count));
+    }
+  };
+
+  const cachedCount = localStorage.getItem(`eventMembersCount_${eventId}`);
+  if (cachedCount !== null) {
+    const parsedCount = Number(cachedCount);
+    if (!isNaN(parsedCount)) {
+      // Обновляем кеш, если прошло больше 10 минут с момента последнего обновления
+      const lastUpdate = localStorage.getItem(
+        `eventMembersCount_lastUpdate_${eventId}`
+      );
+      const currentTime = new Date().getTime();
+      if (!lastUpdate || currentTime - Number(lastUpdate) > updateInterval) {
+        updateCachedCount();
+        localStorage.setItem(
+          `eventMembersCount_lastUpdate_${eventId}`,
+          String(currentTime)
+        );
+      }
+      return parsedCount;
+    }
+  } else {
+    updateCachedCount();
   }
+
+  // Возвращаем значение по умолчанию, если не удалось получить корректное значение
+  return 0;
 };
 </script>
 

@@ -7,6 +7,7 @@ import ThoughtsIcon from "@/assets/icons/ThoughtsIcon.svg?component";
 </script>
 
 <template>
+
   <main class="main">
     <div class="wrapper">
       <div class="intro__wrapper">

@@ -59,7 +59,7 @@ export class EventsService {
 
   // Counting follow members to event
 
-  async getCountEventMember(eventId: string ,userId: string): Promise<number> {
+  async getCountEventMember(eventId: string, userId: string): Promise<number> {
     const result = await this.db.query<{ countMember: number }>(
       `SELECT COUNT(*) AS countMember FROM event_members WHERE event_id = $1 AND user_id = $2;`,
       [eventId, userId],

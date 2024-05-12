@@ -10,8 +10,8 @@ import SavedPostList from "@/components/post/SavedListToPost.vue";
 import SavedNoteList from "@/components/note/SavedListToNote.vue";
 import SideBarNav from "@/components/SideBarNav.vue";
 import { MyButton } from "@/components/UI";
-
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
+
 // import Modal from "@/components/Modal.vue";
 
 // const modalActive = ref(false);
