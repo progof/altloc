@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-// import { useLogoutMutation, useLoginMutation } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 import LogoIcon from "@/assets/logo.svg?component";
-// import { pinia } from "../store/pinia";
+import DropdownMenu from "@/components/front/DropdownMenu.vue";
 
 const authStore = useAuthStore();
 const storedIsAuthenticated = localStorage.getItem("isAuthenticated");
@@ -19,24 +18,25 @@ console.log("default", authStore.isAuthenticated);
   >
     <div class="flex flex-row justify-between items-center text-center gap-6">
       <div class="flex flex-row items-center justify-between gap-3">
-        <a href="/" class="header__logo-link">
-          <LogoIcon style="width: 54px; height: 54px" />
+        <a href="/">
+          <LogoIcon class="md:w-16 md:h-16 w-11 h-11" />
         </a>
 
-        <h2 class="text-2xl text-blue-500 font-bold">AltPlace</h2>
+        <h2 class="text-lg md:text-2xl text-blue-500 font-bold">AltPlace</h2>
       </div>
 
       <div class="flex flex-row gap-8">
         <RouterLink
           to="/register"
-          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white"
+          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base md:text-2xl hidden md:block"
           >Sign up</RouterLink
         >
         <RouterLink
           to="/login"
-          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white"
+          class="bg-zinc-900 text-blue-500 font-bold px-2 py-1 md:px-4 md:py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base md:text-2xl hidden md:block"
           >Log in</RouterLink
         >
+        <DropdownMenu class="text-black" />
       </div>
     </div>
   </header>

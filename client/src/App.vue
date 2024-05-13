@@ -1,6 +1,6 @@
 <script lang="ts">
 import { createRouter, createWebHistory } from "vue-router";
-import LendingPage from "@/pages/landing.vue";
+import IndexPage from "@/pages/index.vue";
 import RegisterPage from "@/pages/auth/register.vue";
 import LoginPage from "@/pages/auth/login.vue";
 import DashboardPage from "@/pages/dashboard.vue";
@@ -31,7 +31,7 @@ export const router = createRouter({
   routes: [
     {
       path: "/",
-      component: LendingPage,
+      component: IndexPage,
     },
     {
       path: "/register",
@@ -144,8 +144,8 @@ router.beforeEach(async (to) => {
 </script>
 
 <script setup lang="ts">
-import Navbar from "@/components/Navbar.vue";
-import Footer from "./components/Footer.vue";
+import Navbar from "@/components/front/Navbar.vue";
+import Footer from "./components/front/Footer.vue";
 import { RouterView } from "vue-router";
 </script>
 
