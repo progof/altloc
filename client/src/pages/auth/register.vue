@@ -33,137 +33,67 @@ const submitForm = async (event: Event) => {
 </script>
 
 <template>
-  <div class="wrapper">
-    <form @submit.prevent="submitForm">
-      <fieldset>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" />
+  <div class="wrapper flex items-center justify-center h-screen">
+    <form
+      @submit.prevent="submitForm"
+      class="w-full max-w-sm p-12 bg-black/90 rounded-2xl"
+    >
+      <fieldset class="mb-4">
+        <label for="username" class="block mb-2 text-white">Username:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="w-full p-2 mb-4 bg-black text-white border-2 border-blue-500 rounded focus:border-green-500"
+        />
       </fieldset>
 
-      <fieldset>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" />
+      <fieldset class="mb-4">
+        <label for="email" class="block mb-2 text-white">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="w-full p-2 mb-4 bg-black text-white border-2 border-blue-500 rounded focus:border-green-500"
+        />
       </fieldset>
 
-      <fieldset>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" />
+      <fieldset class="mb-4">
+        <label for="password" class="block mb-2 text-white">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="w-full p-2 mb-4 bg-black text-white border-2 border-blue-500 rounded focus:border-green-500"
+        />
       </fieldset>
 
-      <fieldset>
-        <label for="password2">Confirm Password:</label>
-        <input type="password" id="password2" name="password2" />
+      <fieldset class="mb-4">
+        <label for="password2" class="block mb-2 text-white"
+          >Confirm Password:</label
+        >
+        <input
+          type="password"
+          id="password2"
+          name="password2"
+          class="w-full p-2 mb-4 bg-black text-white border-2 border-blue-500 rounded focus:border-green-500"
+        />
       </fieldset>
 
-      <span v-for="error in validationErrors">
-        {{ error.message }}
-      </span>
-      <span v-if="error">{{ error }}</span>
+      <div>
+        <span v-for="error in validationErrors" class="text-red-500 block">
+          {{ error.message }}
+        </span>
+        <span v-if="error" class="text-red-500">{{ error }}</span>
+      </div>
 
       <MyButton
         type="submit"
         :disabled="validationErrors.length > 0 || isPending"
+        class="w-full bg-green-500 text-white py-2 rounded mt-4"
       >
         {{ isPending ? "Fetching..." : "Register" }}
       </MyButton>
     </form>
   </div>
 </template>
-
-<!-- <style scoped>
-.wrapper {
-  padding-top: 265px;
-  max-width: 1060px;
-  margin: 0 auto;
-  width: 100vw;
-  height: 100vh;
-}
-
-form {
-  max-width: 300px;
-  margin: auto;
-  padding: 20px;
-  border: 0px solid #ccc;
-  border-radius: 15px;
-  background-color: black;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 4px;
-}
-
-fieldset {
-  border: none;
-}
-</style> -->
-
-<style scoped>
-.wrapper {
-  padding-top: 20vh;
-  max-width: 1060px;
-  margin: 0 auto;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-form {
-  max-width: 300px;
-  width: 90%;
-  padding: 20px;
-  border: 0px solid #ccc;
-  border-radius: 15px;
-  background-color: black;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 4px;
-}
-
-fieldset {
-  border: none;
-}
-
-/* Media Queries */
-@media screen and (min-width: 600px) {
-  .wrapper {
-    padding-top: 10vh;
-  }
-
-  form {
-    width: 70%;
-  }
-}
-
-@media screen and (min-width: 900px) {
-  form {
-    width: 60%;
-  }
-}
-</style>

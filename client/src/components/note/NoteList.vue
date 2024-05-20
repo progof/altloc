@@ -160,3 +160,4 @@ const handleDeleteNote = async (noteId: string) => {
   margin-top: 20px;
 }
 </style>
+@/components/ui

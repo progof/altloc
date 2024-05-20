@@ -116,3 +116,4 @@ const formatCreatedAt = (createdAt: string) => {
   margin-top: 20px;
 }
 </style>
+@/components/ui

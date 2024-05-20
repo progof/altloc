@@ -1,6 +1,6 @@
 <template>
   <footer
-    class="sticky bg-black bottom-0 left-0 flex-shrink items-center flex justify-center p-8"
+    class="bg-black bottom-0 left-0 flex-shrink items-center flex justify-center p-8"
   >
     <div class="text-white text-lg flex">
       <span class="pr-2 text-base text-zinc-200"

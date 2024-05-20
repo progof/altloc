@@ -14,7 +14,7 @@ console.log("default", authStore.isAuthenticated);
 <template>
   <header
     v-if="!authStore.isAuthenticated"
-    class="px-14 py-4 sticky top-0 left-0 bg-black"
+    class="px-14 py-4 top-0 left-0 bg-black"
   >
     <div class="flex flex-row justify-between items-center text-center gap-6">
       <div class="flex flex-row items-center justify-between gap-3">
@@ -28,12 +28,12 @@ console.log("default", authStore.isAuthenticated);
       <div class="flex flex-row gap-8">
         <RouterLink
           to="/register"
-          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base md:text-2xl hidden md:block"
+          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base hidden md:block"
           >Sign up</RouterLink
         >
         <RouterLink
           to="/login"
-          class="bg-zinc-900 text-blue-500 font-bold px-2 py-1 md:px-4 md:py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base md:text-2xl hidden md:block"
+          class="bg-zinc-900 text-blue-500 font-bold px-2 py-1 md:px-4 md:py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base hidden md:block"
           >Log in</RouterLink
         >
         <DropdownMenu class="text-black" />

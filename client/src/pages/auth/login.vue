@@ -46,160 +46,53 @@ const submitForm = async (event: Event) => {
 </script>
 
 <template>
-  <div class="wrapper">
-    <form @submit.prevent="submitForm">
-      <fieldset>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" />
-        <span v-if="validationErrors.email">{{ validationErrors.email }}</span>
+  <div class="flex items-center justify-center h-screen">
+    <form
+      @submit.prevent="submitForm"
+      class="w-full max-w-md p-6 bg-black/90 rounded-2xl"
+    >
+      <fieldset class="mb-6">
+        <label for="email" class="block mb-2 text-white">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="w-full p-3 mb-4 bg-black text-white border-2 border-blue-500 rounded focus:border-green-500"
+        />
+        <span v-if="validationErrors.email" class="text-red-500">{{
+          validationErrors.email
+        }}</span>
       </fieldset>
 
-      <fieldset>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" />
-        <span v-if="validationErrors.password">{{
+      <fieldset class="mb-6">
+        <label for="password" class="block mb-2 text-white">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="w-full p-3 mb-4 bg-black text-white border-2 border-blue-500 rounded focus:border-green-500"
+        />
+        <span v-if="validationErrors.password" class="text-red-500">{{
           validationErrors.password
         }}</span>
       </fieldset>
 
-      <span v-if="error">{{ error }}</span>
-      <div class="button-wrapper">
-        <MyButton type="submit" :disabled="isPending">
+      <span v-if="error" class="text-red-500">{{ error }}</span>
+      <div class="button-wrapper flex flex-col items-center">
+        <MyButton
+          type="submit"
+          :disabled="isPending"
+          class="w-full bg-green-500 text-white py-3 rounded mb-4"
+        >
           {{ isPending ? "Fetching..." : "Login" }}
         </MyButton>
-        <MyButton @click="$router.push(`/recovery-password`)"
-          >Forgot password?</MyButton
+        <MyButton
+          @click="$router.push(`/recovery-password`)"
+          class="w-full bg-green-500 text-white py-3 rounded"
         >
+          Forgot password?
+        </MyButton>
       </div>
     </form>
   </div>
 </template>
-
-<style scoped>
-/* .wrapper {
-  padding-top: 265px;
-  max-width: 1060px;
-  margin: 0 auto;
-  width: 100vw;
-  height: 100vh;
-}
-
-form {
-  max-width: 300px;
-  margin: auto;
-  padding: 20px;
-  border: 0px solid #ccc;
-  border-radius: 15px;
-  background-color: black;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-}
-
-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-input {
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 4px;
-}
-
-input:focus {
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(78, 225, 55);
-  border-radius: 4px;
-}
-
-fieldset {
-  border: none;
-} */
-
-/* Styles for the wrapper */
-.wrapper {
-  padding-top: 10vh; /* Adjusted padding for top spacing */
-  max-width: 400px; /* Adjusted max-width for better responsiveness */
-  margin: 0 auto;
-  width: 90vw; /* Adjusted width for better responsiveness */
-  height: 100vh;
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-}
-
-/* Styles for the form */
-form {
-  width: 100%; /* Make form full width */
-  padding: 20px;
-  border-radius: 15px;
-  background-color: black;
-}
-
-/* Styles for labels */
-label {
-  display: block;
-  margin-bottom: 10px; /* Increased margin for better spacing */
-  color: aliceblue; /* Adjusted color for better visibility */
-}
-
-/* Styles for inputs */
-input {
-  width: 100%;
-  padding: 12px; /* Adjusted padding for better appearance */
-  margin-bottom: 20px; /* Increased margin for better spacing */
-  box-sizing: border-box;
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 4px;
-}
-
-input:focus {
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(78, 225, 55);
-  border-radius: 4px;
-}
-
-/* Styles for button wrapper */
-.button-wrapper {
-  display: flex; /* Make button wrapper a flex container */
-  flex-direction: column;
-  justify-content: center; /* Center align buttons horizontally */
-}
-
-/* Styles for buttons */
-button {
-  width: 100%; /* Make button full width */
-  background-color: #4caf50;
-  color: white;
-  padding: 10px 15px; /* Adjusted padding for better appearance */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 10px; /* Increased margin for better spacing */
-  font-size: 14px; /* Reduced font size for buttons */
-}
-
-/* Styles for spans */
-span {
-  color: red; /* Adjusted color for better visibility */
-}
-</style>
