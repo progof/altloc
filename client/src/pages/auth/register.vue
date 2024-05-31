@@ -11,13 +11,16 @@ const validationSchema = z
     password: z.string().min(6),
     password2: z.string().min(6),
   })
-  .refine((data) => data.password === data.password2, "Password doesn't match");
+  .refine((data) => data.password === data.password2, "Passwords don't match");
 
 const validationErrors = ref<ZodIssue[]>([]);
+const successMessage = ref<string | null>(null);
+const registerError = ref<string | null>(null);
 
-const { mutate: register, isPending, error } = useRegisterMutation();
+const { mutate: register, isPending } = useRegisterMutation();
 
 const submitForm = async (event: Event) => {
+  event.preventDefault();
   const rawData = Object.fromEntries(
     new FormData(event.target as HTMLFormElement)
   );
@@ -28,14 +31,27 @@ const submitForm = async (event: Event) => {
     return;
   }
 
-  register(result.data);
+  validationErrors.value = [];
+
+  register(result.data, {
+    onSuccess: () => {
+      successMessage.value =
+        "Registration successful! Please confirm your email.";
+      registerError.value = null;
+    },
+    onError: (err) => {
+      registerError.value =
+        err.message || "Registration failed. Please try again.";
+      successMessage.value = null;
+    },
+  });
 };
 </script>
 
 <template>
   <div class="wrapper flex items-center justify-center h-screen">
     <form
-      @submit.prevent="submitForm"
+      @submit="submitForm"
       class="w-full max-w-sm p-12 bg-black/90 rounded-2xl"
     >
       <fieldset class="mb-4">
@@ -81,18 +97,28 @@ const submitForm = async (event: Event) => {
       </fieldset>
 
       <div>
-        <span v-for="error in validationErrors" class="text-red-500 block">
+        <span
+          v-for="error in validationErrors"
+          :key="error.message"
+          class="text-red-500 block"
+        >
           {{ error.message }}
         </span>
-        <span v-if="error" class="text-red-500">{{ error }}</span>
+        <span v-if="registerError" class="text-red-500">{{
+          registerError
+        }}</span>
+      </div>
+
+      <div v-if="successMessage" class="text-green-500 text-center mb-4">
+        {{ successMessage }}
       </div>
 
       <MyButton
         type="submit"
-        :disabled="validationErrors.length > 0 || isPending"
+        :disabled="isPending"
         class="w-full bg-green-500 text-white py-2 rounded mt-4"
       >
-        {{ isPending ? "Fetching..." : "Register" }}
+        {{ isPending ? "Registering..." : "Register" }}
       </MyButton>
     </form>
   </div>

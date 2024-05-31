@@ -58,70 +58,50 @@ const submitForm = async (event: Event) => {
 </script>
 
 <template>
-  <div class="wrapper">
-    <form @submit.prevent="submitForm">
-      <fieldset>
-        <label for="password">New Password:</label>
-        <input type="password" id="password" name="password" />
+  <div
+    class="pt-64 max-w-3xl mx-auto w-full h-screen flex flex-col items-center justify-center"
+  >
+    <form
+      @submit.prevent="submitForm"
+      class="max-w-md mx-auto p-8 rounded-md bg-black"
+    >
+      <fieldset class="mb-4">
+        <label for="password" class="block mb-2 text-white"
+          >New Password:</label
+        >
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="w-full p-2 mb-2 bg-black text-white border-2 border-blue-600 rounded"
+        />
       </fieldset>
 
-      <fieldset>
-        <label for="password2">Confirm new password:</label>
-        <input type="password" id="password2" name="password2" />
+      <fieldset class="mb-4">
+        <label for="password2" class="block mb-2 text-white"
+          >Confirm new password:</label
+        >
+        <input
+          type="password"
+          id="password2"
+          name="password2"
+          class="w-full p-2 mb-2 bg-black text-white border-2 border-blue-600 rounded"
+        />
       </fieldset>
 
-      <span v-if="error">{{ error }}</span>
+      <span v-if="error" class="text-red-500">{{ error }}</span>
 
       <MyButton type="submit" :disabled="isPending">
         {{ isPending ? "Fetching..." : "Reset password" }}
       </MyButton>
     </form>
-    <p v-if="isPending">Reset your email...</p>
-    <p v-else-if="error">
+    <p v-if="isPending" class="text-white">Reset your email...</p>
+    <p v-else-if="error" class="text-red-500">
       {{ error }}
     </p>
-    <div v-else>
-      <h2>Password successfully changed!</h2>
-      <RouterLink to="/login">Login</RouterLink>
+    <div v-else class="text-center">
+      <h2 class="text-white">Password successfully changed!</h2>
+      <RouterLink to="/login" class="text-blue-500 underline">Login</RouterLink>
     </div>
   </div>
 </template>
-
-<style scoped>
-.wrapper {
-  padding-top: 265px;
-  max-width: 1060px;
-  margin: 0 auto;
-  width: 100vw;
-  height: 100vh;
-}
-
-form {
-  max-width: 300px;
-  margin: auto;
-  padding: 20px;
-  border-radius: 5px;
-  background-color: black;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-  background-color: rgb(0, 0, 0);
-  color: aliceblue;
-  border: 2px solid rgb(55, 146, 225);
-  border-radius: 4px;
-}
-
-fieldset {
-  border: none;
-}
-</style>
-@/components/ui/MyButton.vue
