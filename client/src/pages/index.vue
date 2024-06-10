@@ -8,7 +8,7 @@ import ThoughtsIcon from "@/assets/icons/ThoughtsIcon.svg?component";
 
 <template>
   <main class="container">
-    <div class="flex flex-col items-center gap-24">
+    <div class="flex flex-col items-center p-6 gap-24">
       <div
         class="flex flex-col md:flex-row justify-between items-center text-center gap-12 gap-y-12 w-auto h-auto"
       >

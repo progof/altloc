@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/vue-query";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { getCountNotesQueryOptions } from "@/services/app.service";
 import { getCountPostsQueryOptions } from "@/services/post.service";
+import UserLayout from "@/layout/UserLayout.vue";
 import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SavedPostList from "@/components/post/SavedListToPost.vue";
@@ -49,93 +50,95 @@ const showContent = (content: string) => {
 </script>
 
 <template>
-  <div class="conteiner">
-    <SideBarNav />
-    <div class="dashboard">
-      <div class="wrapper">
-        <div class="dashboard__face">
-          <UserProfile class="profile" />
-          <h2>Hi, {{ me?.username }} 👋</h2>
-        </div>
-        <div class="dashboard__info">
-          <span style="border-color: #3e3d3d">Your Email: {{ me?.email }}</span>
-          <span
-            >Account status:
-            {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
-          >
-          <span>Count posts: {{ countPosts }}</span>
-          <span>Count notes: {{ countNotes }}</span>
-        </div>
-        <!-- <div v-if="me?.role == 'USER'">
+  <UserLayout>
+    <div class="flex flex-1 min-h-screen gap-6 flex-col">
+      <div
+        class="flex rounded-3xl items-center h-32 gap-6 p-6"
+        style="background: url('../images/dashboard_bg.jpg') left"
+      >
+        <UserProfile class="w-16 h-16" />
+        <h2>Hi, {{ me?.username }} 👋</h2>
+      </div>
+      <div
+        class="flex flex-col md:flex-row justify-center items-center bg-[rgba(32,32,32,0.9)] rounded-2xl h-auto p-3 gap-6"
+      >
+        <!-- <span class="text-sm">Your Email: {{ me?.email }}</span> -->
+        <span class="text-sm"
+          >Account status:
+          {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
+        >
+        <span class="text-sm">Count posts: {{ countPosts }}</span>
+        <span class="text-sm">Count notes: {{ countNotes }}</span>
+      </div>
+      <!-- <div v-if="me?.role == 'USER'">
           <p>hi user!(test msg)</p>
         </div> -->
-        <div class="feed-nav">
-          <MyButton
-            @click="showContent('post-view')"
-            :class="{ active: activeButton === 'post-view' }"
-            class="feed-nav-"
-          >
-            Posts view
-          </MyButton>
-          <RouterLink to="/posts/add" class="sidebar__item" title="Add post">
-            <AddNoteIcon class="icons" />
-          </RouterLink>
+      <div class="feed-nav">
+        <MyButton
+          @click="showContent('post-view')"
+          :class="{ active: activeButton === 'post-view' }"
+          class="feed-nav-"
+        >
+          Posts view
+        </MyButton>
+        <RouterLink to="/posts/add" class="sidebar__item" title="Add post">
+          <AddNoteIcon class="icons" />
+        </RouterLink>
 
-          <MyButton
-            @click="showContent('note-view')"
-            :class="{ active: activeButton === 'note-view' }"
-          >
-            Note view
-          </MyButton>
-          <MyButton
-            @click="showContent('saved-post')"
-            :class="{ active: activeButton === 'saved-post' }"
-          >
-            Saved posts
-          </MyButton>
-          <MyButton
-            @click="showContent('saved-note')"
-            :class="{ active: activeButton === 'saved-note' }"
-          >
-            Saved notes
-          </MyButton>
-        </div>
-        <div v-if="activeButton === 'post-view'" class="post-view">
-          <post-list style="overflow: scroll" />
-        </div>
-        <div v-if="activeButton === 'note-view'" class="note-view">
-          <note-list style="overflow: scroll" />
-        </div>
-        <div v-if="activeButton === 'saved-post'" class="saved-post">
-          <SavedPostList style="overflow: scroll" />
-        </div>
-        <div v-if="activeButton === 'saved-note'" class="saved-note">
-          <SavedNoteList style="overflow: scroll" />
-        </div>
-        <!-- <div class="content-box">
+        <MyButton
+          @click="showContent('note-view')"
+          :class="{ active: activeButton === 'note-view' }"
+        >
+          Note view
+        </MyButton>
+        <MyButton
+          @click="showContent('saved-post')"
+          :class="{ active: activeButton === 'saved-post' }"
+        >
+          Saved posts
+        </MyButton>
+        <MyButton
+          @click="showContent('saved-note')"
+          :class="{ active: activeButton === 'saved-note' }"
+        >
+          Saved notes
+        </MyButton>
+      </div>
+      <div v-if="activeButton === 'post-view'" class="post-view">
+        <post-list style="overflow: scroll" />
+      </div>
+      <div v-if="activeButton === 'note-view'" class="note-view">
+        <note-list style="overflow: scroll" />
+      </div>
+      <div v-if="activeButton === 'saved-post'" class="saved-post">
+        <SavedPostList style="overflow: scroll" />
+      </div>
+      <div v-if="activeButton === 'saved-note'" class="saved-note">
+        <SavedNoteList style="overflow: scroll" />
+      </div>
+      <!-- <div class="content-box">
           <post-list style="overflow: scroll" />
           <note-list style="overflow: scroll" />
         </div> -->
 
-        <!-- <Modal @close="toggleModal" :modalActive="modalActive">
+      <!-- <Modal @close="toggleModal" :modalActive="modalActive">
       		<div class="dialog">
        			 <div class="dialog__content">
          			 <note-form />
        			 </div>
       		</div>
     	</Modal> -->
-      </div>
     </div>
-  </div>
+  </UserLayout>
 </template>
 
 <style scoped>
-.dashboard {
+/* .dashboard {
   flex: 1 1 0%;
-  min-height: 100vh; /* Change height to min-height */
-}
+  min-height: 100vh; 
+} */
 
-.wrapper {
+/* .wrapper {
   max-width: 1024px;
   padding: 50px;
   height: 100%;
@@ -149,7 +152,7 @@ const showContent = (content: string) => {
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-}
+} */
 
 h2 {
   color: azure;
@@ -166,18 +169,18 @@ h2 {
   padding: 20px;
 }
 
-.dashboard__face {
+/* .dashboard__face {
   display: flex;
   background: url(../assets/dashboard_bg.jpg) left;
   align-items: center;
   border-radius: 20px;
-}
+} */
 
-.profile {
+/* .profile {
   width: 128px;
   height: 128px;
   margin: 20px;
-}
+} */
 
 span {
   display: flex;
@@ -235,4 +238,3 @@ note-list {
   margin-top: 20px;
 }
 </style>
-@/components/ui

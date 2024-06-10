@@ -150,26 +150,23 @@ import { RouterView } from "vue-router";
 <template>
   <Navbar />
   <div
-    class="app flex flex-col gap-2"
-    style="
-      background-image: url('./assets/bg.jpg') center no-repeat;
-      background-size: cover;
-    "
+    class="app flex flex-col gap-3 bg-cover bg-no-repeat bg-center overflow-hidden box-border"
+    style="background-image: url('../public/images/bg.jpg')"
   >
     <RouterView />
   </div>
   <Footer></Footer>
 </template>
 
-<style>
+<style scoped>
 .app {
-  /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat; */
-  background: url("./assets/bg.jpg") center no-repeat;
+  /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat;
+  background: url("./assets/bg.jpg") center no-repeat; */
   background-size: stretch;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   gap: 10px;
   overflow: hidden;
-  box-sizing: border-box;
+  box-sizing: border-box; */
 }
 </style>

@@ -142,4 +142,3 @@ function htmlToFormattedText2(html: string) {
   align-items: center;
 }
 </style>
-@/components/ui

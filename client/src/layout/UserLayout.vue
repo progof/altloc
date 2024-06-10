@@ -4,7 +4,9 @@ import SideBarNav from "@/components/SideBarNav.vue";
 
 <template>
   <SideBarNav />
-  <div>
+  <div
+    class="max-w-screen-lg p-6 h-full bg-[rgba(15,14,14,0.9)] text-white m-auto"
+  >
     <slot />
   </div>
 </template>

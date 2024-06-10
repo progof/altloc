@@ -28,12 +28,12 @@ console.log("default", authStore.isAuthenticated);
       <div class="flex flex-row gap-8">
         <RouterLink
           to="/register"
-          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base hidden md:block"
+          class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-sm hidden md:block"
           >Sign up</RouterLink
         >
         <RouterLink
           to="/login"
-          class="bg-zinc-900 text-blue-500 font-bold px-2 py-1 md:px-4 md:py-2 rounded-xl hover:bg-blue-600 hover:text-white text-base hidden md:block"
+          class="bg-zinc-900 text-blue-500 font-bold px-2 py-1 md:px-4 md:py-2 rounded-xl hover:bg-blue-600 hover:text-white text-sm hidden md:block"
           >Log in</RouterLink
         >
         <DropdownMenu class="text-black" />
