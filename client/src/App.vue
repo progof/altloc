@@ -22,8 +22,6 @@ import SpaceNotes from "@/pages/spaces/notes.vue";
 import PostByIdPage from "@/pages/posts/[id].vue";
 import PostAdd from "@/pages/posts/add.vue";
 import PostEditor from "@/pages/posts/editor.vue";
-// import PostFeedPage from "@/pages/posts/feed.vue";
-// import { User, getMeQueryOptions } from "@/services/auth.service";
 import { getMeQueryOptions } from "@/services/auth.service";
 import { queryClient } from "@/services/queryClient";
 
@@ -151,7 +149,13 @@ import { RouterView } from "vue-router";
 
 <template>
   <Navbar />
-  <div class="app">
+  <div
+    class="app flex flex-col gap-2"
+    style="
+      background-image: url('./assets/bg.jpg') center no-repeat;
+      background-size: cover;
+    "
+  >
     <RouterView />
   </div>
   <Footer></Footer>
@@ -159,37 +163,13 @@ import { RouterView } from "vue-router";
 
 <style>
 .app {
-  /* height: 100vh; */
-  /* padding: 20px; */
   /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat; */
   background: url("./assets/bg.jpg") center no-repeat;
-  /* background-color: #222629; */
-  background-size: cover;
-  /* max-height: 100vh; */
+  background-size: stretch;
   display: flex;
   flex-direction: column;
   gap: 10px;
   overflow: hidden;
-
-  /* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  background-size: auto;
-  display: flex; */
-  /* width: 1440px;
-  height: 1024px; */
-  /* flex-direction: column;
-  align-items: flex-start;
-  gap: 10px; */
   box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  font-family: "Montserrat", sans-serif;
-  box-sizing: inherit;
-  color: inherit;
-  text-decoration: none;
 }
 </style>

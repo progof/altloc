@@ -7,13 +7,13 @@ import ThoughtsIcon from "@/assets/icons/ThoughtsIcon.svg?component";
 </script>
 
 <template>
-  <main class="p-14">
-    <div class="flex flex-col items-center md:gap-y-56 gap-y-24">
+  <main class="container">
+    <div class="flex flex-col items-center gap-24">
       <div
-        class="flex flex-col md:flex-row justify-center items-center text-center gap-12 gap-y-12"
+        class="flex flex-col md:flex-row justify-between items-center text-center gap-12 gap-y-12 w-auto h-auto"
       >
         <div
-          class="flex flex-col bg-black p-8 gap-6 border border-black bg-opacity-85 rounded-2xl md:w-[50%] md:h-[25%] w-[100%] h-[50%]"
+          class="flex flex-col bg-black p-8 gap-6 border border-black bg-opacity-85 rounded-2xl md:w-[50%] md:h-[25%] w-[100%] h-[50%] container"
         >
           <h3 class="text-white font-bold text-xl">
             The perfect platform for creating a circle of interest

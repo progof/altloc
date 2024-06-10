@@ -219,7 +219,7 @@ const submitForm = async (event: Event) => {
   </div>
 </template>
 
-<style>
+<style scoped>
 .container {
   max-width: 600px;
   margin: 0 auto;
