@@ -5,7 +5,7 @@ import SideBarNav from "@/components/SideBarNav.vue";
 <template>
   <SideBarNav />
   <div class="flex-1 overflow-y-scroll flex">
-    <div class="container w-2/3">
+    <div class="container w-full md:w-2/3">
       <div
         class="p-6 h-full bg-[rgba(15,14,14,0.9)] text-white m-auto w-full flex"
       >

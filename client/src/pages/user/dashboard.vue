@@ -35,14 +35,14 @@ const { data: countPosts } = useQuery(
     <div class="flex flex-1 gap-3 flex-col">
       <div class="flex flex-row md:flex-col gap-3">
         <div
-          class="flex rounded-3xl items-center h-32 gap-6 p-6"
+          class="flex rounded-3xl items-center h-32 gap-6 p-6 w-2/3 md:w-full"
           style="background: url('../images/dashboard_bg.jpg') left"
         >
           <UserProfile class="w-16 h-16" />
           <h3 class="text-zinc-50">Hi, {{ me?.username }} 👋</h3>
         </div>
         <div
-          class="flex flex-col md:flex-row justify-center items-center bg-[rgba(32,32,32,0.9)] rounded-2xl h-auto p-3 gap-6"
+          class="flex flex-col md:flex-row justify-center items-center bg-[rgba(32,32,32,0.9)] rounded-2xl h-auto p-3 gap-6 flex-1 w-1/3 md:w-full"
         >
           <span class="text-sm"
             >Status:

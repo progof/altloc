@@ -24,7 +24,7 @@ const logoutUser = () => {
 
 <template>
   <div
-    class="flex bg-[rgba(15,14,14,0.9)] justify-center items-center rounded-b-[25px] p-3"
+    class="flex bg-[rgba(15,14,14,0.9)] justify-start md:justify-center items-center rounded-b-[25px] p-3"
   >
     <MobileMenu class="md:hidden" />
     <div class="gap-3 items-center hidden md:flex">

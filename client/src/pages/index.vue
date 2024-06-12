@@ -7,7 +7,7 @@ import ThoughtsIcon from "@/assets/icons/ThoughtsIcon.svg?component";
 </script>
 
 <template>
-  <main class="container">
+  <main class="container overflow-auto">
     <div class="flex flex-col items-center p-6 gap-24">
       <div
         class="flex flex-col md:flex-row justify-between items-center text-center gap-12 gap-y-12 w-auto h-auto"
@@ -46,30 +46,36 @@ import ThoughtsIcon from "@/assets/icons/ThoughtsIcon.svg?component";
       <div
         class="flex flex-col bg-black p-8 gap-6 border border-black bg-opacity-85 rounded-2xl md:w-[50%] md:h-[25%] w-[100%] h-[50%]"
       >
-        <h3 class="text-white font-bold text-xl text-center">
+        <h3 class="text-zinc-100 font-bold text-xl text-center">
           What can you do on the platform?
         </h3>
         <div class="flex flex-col md:flex-row justify-between gap-12">
           <div class="flex flex-col items-center gap-6">
-            <GroupIcon class="w-16 h-16 text-white" />
-            <span>Join a special interest group (space).</span>
+            <GroupIcon class="w-8 h-8 text-zinc-100" />
+            <span class="text-zinc-100 text-sm"
+              >Join a special interest group (space)</span
+            >
           </div>
           <div class="flex flex-col items-center gap-6">
-            <NotesIcon class="w-16 h-16 text-white" />
-            <span>Create notes for the group</span>
+            <NotesIcon class="w-8 h-8 text-zinc-100" />
+            <span class="text-zinc-100 text-sm"
+              >Create notes for the group</span
+            >
           </div>
         </div>
         <div class="flex flex-col md:flex-row justify-between gap-12">
           <div class="flex flex-col items-center gap-6">
-            <EventsIcon class="w-16 h-16 text-white" />
-            <span
+            <EventsIcon class="w-8 h-8 text-white" />
+            <span class="text-zinc-100 text-sm"
               >Participate in activities to integrate with other group
               members</span
             >
           </div>
           <div class="flex flex-col items-center gap-6">
-            <ThoughtsIcon class="w-16 h-16 text-white" />
-            <span>Sharing his thoughts on his wall</span>
+            <ThoughtsIcon class="w-8 h-8 text-zinc-100" />
+            <span class="text-zinc-100 text-sm"
+              >Sharing his thoughts on his wall</span
+            >
           </div>
         </div>
       </div>

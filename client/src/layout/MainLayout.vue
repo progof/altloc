@@ -49,7 +49,7 @@ console.log("default", authStore.isAuthenticated);
 
   <footer
     v-if="!authStore.isAuthenticated"
-    class="bg-black bottom-0 left-0 flex-shrink items-center flex justify-center p-8"
+    class="bg-black bottom-0 left-0 flex-shrink items-center flex justify-center p-8 h-auto w-full"
   >
     <div class="text-white text-lg flex">
       <span class="pr-2 text-base text-zinc-200"

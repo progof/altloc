@@ -100,7 +100,7 @@ const handleDeleteNote = async (noteId: string) => {
 .note-lists {
   margin-top: 20px;
   overflow: scroll;
-  height: 600px;
+  height: 300px;
 }
 
 .note-lists h2 {
@@ -160,4 +160,3 @@ const handleDeleteNote = async (noteId: string) => {
   margin-top: 20px;
 }
 </style>
-@/components/ui
