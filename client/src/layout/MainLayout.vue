@@ -63,11 +63,10 @@ console.log("default", authStore.isAuthenticated);
 
 <style>
 #app {
-  /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat;
-  background: url("./assets/bg.jpg") center no-repeat; */
   height: 100vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
 }
 </style>
