@@ -3,7 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import IndexPage from "@/pages/index.vue";
 import RegisterPage from "@/pages/auth/register.vue";
 import LoginPage from "@/pages/auth/login.vue";
-import DashboardPage from "@/pages/dashboard.vue";
+import DashboardPage from "@/pages/user/dashboard.vue";
+import SettingsPage from "@/pages/user/settings.vue";
 import EmailVerificationPage from "@/pages/auth/email-verification.vue";
 import RecoveryPasswordPage from "@/pages/auth/recovery_password.vue";
 import ResetPasswordPage from "@/pages/auth/reset_password.vue";
@@ -42,6 +43,10 @@ export const router = createRouter({
     {
       path: "/dashboard",
       component: DashboardPage,
+    },
+    {
+      path: "/settings",
+      component: SettingsPage,
     },
     {
       path: "/email-verification",
@@ -142,31 +147,12 @@ router.beforeEach(async (to) => {
 </script>
 
 <script setup lang="ts">
-import Navbar from "@/components/front/Navbar.vue";
-import Footer from "./components/front/Footer.vue";
 import { RouterView } from "vue-router";
+import MainLayout from "./layout/MainLayout.vue";
 </script>
 
 <template>
-  <Navbar />
-  <div
-    class="app flex flex-col gap-3 bg-cover bg-no-repeat bg-center overflow-hidden box-border"
-    style="background-image: url('../public/images/bg.jpg')"
-  >
+  <MainLayout>
     <RouterView />
-  </div>
-  <Footer></Footer>
+  </MainLayout>
 </template>
-
-<style scoped>
-.app {
-  /* background: url("./assets/bg.jpg"), lightgray 50% / cover no-repeat;
-  background: url("./assets/bg.jpg") center no-repeat; */
-  background-size: stretch;
-  /* display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow: hidden;
-  box-sizing: border-box; */
-}
-</style>

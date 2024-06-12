@@ -107,7 +107,7 @@ const handleDeleteNote = async (postId: string) => {
 .post-lists {
   margin-top: 20px;
   overflow: scroll;
-  height: 600px;
+  height: 300px;
 }
 
 .post-lists h2 {

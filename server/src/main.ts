@@ -17,9 +17,11 @@ import { SpacesService } from "./spaces/spaces.service";
 import { PostsController } from "./posts/posts.controller";
 import { PostsService } from "./posts/posts.service";
 
-
 import { EventsController } from "./events/events.controller";
 import { EventsService } from "./events/events.service";
+
+import { UserController } from "./user/user.controller";
+import { UserService } from "./user/user.service";
 
 // Create an instance of the Express application
 const app = express();
@@ -61,12 +63,17 @@ const spacesController = new SpacesController(spacesService);
 // Mount route for spaces onto the Express application
 app.use(spacesController.router);
 
-
-// Initialize services with database pool and configuration for PostsService
+// Initialize services with database pool and configuration for EventsService
 export const eventsService = new EventsService(pool);
 const eventsController = new EventsController(eventsService);
 // Mount route for posts onto the Express application
 app.use(eventsController.router);
+
+// Initialize services with database pool and configuration for UserService
+export const userService = new UserService(pool);
+const userController = new UserController(userService);
+// Mount route for posts onto the Express application
+app.use(userController.router);
 
 // Start the Express server, listening on the specified port
 app.listen(config.APP_PORT, () => {

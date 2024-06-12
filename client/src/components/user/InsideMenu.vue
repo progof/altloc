@@ -16,7 +16,7 @@ import SavedNoteList from "@/components/note/SavedListToNote.vue";
 <template>
   <TabsRoot
     class="flex flex-col flex-inline w-full bg-[rgba(15,14,14,0.9)]"
-    value="tab1"
+    default-value="tab1"
   >
     <TabsList
       class="relative shrink-0 flex border-b border-white"
