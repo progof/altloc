@@ -9,9 +9,9 @@ import NoteList from "@/components/note/NoteList.vue";
 import PostList from "@/components/post/PostList.vue";
 import SavedPostList from "@/components/post/SavedListToPost.vue";
 import SavedNoteList from "@/components/note/SavedListToNote.vue";
-import SideBarNav from "@/components/SideBarNav.vue";
 import { MyButton } from "@/components/UI";
 import UserProfile from "@/assets/icons/UserProfile.svg?component";
+import { InsideMenu } from "@/components/user/";
 
 // import Modal from "@/components/Modal.vue";
 
@@ -56,8 +56,16 @@ const showContent = (content: string) => {
         class="flex rounded-3xl items-center h-32 gap-6 p-6"
         style="background: url('../images/dashboard_bg.jpg') left"
       >
-        <UserProfile class="w-16 h-16" />
-        <h2>Hi, {{ me?.username }} 👋</h2>
+        <div class="flex gap-6 items-center">
+          <UserProfile class="w-16 h-16" />
+          <h2>Hi, {{ me?.username }} 👋</h2>
+        </div>
+        <div class="flex justify-end">
+          <span class="text-sm"
+            >Account status:
+            {{ me?.is_verified ? "🏅 verified " : "🚫 not verified" }}</span
+          >
+        </div>
       </div>
       <div
         class="flex flex-col md:flex-row justify-center items-center bg-[rgba(32,32,32,0.9)] rounded-2xl h-auto p-3 gap-6"
@@ -73,7 +81,7 @@ const showContent = (content: string) => {
       <!-- <div v-if="me?.role == 'USER'">
           <p>hi user!(test msg)</p>
         </div> -->
-      <div class="feed-nav">
+      <!-- <div class="feed-nav">
         <MyButton
           @click="showContent('post-view')"
           :class="{ active: activeButton === 'post-view' }"
@@ -115,7 +123,8 @@ const showContent = (content: string) => {
       </div>
       <div v-if="activeButton === 'saved-note'" class="saved-note">
         <SavedNoteList style="overflow: scroll" />
-      </div>
+      </div> -->
+      <InsideMenu />
       <!-- <div class="content-box">
           <post-list style="overflow: scroll" />
           <note-list style="overflow: scroll" />
