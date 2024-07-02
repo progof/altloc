@@ -1,0 +1,28 @@
+{
+  "name": "client-new",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.7.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/vue": "^4.5.0",
+    "@tanstack/vue-query": "^5.49.1",
+    "@vee-validate/zod": "^4.13.1",
+    "astro": "^4.11.3",
+    "astro-icon": "^1.1.0",
+    "pinia": "^2.1.7",
+    "radix-vue": "^1.8.5",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.3",
+    "vite-svg-loader": "^5.1.0",
+    "vue": "^3.4.31",
+    "zod": "^3.23.8"
+  }
+}

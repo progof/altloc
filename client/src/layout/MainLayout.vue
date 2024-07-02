@@ -14,18 +14,18 @@ console.log("default", authStore.isAuthenticated);
 <template>
   <header
     v-if="!authStore.isAuthenticated"
-    class="px-14 py-4 top-0 left-0 bg-black"
+    class="pointer-events-auto sticky top-0 z-20 bg-[#222629] bg-opacity-90 backdrop-blur-[20px] backdrop-saturate-150 px-6 py-3 md:px-14"
   >
-    <div class="flex flex-row justify-between items-center text-center gap-6">
-      <div class="flex flex-row items-center justify-between gap-3">
+    <div class="container flex items-center justify-between gap-6 w-full">
+      <div class="flex items-center justify-between gap-3">
         <a href="/">
-          <LogoIcon class="md:w-16 md:h-16 w-11 h-11" />
+          <LogoIcon class="md:w-10 md:h-10 w-8 h-8" />
         </a>
 
-        <h2 class="text-lg md:text-2xl text-blue-500 font-bold">AltPlace</h2>
+        <h2 class="text-lg md:text-lg text-blue-800 font-bold">AltPlace</h2>
       </div>
 
-      <div class="flex flex-row gap-8">
+      <div class="flex gap-6">
         <RouterLink
           to="/register"
           class="bg-zinc-900 text-blue-500 font-bold px-4 py-2 rounded-xl hover:bg-blue-600 hover:text-white text-sm hidden md:block"
@@ -40,16 +40,13 @@ console.log("default", authStore.isAuthenticated);
       </div>
     </div>
   </header>
-  <main
-    class="app flex flex-col bg-cover bg-no-repeat bg-center overflow-hidden box-border flex-1"
-    style="background-image: url('../public/images/bg.jpg')"
-  >
+  <main class="relative flex flex-1 flex-col bg-[#222629]">
     <slot />
   </main>
 
   <footer
     v-if="!authStore.isAuthenticated"
-    class="bg-black bottom-0 left-0 flex-shrink items-center flex justify-center p-8 h-auto w-full"
+    class="bg-[#222629] flex-shrink items-center flex justify-center p-4 h-auto w-full"
   >
     <div class="text-white text-lg flex">
       <span class="pr-2 text-base text-zinc-200"
