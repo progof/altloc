@@ -1,7 +1,10 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
+import RegisterFormIsland from "../components/auth/RegisterFormIsland.vue";
 ---
 
 <MainLayout title="AltPlace" description="AltPlace" keywords="AltPlace">
-  test
+  <div>
+    <RegisterFormIsland client:load />
+  </div>
 </MainLayout>

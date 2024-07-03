@@ -1,7 +1,7 @@
 import { queryOptions, useMutation } from "@tanstack/vue-query";
 import { z } from "zod";
-import { useAuthStore } from "@/store/auth.store";
-import { pinia } from "@/store/pinia";
+import { useAuthStore } from "@/stores/auth.store";
+import { pinia } from "@/stores/pinia";
 
 const authStore = useAuthStore(pinia);	
 export const isAuthenticated = authStore.isAuthenticated;	

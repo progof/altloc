@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.7.0",
+    "@astrojs/node": "^8.3.2",
     "@astrojs/tailwind": "^5.1.0",
     "@astrojs/vue": "^4.5.0",
     "@tanstack/vue-query": "^5.49.1",
@@ -21,6 +22,7 @@
     "radix-vue": "^1.8.5",
     "tailwindcss": "^3.4.4",
     "typescript": "^5.5.3",
+    "vee-validate": "^4.13.1",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.4.31",
     "zod": "^3.23.8"
