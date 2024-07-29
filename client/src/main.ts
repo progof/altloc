@@ -11,3 +11,4 @@ createApp(App)
   .use(VueQueryPlugin, { queryClient })
   .use(router)
   .mount("#app");
+

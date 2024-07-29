@@ -5,6 +5,7 @@ import {
   EmailActivation,
   ResetPasswordRequest,
   User,
+  PasswoedAccounts,
   UserSession,
 } from "../database";
 import jwt from "jsonwebtoken";
@@ -211,6 +212,18 @@ export class AuthService {
     return result.rows.at(0) || null;
   }
 
+  async getUserWithPasswordByEmail(email: string) {
+    const result = await this.db.query(
+      `SELECT u.user_id, u.username, u.email, u.is_verified, u.created_at, u.role, pa.password 
+       FROM users u
+       JOIN password_accounts pa ON u.user_id = pa.user_id
+       WHERE u.email = $1;`,
+      [email]
+    );
+  
+    return result.rows[0] || null;
+  }
+
   /**
    * Creates a new user.
    * @param data Object containing user data (username, email, hashedPassword).
@@ -219,16 +232,29 @@ export class AuthService {
   async createUser(data: {
     username: string;
     email: string;
-    hashedPassword: string;
+
   }) {
-    const { email, hashedPassword, username } = data;
+    const { username, email } = data;
     const result = await this.db.query(
-      `INSERT INTO users (username, email, password)
-			VALUES ($1, $2, $3)
+      `INSERT INTO users (username, email)
+			VALUES ($1, $2)
 			RETURNING user_id`,
-      [username, email, hashedPassword],
+      [username, email ],
     );
     return result.rows[0] as { user_id: string };
+  }
+
+  async createPasswordAccount(data: {
+    userId: string;
+    hashedPassword: string;
+  }) {
+    const { userId, hashedPassword,  } = data;
+    const result = await this.db.query(
+      `INSERT INTO password_accounts (user_id, password)
+			VALUES ($1, $2)`,
+      [userId, hashedPassword],
+    );
+    return result.rows[0];
   }
 
   /**
@@ -258,7 +284,7 @@ export class AuthService {
     userId: string,
     newPassword: string,
   ) {
-    await this.db.query(`UPDATE users SET password = $2 WHERE user_id = $1;`, [
+    await this.db.query(`UPDATE password_accounts SET password = $2 WHERE user_id = $1;`, [
       userId,
       newPassword,
     ]);

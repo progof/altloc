@@ -1,4 +1,4 @@
-import { queryOptions, useMutation } from "@tanstack/vue-query";
+import { useMutation } from "@tanstack/vue-query";
 import { z } from "zod";
 import { useAuthStore } from "@/stores/auth.store";
 import { pinia } from "@/stores/pinia";
@@ -13,6 +13,8 @@ const errorSchema = z.object({
 		})
 	),
 });
+
+
 
 export const useRegisterMutation = () =>
 	useMutation({
@@ -89,25 +91,7 @@ export const useLogoutMutation = () => {
 	});
 };
 
-export type User = {
-	user_id: string;
-	username: string;
-	email: string;
-	is_verified: boolean;
-	role: string;
-};
 
-export const getMeQueryOptions = queryOptions({
-	queryKey: ["/auth/me"] as const,
-	queryFn: async () => {
-		const res = await fetch("/api/auth/me");
-		if (!res.ok) {
-			const errors = errorSchema.parse(await res.json()).errors;
-			throw new Error(errors.at(0)?.message);
-		}
-		return (await (res.json() as Promise<{ data: User }>)).data;
-	},
-});
 
 export const useVerifyEmailMutation = () => {
 	return useMutation({
@@ -170,25 +154,3 @@ export const useRecoveryPasswordMutation = () =>
 			},
 		});
 	};
-
-	const getUser = async (user_id: string) => {
-		const res = await fetch(`/api/auth/users/${user_id}/`, {
-		  headers: {
-			Accept: "application/json",
-		  },
-		});
-	  
-		if (!res.ok) {
-		  const errors = errorSchema.parse(await res.json()).errors;
-		  throw new Error(errors.at(0)?.message);
-		}
-	  
-		const responseData = await res.json();
-		return responseData.data as User;
-	  };
-	  
-	  export const getUserQueryOptions = (user_id: string) =>
-		queryOptions({
-		  queryKey: ["/auth/users", user_id],
-		  queryFn: () => getUser(user_id),
-		});

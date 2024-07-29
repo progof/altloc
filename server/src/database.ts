@@ -21,6 +21,11 @@ export type User = {
   role: string;
 };
 
+export type PasswoedAccounts = {
+	user_id: string;
+	password: string;
+};
+
 /**
  * Definition of the UserSession object.
  */
@@ -218,10 +223,15 @@ try {
 			user_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 			username VARCHAR(200) NOT NULL,
 			email VARCHAR(200) NOT NULL UNIQUE,
-			password VARCHAR(200) NOT NULL,
 			is_verified BOOLEAN DEFAULT FALSE,
 			created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			role VARCHAR(50) DEFAULT 'USER' 
+		);
+
+		CREATE TABLE IF NOT EXISTS password_accounts (
+			user_id uuid NOT NULL,
+			password VARCHAR(255) NOT NULL,
+			FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 		);
 		
 		CREATE TABLE IF NOT EXISTS user_sessions (

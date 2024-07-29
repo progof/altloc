@@ -81,8 +81,12 @@ export class AuthController {
 
       const { user_id } = await this.authService.createUser({
         email,
-        hashedPassword,
         username,
+      });
+
+      await this.authService.createPasswordAccount({
+        userId: user_id,
+        hashedPassword,
       });
 
       const { activation_token } = await this.authService
@@ -95,7 +99,7 @@ export class AuthController {
         username,
       });
       console.log("Debug email: ", sendVerificationEmail);
-      return res.status(201).send({ data: { user_id } });
+      return res.status(201).send({ data: { user_id} });
     } catch (error) {
       console.error(error);
       return res
@@ -124,7 +128,7 @@ export class AuthController {
 
       const { email, password } = body.data;
 
-      const user = await this.authService.getUserByEmail(email);
+      const user = await this.authService.getUserWithPasswordByEmail(email);
       if (!user) {
         return res.status(400).send({
           errors: [{ message: "User with this email does not exist" }],

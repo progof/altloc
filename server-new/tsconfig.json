@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+	  "target": "ESNext",
+	  "module": "ESNext",
+	  "moduleResolution": "Node",
+	  "baseUrl": ".",
+	  "paths": {
+		"@db/*": ["db/*"],
+		"@/*": ["src/*"]
+	  },
+	  "esModuleInterop": true,
+	  "allowSyntheticDefaultImports": true,
+	  "forceConsistentCasingInFileNames": true,
+	  "strict": true,
+	  "noUncheckedIndexedAccess": true,
+	  "noUnusedLocals": true,
+	  "outDir": "dist",
+	  "removeComments": true,
+	  "noFallthroughCasesInSwitch": true,
+	  "useDefineForClassFields": true,
+	  "skipLibCheck": true,
+	  "strictNullChecks": true,
+	  "lib": ["esnext"],
+	  "typeRoots": ["./node_modules/@types", "./"]
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "dist", ]
+}
+  
+  

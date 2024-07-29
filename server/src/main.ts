@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { config } from "./config";
 import { pool } from "./database";
+import { User } from "./database";
 
 import { AuthService } from "./auth/auth.service";
 import { AuthController } from "./auth/auth.controller";
@@ -20,8 +21,10 @@ import { PostsService } from "./posts/posts.service";
 import { EventsController } from "./events/events.controller";
 import { EventsService } from "./events/events.service";
 
-import { UserController } from "./user/user.controller";
-import { UserService } from "./user/user.service";
+
+console.log(User);
+// import { UserController } from "./user/user.controller";
+// import { UserService } from "./user/user.service";
 
 // Create an instance of the Express application
 const app = express();
@@ -70,10 +73,10 @@ const eventsController = new EventsController(eventsService);
 app.use(eventsController.router);
 
 // Initialize services with database pool and configuration for UserService
-export const userService = new UserService(pool);
-const userController = new UserController(userService);
+// export const userService = new UserService(pool);
+// const userController = new UserController(userService);
 // Mount route for posts onto the Express application
-app.use(userController.router);
+// app.use(userController.router);
 
 // Start the Express server, listening on the specified port
 app.listen(config.APP_PORT, () => {

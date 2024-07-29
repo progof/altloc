@@ -1,5 +1,5 @@
 import "express-session";
-import { User } from "./src/users/user.service";
+import { User } from "./src/user/user.service";
 
 declare module "express-session" {
   interface SessionData {
