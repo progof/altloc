@@ -1,9 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { config } from "../config";
 import jwt from "jsonwebtoken";
-import { authService } from "../main";
+import { authPasswordService } from "../main";
 
-// Middleware для блокировки доступа к панели управления для непроверенных пользователей
 export async function blockNotVerifiedUser(
   req: Request,
   res: Response,
@@ -40,33 +39,33 @@ export async function blockNotAuthenticated(
 
     const payload = jwt.verify(req.cookies.access_token, config.ACCESS_TOKEN_SECRET) as { userId: string, userRole: string };
 
-    const user = await authService.getUserById(payload.userId);
-    const role = await authService.getUserRoleById(payload.userId);
+    const user = await authPasswordService.getUserById(payload.userId);
+    const role = await authPasswordService.getUserRoleById(payload.userId);
 
     if (!user) {
       return res.status(401).send({ errors: [{ message: "User not found" }] });
     }
 
     req.session.user = user;
-    req.session.role = role;
+    // req.session.user.role = role;
 
     return next();
   } catch (error) {
     try {
       const payload = jwt.verify(req.cookies.refresh_token, config.REFRESH_TOKEN_SECRET) as { userId: string; userRole: string; sessionId: string };
 
-      const session = await authService.getSessionById(payload.sessionId);
+      const session = await authPasswordService.getSessionById(payload.sessionId);
       if (!session) {
         throw new Error("Couldn't find session");
       }
 
-      const accessToken = authService.generateAccessToken({
+      const accessToken = authPasswordService.generateAccessToken({
         userId: session.userId,
         role: session.userRole
       });
       res.cookie("access_token", accessToken, { httpOnly: true });
 
-      const user = await authService.getUserById(session.userId);
+      const user = await authPasswordService.getUserById(session.userId);
       if (!user) {
         return res.status(401).send();
       }
@@ -78,7 +77,7 @@ export async function blockNotAuthenticated(
   }
 }
 
-// Middleware для блокировки доступа к административной панели
+
 export async function isAdmin(
   req: Request,
   res: Response,

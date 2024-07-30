@@ -5,8 +5,8 @@ import cookieParser from "cookie-parser";
 import { config } from "./config";  
 
 
-import { AuthService } from "./auth/auth.service";  
-import { AuthController } from "./auth/auth.controller";
+import { AuthPasswordService } from "./auth/password/auth.password.service";  
+import { AuthPasswordController } from "./auth/password/auth.password.controller";
 
 const app = express();
 
@@ -23,10 +23,10 @@ app.use(
     })
 );
 
-export const authService = new AuthService(config);
-const authController = new AuthController(authService);
+export const authPasswordService = new AuthPasswordService(config);
+const authController = new AuthPasswordController(authPasswordService);
 app.use(authController.router);
 
 app.listen(config.APP_PORT, () => {
-    console.log(`Server running on port ${config.APP_PORT}`);
+    console.log(`Server running on port: ${config.APP_PORT}`);
 });

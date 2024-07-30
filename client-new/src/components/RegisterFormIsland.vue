@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { ZodIssue, z } from "zod";
-import { useRegisterMutation } from "@/services/auth.service";
+import { useRegisterMutation } from "@/services/auth.password.service";
 import { Button } from "@/components/ui/button";
 import { TextField, PasswordField } from "@/components/ui/input";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
@@ -102,3 +102,4 @@ const submitForm = async (event: Event) => {
     </Button>
   </form>
 </template>
+@/services/auth.password.service

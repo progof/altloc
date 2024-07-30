@@ -2,7 +2,7 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import { ref } from "vue";
 import { z } from "zod";
-import { useRecoveryPasswordMutation } from "@/services/auth.service";
+import { useRecoveryPasswordMutation } from "@/services/auth.password.service";
 import { Button } from "@/components/ui/button";
 import { TextField } from "@/components/ui/input";
 
@@ -91,3 +91,4 @@ const submitForm = async (event: Event) => {
     </div>
   </AuthLayout>
 </template>
+@/services/auth.password.service

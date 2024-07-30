@@ -17,7 +17,7 @@ import SettingsIcon from "@/assets/icons/SettingsIcon.svg?component";
 
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useLogoutMutation } from "@/services/auth.service";
+import { useLogoutMutation } from "@/services/auth.password.service";
 
 const router = useRouter();
 const { mutate: logout } = useLogoutMutation();
@@ -79,3 +79,4 @@ const isOpen = ref(false);
     </DialogPortal>
   </DialogRoot>
 </template>
+@/services/auth.password.service

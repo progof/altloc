@@ -1,34 +1,34 @@
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { sendPasswordRestToken, sendVerificationEmail } from "../mailer";
+import { sendPasswordRestToken, sendVerificationEmail } from "../../mailer";
 import { Request, Response, Router } from "express";
-import { AuthService } from "./auth.service";
+import { AuthPasswordService } from "./auth.password.service";
 import {
   blockNotAuthenticated,
   blockNotVerifiedUser,
-} from "../middlewares/auth.middlewares";
+} from "../../middlewares/auth.middlewares";
 
-export class AuthController {
+export class AuthPasswordController {
   public readonly router = Router();
 
   // Constructor initialization of routes
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authPasswordService: AuthPasswordService) {
     this.router.post(
-      "/auth/verify-email/:user_id/:activation_token",
+      "/auth/password/verify-email/:user_id/:activation_token",
       this.handleVerification.bind(this),
     );
     this.router.post(
-      "/auth/email-reset-password/:user_id/:reset_token",
+      "/auth/password/email-reset-password/:user_id/:reset_token",
       this.handlePasswordReset.bind(this),
     );
     this.router.post(
-      "/auth/recovery_password",
+      "/auth/password/recovery_password",
       this.handleRecoveryPassword.bind(this),
     );
-    this.router.post("/auth/register", this.userRegister.bind(this));
-    this.router.post("/auth/login", this.userLogin.bind(this));
+    this.router.post("/auth/password/register", this.userRegister.bind(this));
+    this.router.post("/auth/password/login", this.userLogin.bind(this));
     this.router.post(
-      "/auth/logout",
+      "/auth/password/logout",
       blockNotAuthenticated,
       blockNotVerifiedUser,
       this.userLogout.bind(this),
@@ -49,9 +49,9 @@ export class AuthController {
 
   async userRegister(req: Request, res: Response) {
     const bodySchema = z.object({
-      username: z.string(),
+      username: z.string().min(1).max(255),
       email: z.string().email(),
-      password: z.string().min(6),
+      password: z.string().min(6).max(255),
     });
   
     const body = bodySchema.safeParse(req.body);
@@ -66,14 +66,14 @@ export class AuthController {
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
   
-      const existingUser = await this.authService.getUserByEmail(email);
+      const existingUser = await this.authPasswordService.getUserByEmail(email);
       if (existingUser) {
         return res
           .status(400)
           .send({ errors: [{ message: "Email already registered" }] });
       }
   
-      const user = await this.authService.createUser({
+      const user = await this.authPasswordService.createUser({
         email,
         username,
       });
@@ -84,12 +84,12 @@ export class AuthController {
         });
       }
   
-      await this.authService.createPasswordAccount({
+      await this.authPasswordService.createPasswordAccount({
         userId: user.id,
         hashedPassword,
       });
   
-      const activation = await this.authService.createOrGetEmailActivation(user.id);
+      const activation = await this.authPasswordService.createOrGetEmailActivation(user.id);
   
       if (!activation) {
         return res.status(500).send({
@@ -118,7 +118,7 @@ export class AuthController {
     try {
       const bodySchema = z.object({
         email: z.string().email(),
-        password: z.string().min(6),
+        password: z.string().min(6).max(255),
       });
 
       const body = bodySchema.safeParse(req.body);
@@ -128,27 +128,29 @@ export class AuthController {
 
       const { email, password } = body.data;
 
-      const user = await this.authService.getUserWithPasswordByEmail(email);
+      const user = await this.authPasswordService.getUserByEmail(email);
+      const passwordAPI = await this.authPasswordService.getPasswordByUserId(user?.id as string);
       if (!user) {
         return res.status(400).send({
           errors: [{ message: "User with this email does not exist" }],
         });
       }
 
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, passwordAPI?.password as string);
       if (!isMatch) {
         return res
           .status(400)
           .send({ errors: [{ message: "Invalid password" }] });
       }
 
-      const session = await this.authService.createSession(user.id, user.role);
+      const session = await this.authPasswordService.createSession(user.id, user.role);
 
-      const accessToken = this.authService.generateAccessToken({
+      const accessToken = this.authPasswordService.generateAccessToken({
         userId: user.id,
         role: user.role,
       });
-      const refreshToken = this.authService.generateRefreshToken({
+
+      const refreshToken = this.authPasswordService.generateRefreshToken({
         userId: user.id,
         sessionId: session.sessionId,
         role: user.role,
@@ -179,7 +181,7 @@ export class AuthController {
     try {
       const userId = req.session.user.id;
 
-      await this.authService.deleteSession(userId);
+      await this.authPasswordService.deleteSession(userId);
 
       res.clearCookie("access_token", { httpOnly: true });
       res.clearCookie("refresh_token", { httpOnly: true });
@@ -221,7 +223,7 @@ export class AuthController {
     const { activation_token, user_id } = parsedResult.data;
 
     try {
-      const activation = await this.authService.getUserActivationById(user_id);
+      const activation = await this.authPasswordService.getUserActivationById(user_id);
 
       if (!activation || activation.activationToken !== activation_token) {
         return res
@@ -229,8 +231,8 @@ export class AuthController {
           .send({ errors: [{ message: "Invalid activation token" }] });
       }
 
-      await this.authService.changeEmailVerificationStatus(user_id, true);
-      await this.authService.deleteUserActivationToken(user_id);
+      await this.authPasswordService.changeEmailVerificationStatus(user_id, true);
+      await this.authPasswordService.deleteUserActivationToken(user_id);
 
       return res.status(200).send();
     } catch (error) {
@@ -246,7 +248,7 @@ export class AuthController {
         errors: [{ message: "Not found session" }],
       });
     }
-    const me = await this.authService.getUserById(req.session.user.id);
+    const me = await this.authPasswordService.getUserById(req.session.user.id);
     if (!me) {
       return res.status(401).send({ errors: [{ message: "Not found user" }] });
     }
@@ -273,7 +275,7 @@ export class AuthController {
     try {
       const { email } = parseResult.data;
   
-      const user = await this.authService.getUserByEmail(email);
+      const user = await this.authPasswordService.getUserByEmail(email);
       if (!user) {
         return res.status(400).send({
           errors: [{
@@ -282,7 +284,7 @@ export class AuthController {
         });
       }
   
-      const resetRequest = await this.authService.createOrGetResetPasswordRequest(user.id);
+      const resetRequest = await this.authPasswordService.createOrGetResetPasswordRequest(user.id);
   
       if (!resetRequest) {
         return res.status(500).send({
@@ -320,7 +322,7 @@ export class AuthController {
     }
 
     try {
-      const user = await this.authService.getUserById(params.data.user_id);
+      const user = await this.authPasswordService.getUserById(params.data.user_id);
       return res.status(200).send({
         data: user,
       });
@@ -351,7 +353,7 @@ export class AuthController {
     const { reset_token, user_id, password } = parsedResult.data;
 
     try {
-      const resetRequest = await this.authService.getResetPasswordRequest(user_id);
+      const resetRequest = await this.authPasswordService.getResetPasswordRequest(user_id);
 
       if (!resetRequest || resetRequest.resetToken !== reset_token) {
         return res.status(400).send({
@@ -360,8 +362,8 @@ export class AuthController {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      await this.authService.changePassword(user_id, hashedPassword);
-      await this.authService.deleteUserResetPasswordRequest(user_id);
+      await this.authPasswordService.changePassword(user_id, hashedPassword);
+      await this.authPasswordService.deleteUserResetPasswordRequest(user_id);
 
       return res.status(200).send();
     } catch (error) {

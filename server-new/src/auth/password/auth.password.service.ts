@@ -1,16 +1,17 @@
 import jwt from "jsonwebtoken";
-import { Config } from "../config";
-import { db } from "../db";
+import { Config } from "../../config";
+import { db } from "../../db";
 import {
   emailActivationsTable,
   resetPasswordRequestsTable,
   usersTable,
   userSessionsTable,
-  passwordAccountsTable
-} from "../../db/schema"; 
+  passwordAccountsTable,
+  PasswordAccount
+} from "../../../db/schema"; 
 import { eq } from "drizzle-orm";
 
-export class AuthService {
+export class AuthPasswordService {
   constructor(private readonly config: Config) {}
 
   generateAccessToken(payload: { userId: string, role: string }) {
@@ -25,10 +26,14 @@ export class AuthService {
     });
   }
 
+
   async createSession(userId: string, role: string) {
     const [session] = await db.insert(userSessionsTable)
       .values({ userId, userRole: role })
       .returning();
+   if(!session){
+    throw new Error("Failed to create session");
+   };
     return session;
   }
 
@@ -99,53 +104,59 @@ export class AuthService {
     return user || null;
   }
 
-  async getUserWithPasswordByEmail(email: string) {
-    const usersQuery = await db
-      .select({
-        id: usersTable.id,
-        username: usersTable.username,
-        email: usersTable.email,
-        emailVerified: usersTable.emailVerified,
-        createdAt: usersTable.createdAt,
-        role: usersTable.role,
-      })
-      .from(usersTable)
-      .where(eq(usersTable.email, email))
-      .limit(1);
-  
-    if (usersQuery.length === 0) {
-      return null;
-    }
-  
-    const user = usersQuery[0];
-  
-    if (!user) {
-      return null;
-    }
-  
-    const passwordAccountQuery = await db
-      .select({
-        password: passwordAccountsTable.password,
-      })
-      .from(passwordAccountsTable)
-      .where(eq(passwordAccountsTable.userId, user.id))
-      .limit(1);
-  
-    if (passwordAccountQuery.length === 0) {
-      return null;
-    }
-  
-    const passwordAccount = passwordAccountQuery[0];
-  
-    if (!passwordAccount) {
-      return null;
-    }
-  
-    return {
-      ...user,
-      password: passwordAccount.password,
-    };
+  async getPasswordByUserId(userId: string): Promise<PasswordAccount | null> {
+    const [password] = await db.select().from(passwordAccountsTable)
+      .where(eq(passwordAccountsTable.userId, userId));  // Corrected here
+    return password || null;
   }
+  
+  
+
+  // async getUserWithPasswordByEmail(email: string): Promise<User | null> {
+    
+  //   const usersQuery = await db
+  //     .select({
+  //       id: usersTable.id,
+  //       username: usersTable.username,
+  //       email: usersTable.email,
+  //       emailVerified: usersTable.emailVerified,
+  //       createdAt: usersTable.createdAt,
+  //       role: usersTable.role,
+        
+  //     })
+  //     .from(usersTable)
+  //     .where(eq(usersTable.email, email))
+  //     .limit(1);
+  
+  //   if (usersQuery.length === 0) {
+  //     return null;
+  //   }
+  
+  //   const user = usersQuery[0];
+  
+  //   if (!user) {
+  //     return null;
+  //   }
+  
+  //   const passwordAccountQuery = await db
+  //     .select({
+  //       password: passwordAccountsTable.password,
+  //     })
+  //     .from(passwordAccountsTable)
+  //     .where(eq(passwordAccountsTable.userId, user.id))
+  //     .limit(1);
+  
+  //   if (passwordAccountQuery.length === 0) {
+  //     return null;
+  //   }
+  
+  //   const passwordAccount = passwordAccountQuery[0];
+  
+  //   if (!passwordAccount) {
+  //     return null;
+  //   }
+
+  // }
   
   async createUser(data: { username: string; email: string; }) {
     const { username, email } = data;

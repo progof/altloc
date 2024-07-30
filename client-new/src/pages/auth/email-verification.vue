@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import { buttonVariant } from "@/components/ui/button";
-import { useVerifyEmailMutation } from "@/services/auth.service";
+import { useVerifyEmailMutation } from "@/services/auth.password.service";
 import { z } from "zod";
 
 const rawParams = Object.fromEntries(new URLSearchParams(location.search));
@@ -50,4 +50,4 @@ verifyEmail(parsedParams);
     </div>
   </AuthLayout>
 </template>
-@/components/ui/button
+@/components/ui/button @/services/auth.password.service

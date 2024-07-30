@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { z } from "zod";
-import { useLoginMutation } from "@/services/auth.service";
+import { useLoginMutation } from "@/services/auth.password.service";
 import { useRouter } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { TextField, PasswordField } from "@/components/ui/input";
@@ -74,3 +74,4 @@ const submitForm = async (event: Event) => {
     </button>
   </form>
 </template>
+@/services/auth.password.service

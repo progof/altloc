@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { useLogoutMutation } from "@/services/auth.service";
+import { useLogoutMutation } from "@/services/auth.password.service";
 
 import DashboardIcon from "@/assets/icons/DashboardIcon.svg?component";
 import SpacesIcon from "@/assets/icons/SpacesIcon.svg?component";
@@ -83,3 +83,4 @@ const logoutUser = () => {
     <slot />
   </div>
 </template>
+@/services/auth.password.service

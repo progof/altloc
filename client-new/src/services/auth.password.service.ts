@@ -15,7 +15,6 @@ const errorSchema = z.object({
 });
 
 
-
 export const useRegisterMutation = () =>
 	useMutation({
 		mutationFn: async (data: {
@@ -23,7 +22,7 @@ export const useRegisterMutation = () =>
 			email: string;
 			password: string;
 		}) => {
-			const res = await fetch("/api/auth/register", {
+			const res = await fetch("/api/auth/password/register", {
 				method: "POST",
 				headers: {
 					Accept: "application/json",
@@ -44,7 +43,7 @@ export const useRegisterMutation = () =>
 export const useLoginMutation = () =>
 	useMutation({
 		mutationFn: async (data: { email: string; password: string }) => {
-			const res = await fetch("/api/auth/login", {
+			const res = await fetch("/api/auth/password/login", {
 				method: "POST",
 				headers: {
 					Accept: "application/json",
@@ -71,7 +70,7 @@ export const useLoginMutation = () =>
 export const useLogoutMutation = () => {
 	return useMutation({
 		mutationFn: async () => {
-			const res = await fetch("/api/auth/logout", {
+			const res = await fetch("/api/auth/password/logout", {
 				method: "POST",
 				headers: {
 					Accept: "application/json",
@@ -97,7 +96,7 @@ export const useVerifyEmailMutation = () => {
 	return useMutation({
 		mutationFn: async (data: { user_id: string; activation_token: string }) => {
 			const res = await fetch(
-				`/api/auth/verify-email/${data.user_id}/${data.activation_token}`,
+				`/api/auth/password/verify-email/${data.user_id}/${data.activation_token}`,
 				{
 					method: "POST",
 					headers: {
@@ -116,7 +115,7 @@ export const useVerifyEmailMutation = () => {
 export const useRecoveryPasswordMutation = () =>
 	useMutation({
 		mutationFn: async (data: { email: string}) => {
-			const res = await fetch("/api/auth/recovery_password", {
+			const res = await fetch("/api/auth/password/recovery_password", {
 				method: "POST",
 				headers: {
 					Accept: "application/json",
@@ -137,7 +136,7 @@ export const useRecoveryPasswordMutation = () =>
 		return useMutation({
 			mutationFn: async (data: { user_id: string; reset_token: string; password: string }) => {
 				const res = await fetch(
-					`/api/auth/email-reset-password/${data.user_id}/${data.reset_token}`,
+					`/api/auth/password/email-reset-password/${data.user_id}/${data.reset_token}`,
 					{
 						method: "POST",
 						headers: {

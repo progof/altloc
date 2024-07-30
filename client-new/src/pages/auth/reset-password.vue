@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import AuthLayout from "@/layouts/AuthLayout.vue";
-import { useResetPasswordEmailMutation } from "@/services/auth.service";
+import { useResetPasswordEmailMutation } from "@/services/auth.password.service";
 import { z, ZodIssue } from "zod";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
@@ -94,3 +94,4 @@ const submitForm = async (event: Event) => {
     </div>
   </AuthLayout>
 </template>
+@/services/auth.password.service
