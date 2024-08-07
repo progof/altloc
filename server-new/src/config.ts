@@ -17,6 +17,12 @@ const envSchema = z.object({
   CLIENT_URL: z.string().url(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  MINIO_ACCESS_KEY: z.string(),
+  MINIO_SECRET_KEY: z.string(),
+  MINIO_ENDPOINT: z.string(),
+  MINIO_BUCKET: z.string(),
+  MINIO_REGION: z.string(),
+  PUBLIC_CDN_URL: z.string(),
 });
 
 export const config = envSchema.parse(loadEnv().parsed);
