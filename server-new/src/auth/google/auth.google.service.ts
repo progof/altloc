@@ -1,4 +1,3 @@
-// src/auth/google/google.services.ts
 import { FetchError } from '@/utils';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { googleAccountsTable, usersTable } from '@db/schema';
@@ -52,7 +51,6 @@ export class AuthGoogleService {
         });
 
         const googleUser = await getGoogleUserInfo(tokens.accessToken);
-
         const userId = await this.processGoogleUser(googleUser);
         return userId;
     }
@@ -70,7 +68,7 @@ export class AuthGoogleService {
                 } else {
                     const avatarKey = existingUser.avatarKey ?? createUserAvatarKey();
                     await Promise.all([
-                        !existingUser.avatarKey && googleUser.picture ? this.putUserAvatarFromUrl(googleUser.picture, avatarKey) : null,
+                        !existingUser.avatarKey && googleUser.picture ? this.safePutUserAvatarFromUrl(googleUser.picture, avatarKey) : null,
                         tx.update(usersTable).set({
                             avatarKey,
                             emailVerified: googleUser.email_verified === true ? true : undefined,
@@ -98,28 +96,36 @@ export class AuthGoogleService {
                     googleId: googleUser.sub,
                     userId,
                 });
+                if (googleUser.picture) {
+                    await this.safePutUserAvatarFromUrl(googleUser.picture, avatarKey);
+                }
                 return userId;
             }
         });
     }
 
-    private async putUserAvatarFromUrl(pictureUrl: string, avatarKey: string): Promise<void> {
-        const res = await fetch(pictureUrl);
-        if (!res.ok) {
-            throw new FetchError(res);
-        }
+    private async safePutUserAvatarFromUrl(pictureUrl: string, avatarKey: string): Promise<void> {
+        try {
+            const res = await fetch(pictureUrl);
+            if (!res.ok) {
+                console.error(`Failed to fetch image from ${pictureUrl}: ${res.statusText}`);
+                return;
+            }
 
-        const contentType = res.headers.get('Content-Type');
-        if (!contentType) {
-            throw new Error('Failed to get content type');
-        }
+            const contentType = res.headers.get('Content-Type');
+            if (!contentType) {
+                throw new Error('Failed to get content type');
+            }
 
-        await this.s3Client.send(new PutObjectCommand({
-            Bucket: this.s3Bucket,
-            Key: avatarKey,
-            Body: Buffer.from(await res.arrayBuffer()),
-            ACL: 'public-read',
-            ContentType: contentType,
-        }));
+            await this.s3Client.send(new PutObjectCommand({
+                Bucket: this.s3Bucket,
+                Key: avatarKey,
+                Body: Buffer.from(await res.arrayBuffer()),
+                ACL: 'public-read',
+                ContentType: contentType,
+            }));
+        } catch (error) {
+            console.error("Error while uploading avatar to S3:", error);
+        }
     }
 }

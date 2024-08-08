@@ -1,19 +1,17 @@
-// src/auth/google/google.controller.ts
 import { Router, Request, Response } from 'express';
 import { generateState, generateCodeVerifier } from 'arctic';
 import { google } from '@/oauth';
 import { AuthGoogleService } from './auth.google.service';
-import jwt from 'jsonwebtoken';
+import { AuthPasswordService } from "@/auth/password/auth.password.service";
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
 export class AuthGoogleController {
     public readonly router = Router();
 
     constructor(
         private readonly authGoogleService: AuthGoogleService,
-
-        ) {
+        private readonly authPasswordService: AuthPasswordService,
+    ) {
         this.router.get('/auth/google', this.userRegisterWithGoogle.bind(this));
         this.router.get('/auth/google/callback', this.handleGoogleCallback.bind(this));
     }
@@ -49,56 +47,61 @@ export class AuthGoogleController {
         const codeVerifier = req.cookies.google_oauth_code_verifier;
 
         if (!code || !state || !storedState || !codeVerifier || state !== storedState) {
+            res.clearCookie('google_oauth_state', { path: '/', httpOnly: true });
+            res.clearCookie('google_oauth_code_verifier', { path: '/', httpOnly: true });
             return res.status(400).send('Invalid request');
         }
 
         try {
+            // Получение информации о пользователе через Google OAuth
             const userId = await this.authGoogleService.handleGoogleCallback(code, codeVerifier);
-            
-            // Create JWT token
-            const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1h' });
 
-            // Set the token as a cookie or send it in the response
-            res.cookie('jwt', token, {
+            // Создание сессии для пользователя
+            const user = await this.authPasswordService.getUserById(userId);
+            if (!user) {
+                throw new Error("User not found after Google authentication");
+            }
+
+            const session = await this.authPasswordService.createSession(user.id, user.role);
+
+            // Генерация access и refresh токенов
+            const accessToken = this.authPasswordService.generateAccessToken({
+                userId: user.id,
+                role: user.role,
+            });
+
+            const refreshToken = this.authPasswordService.generateRefreshToken({
+                userId: user.id,
+                sessionId: session.sessionId,
+                role: user.role,
+            });
+
+            // Установка токенов в куки
+            res.cookie('access_token', accessToken, {
                 httpOnly: true,
                 maxAge: 3600000, // 1 hour
             });
 
+            res.cookie('refresh_token', refreshToken, {
+                httpOnly: true,
+                maxAge: 604800000, // 7 days
+            });
+
+            // Сохранение пользователя в сессии
+            req.session.user = user;
+
+            // Очистка временных cookies и редирект
+            res.clearCookie('google_oauth_state', { path: '/', httpOnly: true });
+            res.clearCookie('google_oauth_code_verifier', { path: '/', httpOnly: true });
+            
             res.redirect('/dashboard');
         } catch (error) {
             console.error(error);
-            res.status(500).send('Internal Server Error');
-        } finally {
-            res.clearCookie('google_oauth_state', { path: '/' });
-            res.clearCookie('google_oauth_code_verifier', { path: '/' });
+
+            res.clearCookie('google_oauth_state', { path: '/', httpOnly: true });
+            res.clearCookie('google_oauth_code_verifier', { path: '/', httpOnly: true });
+
+            return res.status(500).send('Internal Server Error');
         }
     }
-
-
-    // async handleGoogleCallback(req: Request, res: Response) {
-    //     const code = req.query.code as string;
-    //     const state = req.query.state as string;
-    //     const storedState = req.cookies.google_oauth_state;
-    //     const codeVerifier = req.cookies.google_oauth_code_verifier;
-    
-    //     if (!code || !state || !storedState || !codeVerifier || state !== storedState) {
-    //         res.clearCookie('google_oauth_state', { path: '/' });
-    //         res.clearCookie('google_oauth_code_verifier', { path: '/' });
-    //         return res.status(400).send('Invalid request');
-    //     }
-    
-    //     try {
-    //         await this.authGoogleService.handleGoogleCallback(code, codeVerifier);
-    //         res.clearCookie('google_oauth_state', { path: '/' });
-    //         res.clearCookie('google_oauth_code_verifier', { path: '/' });
-    //         res.redirect('/');
-    //     } catch (error) {
-    //         console.error(error);
-    //         res.clearCookie('google_oauth_state', { path: '/' });
-    //         res.clearCookie('google_oauth_code_verifier', { path: '/' });
-    //         res.status(500).send('Internal Server Error');
-    //     }
-    // }
-    
-    
 }

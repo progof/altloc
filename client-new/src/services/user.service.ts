@@ -9,12 +9,25 @@ const errorSchema = z.object({
 	),
 });
 
+// export const usersTable = pgTable("users", {
+// 	id: uuid("id").defaultRandom().primaryKey(),
+// 	username: text("name").notNull(),
+// 	email: text("email").notNull().unique(),
+// 	emailVerified: boolean("email_verified").notNull().default(false),
+// 	avatarKey: text("avatar_key"),
+//     role: text("role").notNull().default("user"),
+// 	createdAt: timestamp("created_at").notNull().defaultNow(),
+// });
+
+
+
 export type User = {
   user_id: string;
   username: string;
   email: string;
-  is_verified: boolean;
+  emailVerified: boolean;
   role: string;
+  avatarKey: string;
 };
 
 const getUser = async (user_id: string) => {

@@ -7,12 +7,12 @@ import { VueQueryPlugin } from "@tanstack/vue-query";
 import { queryClient } from "@/services/queryClient";
 import { pinia } from "./stores/pinia"; 
 
-
 const app = createApp(App)
 
 app.use(router)
 app.use(VueQueryPlugin, { queryClient })
 app.use(pinia)
+
 
 app.mount('#app')
 

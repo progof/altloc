@@ -21,6 +21,7 @@
     "tailwind-merge": "2.4.0",
     "class-variance-authority": "0.7.0",
     "@vuepic/vue-datepicker": "8.8.1",
+    "dotenv": "^16.4.5",
     "vee-validate": "4.13.2"
   },
   "devDependencies": {

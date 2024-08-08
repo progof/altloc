@@ -2,6 +2,7 @@
 import { getMeQueryOptions } from "@/services/user.service";
 import { useQuery } from "@tanstack/vue-query";
 import AppLayout from "@/layouts/AppLayout.vue";
+import { getCDNImageURL } from "@/utils";
 
 const { data: me } = useQuery(getMeQueryOptions);
 </script>
@@ -14,7 +15,11 @@ const { data: me } = useQuery(getMeQueryOptions);
           <div class="flex items-center h-32 gap-32 p-4 w-full">
             <div class="flex flex-col gap-3">
               <img
-                src="/images/placeholder_image.webp"
+                :src="
+                  me?.avatarKey
+                    ? getCDNImageURL(me?.avatarKey)
+                    : '/images/placeholder_image.webp'
+                "
                 alt="User avatar"
                 class="w-20 h-20 border-2 border-zinc-100 rounded-full shrink-0"
               />

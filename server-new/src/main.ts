@@ -42,7 +42,7 @@ const authPasswordController = new AuthPasswordController(authPasswordService);
 app.use(authPasswordController.router);
 
 export const authGoogleService = new AuthGoogleService(s3, config.MINIO_BUCKET, google, db);
-const authGoogleController = new AuthGoogleController(authGoogleService);
+const authGoogleController = new AuthGoogleController(authGoogleService, authPasswordService);
 app.use(authGoogleController.router);
 
 app.listen(config.APP_PORT, () => {
