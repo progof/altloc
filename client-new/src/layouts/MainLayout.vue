@@ -41,44 +41,70 @@ import { buttonVariant } from "@/components/ui/button";
   <main class="relative flex flex-1 flex-col bg-zinc-50">
     <slot />
   </main>
-  <footer class="bg-indigo-200 md:px-14 py-3 px-6">
-    <div class="flex flex-col">
-      <div
-        class="mb-4 mt-2 flex flex-col justify-center gap-3 text-center md:flex-row md:justify-between"
-      >
-        <span class="text-center text-base text-zinc-700 font-semibold">
-          ISotus
-        </span>
+  <footer class="bg-indigo-200 px-6 md:px-10">
+    <div class="container flex flex-col">
+      <div class="flex flex-col items-start gap-4 py-6 md:gap-2 md:py-4">
         <div
-          class="flex flex-col items-center justify-center gap-6 md:flex-row md:justify-end"
+          class="flex w-full flex-col items-start justify-center gap-3 text-center md:flex-row md:items-center md:justify-between"
         >
-          <a href="#" class="text-sm text-zinc-700">Privacy policy</a>
-          <a href="#" class="text-sm text-zinc-700">Terms of service</a>
-          <a href="#" class="text-sm text-zinc-700">About us</a>
+          <span class="text-center text-lg font-medium text-zinc-700">
+            Sitelogo
+          </span>
+          <ul
+            class="flex flex-wrap items-start justify-start gap-x-5 gap-y-2 md:justify-between"
+          >
+            <li>
+              <a
+                href="/organizers"
+                class="text-sm text-zinc-700/75 hover:text-zinc-700"
+              >
+                To organizers
+              </a>
+            </li>
+            <li>
+              <a href="#" class="text-sm text-zinc-700/75 hover:text-zinc-700">
+                For partners
+              </a>
+            </li>
+            <li>
+              <a href="#" class="text-sm text-zinc-700/75 hover:text-zinc-700">
+                User agreement
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="flex flex-row justify-center gap-1 md:justify-end">
+          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+            <TelegramIcon class="size-5" />
+          </a>
+          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+            <InstagramIcon class="size-5" />
+          </a>
+          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+            <FacebookIcon class="size-5" />
+          </a>
+          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+            <XIcon class="size-5" />
+          </a>
         </div>
       </div>
-      <div class="mt-1 flex flex-row justify-center gap-3 py-2 md:justify-end">
-        <a href="#"><TelegramIcon class="size-6" /></a>
-        <a href="#"><InstagramIcon class="size-6" /></a>
-        <a href="#"><FacebookIcon class="size-6" /></a>
-        <a href="#"><XIcon class="size-6" /></a>
-      </div>
+
       <div
-        class="mt-2 flex flex-col items-center justify-center border-t-2 border-zinc-400 py-2 text-center md:flex-row md:justify-between"
+        class="flex flex-col justify-between gap-2 border-t border-zinc-700/25 py-4 sm:flex-row"
       >
-        <div class="inline-block">
-          <span class="pr-2 text-[12px] text-zinc-700"
-            >Copyright &copy; {{ new Date().getFullYear() }}</span
-          >
-          <span class="text-[12px] text-zinc-700">&bull;</span>
-          <span class="pl-2 text-[12px] text-zinc-700"
-            >All Rights Reserved</span
-          >
+        <div class="inline-flex gap-1.5 text-zinc-700/75">
+          <span class="text-xs">
+            Copyright &copy; {{ new Date().getFullYear() }}
+          </span>
+          <span class="text-xs">&bull;</span>
+          <span class="text-xs">All Rights Reserved</span>
         </div>
-        <div class="inline-block">
-          <a href="#" class="pr-2 text-[12px] text-zinc-700">Privacy Policy</a>
-          <span class="text-[12px] text-zinc-700">&bull;</span>
-          <a href="#" class="pl-2 text-[12px] text-zinc-700">
+        <div class="inline-flex gap-1.5 text-zinc-700/75">
+          <a href="#" class="text-xs underline-offset-2 hover:underline">
+            Privacy Policy
+          </a>
+          <span class="text-xs">&bull;</span>
+          <a href="#" class="text-xs underline-offset-2 hover:underline">
             Terms of Service
           </a>
         </div>
@@ -86,4 +112,3 @@ import { buttonVariant } from "@/components/ui/button";
     </div>
   </footer>
 </template>
-@/components/ui/button

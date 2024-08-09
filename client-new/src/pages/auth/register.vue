@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import RegisterFormIsland from "@/components/RegisterFormIsland.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
-import { useGoogleAuth } from "@/services/auth.google.service";
+import GoogleIcon from "@/assets/icons/google.svg?component";
+// import { useGoogleAuth } from "@/services/auth.google.service";
 
-const { redirectToGoogle, isLoading, isError, error } = useGoogleAuth();
+// const { redirectToGoogle, isLoading, isError, error } = useGoogleAuth();
 
-const handleGoogleAuth = async () => {
-  try {
-    await redirectToGoogle();
-  } catch (err) {
-    console.error("Error during Google auth:", err);
-  }
-};
+// const handleGoogleAuth = async () => {
+//   try {
+//     await redirectToGoogle();
+//   } catch (err) {
+//     console.error("Error during Google auth:", err);
+//   }
+// };
 </script>
 
 <template>
@@ -32,9 +33,8 @@ const handleGoogleAuth = async () => {
           type="button"
           href="/api/auth/google"
           class="flex h-11 w-full items-center justify-center rounded-full border border-zinc-100 bg-zinc-100 px-5 transition-colors hover:border-zinc-300 hover:bg-white"
-          :disabled="isLoading"
         >
-          <Icon class="mr-2 size-4" name="google" />
+          <GoogleIcon class="mr-2 size-4" />
           <span class="font-medium text-zinc-950">Sign up with Google</span>
         </a>
         <span class="mt-2 flex text-[13px] font-medium">
