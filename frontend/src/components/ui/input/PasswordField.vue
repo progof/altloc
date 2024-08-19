@@ -25,7 +25,7 @@ const isHidden = ref(true);
     <Label :for="id">
       {{ props.label }}
     </Label>
-    <div class="relative">
+    <div class="relative w-full">
       <input
         class="h-10 w-full rounded-full border border-zinc-200 px-4 text-sm font-medium outline-none ring-indigo-200 transition-[border-color,box-shadow] placeholder:text-zinc-400 focus-visible:border-indigo-300 focus-visible:ring-2 aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-200 aria-[invalid=true]:focus-visible:border-red-300"
         :aria-invalid="errorMessage ? 'true' : 'false'"

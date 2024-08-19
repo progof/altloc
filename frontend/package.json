@@ -21,7 +21,8 @@
     "tailwind-merge": "2.4.0",
     "class-variance-authority": "0.7.0",
     "@vuepic/vue-datepicker": "9.0.1",
-    "vee-validate": "4.13.2"
+    "vee-validate": "4.13.2",
+    "@types/shared": "workspace:*"
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.4",

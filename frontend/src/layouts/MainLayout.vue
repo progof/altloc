@@ -4,6 +4,7 @@ import InstagramIcon from "@/assets/icons/instagram.svg?component";
 import FacebookIcon from "@/assets/icons/facebook.svg?component";
 import XIcon from "@/assets/icons/x.svg?component";
 import { buttonVariant } from "@/components/ui/button";
+import { getAppName, getSoialMediaURL } from "@/utils";
 </script>
 
 <template>
@@ -12,7 +13,7 @@ import { buttonVariant } from "@/components/ui/button";
   >
     <div class="container flex items-center justify-between gap-6">
       <span class="text-center text-base text-zinc-700 font-semibold">
-        ISotus
+        {{ getAppName() }}
       </span>
 
       <div class="flex gap-1 justify-center md:justify-end">
@@ -74,16 +75,28 @@ import { buttonVariant } from "@/components/ui/button";
           </ul>
         </div>
         <div class="flex flex-row justify-center gap-1 md:justify-end">
-          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+          <a
+            :href="getSoialMediaURL('telegram')"
+            class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90"
+          >
             <TelegramIcon class="size-5" />
           </a>
-          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+          <a
+            :href="getSoialMediaURL('instagram')"
+            class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90"
+          >
             <InstagramIcon class="size-5" />
           </a>
-          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+          <a
+            :href="getSoialMediaURL('facebook')"
+            class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90"
+          >
             <FacebookIcon class="size-5" />
           </a>
-          <a href="#" class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90">
+          <a
+            :href="getSoialMediaURL('twitter')"
+            class="flex p-1 text-zinc-700/75 hover:text-zinc-700/90"
+          >
             <XIcon class="size-5" />
           </a>
         </div>
