@@ -59,28 +59,34 @@ export const resetPasswordRequestsTable = pgTable("reset_password_requests", {
 
 export const dayQuestTasksTable = pgTable("day_quest_tasks", {
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").notNull(),
-    title: text("title").notNull(),
+    creatorId: uuid("user_id").notNull(),
+    name: text("name").notNull(),
     isCompleted: boolean("is_completed").notNull().default(false),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
-	createdAt: timestamp("created_at").notNull().defaultNow(),
+    // updatedAt: timestamp("updated_at").notNull().defaultNow(),
+	// createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export type DayQuestTask = typeof dayQuestTasksTable.$inferSelect;
 
 export const dayQuestCategoriesTable = pgTable("day_quest_categories", {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: uuid("user_id").notNull(),
+    creatorId: uuid("user_id").notNull(),
 	name: text("name").notNull().unique(),
+    // imageKey: text("image_key").notNull(),
 });
 
 export type DayQuestCategory = typeof dayQuestCategoriesTable.$inferSelect;
 
-export const dayQuestTasksCategoriesTable = pgTable(
-    "day_quest_tasks_categories", 
-    {
-    taskId: uuid("task_id").notNull().references(() => dayQuestTasksTable.id, { onDelete: "cascade" }),
-    categoryId: uuid("category_id").notNull().references(() => dayQuestCategoriesTable.id, { onDelete: "cascade" }),
+
+
+export const dayQuestTasksCategoriesTable = pgTable("day_quest_tasks_categories", {
+	categoryId: uuid("category_id")
+		.notNull()
+		.references(() => dayQuestTasksTable.id, { onDelete: "cascade" }),
+	taskId: uuid("task_id")
+		.notNull()
+		.references(() => dayQuestTasksTable.id, { onDelete: "cascade" }),
 });
+
 
 export type DayQuestTaskCategory = typeof dayQuestTasksCategoriesTable.$inferSelect;

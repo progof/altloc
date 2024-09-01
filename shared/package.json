@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@types/shared",
-  "types": "index.d.ts"
+  "name": "@types/shared"
+  
 
 }

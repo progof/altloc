@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1722114625139,
-      "tag": "0000_legal_harpoon",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1723064721971,
-      "tag": "0001_shiny_gladiator",
+      "when": 1725100329429,
+      "tag": "0000_magenta_sister_grimm",
       "breakpoints": true
     }
   ]

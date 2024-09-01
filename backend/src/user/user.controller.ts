@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { UserService } from "./user.service";
 import { Request, Response, Router } from "express";
-import { blockNotVerifedUser } from "../middlewares/auth.middlewares";
+import { blockNotVerifedUser } from "@/middlewares/auth.middlewares";
 import { AuthService } from "../auth/password/auth.password.service";
 import { Config } from "../config";
 import { Pool } from "pg"; 
