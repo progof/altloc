@@ -94,7 +94,7 @@ export class AuthGoogleController {
             res.clearCookie('google_oauth_state', { path: '/', httpOnly: true });
             res.clearCookie('google_oauth_code_verifier', { path: '/', httpOnly: true });
             
-            res.redirect('/dashboard');
+            res.redirect('/user/day-quest');
         } catch (error) {
             console.error(error);
 

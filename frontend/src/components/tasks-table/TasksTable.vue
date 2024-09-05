@@ -7,9 +7,8 @@ import {
 } from "@/components/ui/dialog";
 
 import { useQuery } from "@tanstack/vue-query";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useField } from "vee-validate";
-import { computed, h, ref, type Ref, watch, toRaw } from "vue";
+import { computed, h, ref, watch, toRaw } from "vue";
 import CreateTaskDialogContent from "./CreateTaskDialogContent.vue";
 import Button from "@/components/ui/button/Button.vue";
 import {
@@ -28,7 +27,7 @@ import {
   tasksQuery,
 } from "@/services/dayquest/task.service";
 
-const props = defineProps<{ name: string }>();
+const props = defineProps<{ name: string; categoryId: string }>();
 
 const { errorMessage, resetField } = useField<string[]>(props.name);
 
@@ -40,39 +39,7 @@ const { mutate: deleteTask } = useDeleteTaskMutation();
 
 const columns: TableColumnDef<{
   data: Task;
-  selected: Ref<boolean>;
 }>[] = [
-  {
-    key: "selected",
-    headerAttributes: {
-      class: "pr-0 pl-4 w-7",
-    },
-    header: ({ rows }) => {
-      return h(
-        "div",
-        { class: "flex items-center" },
-        h(Checkbox, {
-          modelValue: rows.every((row) => row.selected.value),
-          "onUpdate:modelValue": (newValue) => {
-            for (const row of rows) {
-              row.selected.value = newValue;
-            }
-          },
-        })
-      );
-    },
-    cellAttributes: {
-      class: "pr-0 pl-4 w-7",
-    },
-    cell: ({ row }) => {
-      return h(Checkbox, {
-        modelValue: row.selected.value,
-        "onUpdate:modelValue": (newValue) => {
-          row.selected.value = newValue;
-        },
-      });
-    },
-  },
   {
     key: "task",
     header: "Task",
@@ -112,7 +79,6 @@ const columns: TableColumnDef<{
           type: "button",
           class: "text-sm font-medium text-zinc-500 hover:text-red-500",
           onClick: () => {
-            row.selected.value = false;
             deleteTask(row.data.id);
           },
         },

@@ -7,7 +7,6 @@ import {
 import {
 	dayQuestCategoriesTable,
     dayQuestTasksTable,
-    dayQuestTasksCategoriesTable,
 } from "@db/schema";
 import { and, eq, inArray } from "drizzle-orm";
 import type { Task } from "@/dayquest/task.service";
@@ -15,23 +14,14 @@ import { Category } from "shared";
 
 export const createCategoryBodySchema = z
 	.object({
-		name: z.string().min(6).max(256),
-		taskIds: z
-			.array(z.string().uuid())
-			.min(1)
-			.or(
-				z
-					.string()
-					.uuid()
-					.transform((id) => [id]),
-			),
+		name: z.string().min(6).max(32),
 	});
 
 export type CreateCategoryBody = z.infer<typeof createCategoryBodySchema>;
 
 export const updateCategoryBodySchema = z
 	.object({
-		name: z.string().min(6).max(256),
+		name: z.string().min(6).max(32),
 	});
 
 export type UpdateCategoryBody = z.infer<typeof updateCategoryBodySchema>;
@@ -39,13 +29,13 @@ export type UpdateCategoryBody = z.infer<typeof updateCategoryBodySchema>;
 export class CategoriesService {
 	constructor() {}
 
-	async _createCategoryWithImageKey(
+	async _createCategory(
 		tx: Database | Transaction,
 		options: {
 			creatorId: string;
 			body: CreateCategoryBody;
 		},
-	): Promise<Category> {
+	): Promise<CreateCategoryBody> {
 		const { body, creatorId } = options;
 
 		const category = (
@@ -61,19 +51,11 @@ export class CategoriesService {
 			throw new Error("Failed to create category");
 		}
 
-		const [tasks] = await Promise.all([
-			tx
-				.select()
-				.from(dayQuestTasksTable)
-				.where(inArray(dayQuestTasksTable.id, body.taskIds)),
-		]);
-
 		return {
 			...createBaseCategoryObject({
 				category: category,
 			}),
-			tasks,
-		} satisfies Category;
+		} satisfies CreateCategoryBody;
 	}
 
 	async createCategory(
@@ -82,11 +64,11 @@ export class CategoriesService {
 			creatorId: string;
 			body: CreateCategoryBody;
 		},
-	): Promise<Category> {
+	): Promise<CreateCategoryBody> {
 		const { body, creatorId } = options;
 
 		return db.transaction(async (tx: any) => {
-			const category = await this._createCategoryWithImageKey(tx, { creatorId, body });
+			const category = await this._createCategory(tx, { creatorId, body });
 
 			return category;
 		});
@@ -162,92 +144,6 @@ export class CategoriesService {
 		});
 	}
 
-	async addTaskToCategory(
-		db: Database | Transaction,
-		options: {
-			creatorId: string;
-			categoryId: string;
-			taskId: string;
-		},
-	): Promise<Category> {
-		const { creatorId, categoryId, taskId } = options;
-
-		return db.transaction(async (tx: any) => {
-			const category = await this.getCategory(db, {
-				categoryId,
-				creatorId,
-			});
-
-			const task = (
-				await tx
-					.select()
-					.from(dayQuestTasksTable)
-					.where(eq(dayQuestTasksTable.id, taskId))
-			).at(0);
-			if (!task) {
-				throw new HTTPError({ status: 404, message: "Task not found" });
-			}
-
-			await tx
-				.insert(dayQuestTasksCategoriesTable)
-				.values({ categoryId, taskId })
-				.returning();
-
-			return {
-				...category,
-				tasks: [
-					...category.tasks,
-					{
-						id: task.id,
-						name: task.name,
-                        isCompleted: task.isCompleted,
-                        createdAt: task.createdAt,
-                        updatedAt: task.updatedAt,
-					} as Task,
-				],
-			};
-		});
-	}
-
-	async removeTaskFromCategory(
-		db: Database | Transaction,
-		options: {
-			creatorId: string;
-			categoryId: string;
-			taskId: string;
-		},
-	): Promise<Category> {
-		const { creatorId, categoryId, taskId } = options;
-
-		return db.transaction(async (tx: any) => {
-			const category = await this.getCategory(db, {
-				categoryId,
-				creatorId,
-			});
-
-			if (!category.tasks.find((task) => task.id === taskId)) {
-				throw new HTTPError({
-					status: 404,
-					message: "Task not found in category",
-				});
-			}
-
-			await tx
-				.delete(dayQuestTasksCategoriesTable)
-				.where(
-					and(
-						eq(dayQuestTasksCategoriesTable.categoryId, categoryId),
-						eq(dayQuestTasksCategoriesTable.taskId, taskId),
-					),
-				);
-
-			return {
-				...category,
-				tasks: category.tasks.filter((s) => s.id !== taskId),
-			};
-		});
-	}
-
 	async updateCategory(
 		db: Database | Transaction,
 		options: {
@@ -301,12 +197,14 @@ export class CategoriesService {
 			});
 
 			await tx
-				.delete(dayQuestTasksCategoriesTable)
-				.where(eq(dayQuestTasksCategoriesTable.categoryId, categoryId));
-
-			await tx
 				.delete(dayQuestCategoriesTable)
-				.where(eq(dayQuestCategoriesTable.id, categoryId));
+				.where(
+					and(
+						eq(dayQuestCategoriesTable.id, categoryId),
+						eq(dayQuestCategoriesTable.creatorId, creatorId),
+					),
+				);
 		});
 	}
+
 }

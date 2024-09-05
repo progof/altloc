@@ -3,24 +3,27 @@ import { z, ZodType } from "zod";
 // import {
 // 	S3Client,
 // } from "@aws-sdk/client-s3";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { HTTPError, type Database, type Transaction } from "@/utils";
 
 export interface Task {
 	id: string;
+	categoryId: string;
 	name: string;
-    // isCompleted: boolean;
+    isCompleted: boolean;
 }
 
 export const taskSchema = z.object({
 	id: z.string(),
+	categoryId: z.string(),
 	name: z.string(),
-    // isCompleted: z.boolean(),
+    isCompleted: z.boolean(),
 }) satisfies ZodType<Task>;
 
 export const createTaskBodySchema = z.object({
+	categoryId: z.string(),
 	name: z.string().min(1).max(256),
-	// isCompleted: z.boolean().optional().default(false),  
+	isCompleted: z.boolean().optional().default(false),  
 });
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
@@ -55,6 +58,7 @@ export class TasksService {
 			await db
 				.insert(dayQuestTasksTable)
 				.values({
+					categoryId: body.categoryId,
 					creatorId: userId,
 					name: body.name,
 					// isCompleted: body.isCompleted,
@@ -107,7 +111,10 @@ export class TasksService {
 			await db
 				.select()
 				.from(dayQuestTasksTable)
-				.where(eq(dayQuestTasksTable.id, taskId))
+				.where(
+					and(
+						eq(dayQuestTasksTable.id, taskId), 
+					eq(dayQuestTasksTable.creatorId, userId)))
 		).at(0);
 
 		if (!task) {
@@ -121,19 +128,12 @@ export class TasksService {
 			});
 		}
 
-		await db.delete(dayQuestTasksTable).where(eq(dayQuestTasksTable.id, taskId));
-
-		// if (speaker.avatarKey) {
-		// 	this.s3
-		// 		.send(
-		// 			new DeleteObjectCommand({
-		// 				Bucket: this.s3Bucket,
-		// 				Key: speaker.avatarKey,
-		// 			}),
-		// 		)
-		// 		.catch(console.error);
-		// }
-
+		await db.delete(dayQuestTasksTable).where(
+			and(
+				eq(dayQuestTasksTable.id, taskId), 
+			eq(dayQuestTasksTable.creatorId, userId))
+	
+			);
 		return taskSchema.parse(task);
 	}
 }

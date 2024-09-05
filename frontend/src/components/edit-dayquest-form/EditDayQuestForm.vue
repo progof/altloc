@@ -2,14 +2,16 @@
 import { z } from "zod";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import { useCreateCategoryMutation } from "@/services/dayquest/category.service";
+import { useUpdateCategoryMutation } from "@/services/dayquest/category.service";
 import { TextField } from "@/components/ui/input";
-// import { TasksTable } from "@/components/tasks-table";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
 import { Button } from "@/components/ui/button";
-// import DayQuestImageUpload from "./DayQuestImageUpload.vue";
 import { FetchError } from "@/utils/fetch";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
+
+const props = defineProps<{
+  categoryId: string;
+}>();
 
 const { handleSubmit, meta, setFieldError } = useForm({
   validationSchema: toTypedSchema(
@@ -21,14 +23,18 @@ const { handleSubmit, meta, setFieldError } = useForm({
 
 const emit = defineEmits<{ close: [] }>();
 
-const { mutate: createCategory, isPending } = useCreateCategoryMutation();
+const { mutate: updateCategory, isPending } = useUpdateCategoryMutation();
 
 const onSubmit = handleSubmit((data) => {
-  const { ...rest } = data;
+  const formData = {
+    ...data,
+    categoryId: props.categoryId,
+  };
   console.log("Create dayQuest -> data:", data);
-  createCategory(
+  updateCategory(
     {
-      ...rest,
+      categoryId: props.categoryId,
+      body: data,
     },
     {
       onSuccess: () => {
@@ -45,9 +51,9 @@ const onSubmit = handleSubmit((data) => {
 </script>
 
 <template>
-  <DialogTitle class="text-xl font-bold tracking-tight"> DayQuest </DialogTitle>
+  <DialogTitle class="text-xl font-bold tracking-tight">Edit</DialogTitle>
   <DialogDescription class="mt-2 text-sm text-zinc-600">
-    Create a new category for your dayQuest
+    Edit the category
   </DialogDescription>
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
     <TextField name="name" label="Name" placeholder="Business" />
@@ -61,7 +67,7 @@ const onSubmit = handleSubmit((data) => {
           v-if="isPending"
           class="absolute mx-auto size-5 animate-spin stroke-[1.5]"
         />
-        <span :class="isPending ? 'invisible' : ''">Create category</span>
+        <span :class="isPending ? 'invisible' : ''">Edit category</span>
       </Button>
     </div>
   </form>

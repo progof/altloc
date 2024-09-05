@@ -18,11 +18,23 @@ const { handleSubmit, meta } = useForm({
 
 const emit = defineEmits<{ close: [] }>();
 
+const props = defineProps<{
+  categoryId: string;
+}>();
+
+console.log("CreateTaskDialogContent -> categoryId", props.categoryId);
+
 const { mutate: createTask, isPending } = useCreateTaskMutation();
 
 const onSubmit = handleSubmit((data) => {
-  console.log("Create task -> data:", data);
-  createTask(data, { onSettled: () => emit("close") });
+  const formData = {
+    ...data,
+    categoryId: props.categoryId,
+  };
+
+  console.log("Create task -> data:", formData);
+
+  createTask(formData, { onSettled: () => emit("close") });
 });
 </script>
 

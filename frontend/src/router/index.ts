@@ -7,7 +7,10 @@ import LoginPage from "@/pages//auth/login.vue"
 import EmailVerificationPage from '@/pages/auth/email-verification.vue';
 import RecoveryPasswordPage from "@/pages/auth/recovery-password.vue";
 import ResetPasswordPage from "@/pages/auth/reset-password.vue";
-import DashboardPage from '@/pages/user/dashboard.vue';
+import DayQuestPage from '@/pages/user/dayQuest.vue';
+import DayCommentPage from '@/pages/user/daycomment.vue';
+import DayBalancePage from '@/pages/user/dayBalance.vue';
+import SettingsPage from '@/pages/user/settings.vue';
 
 const router = createRouter({
   routes: [
@@ -36,9 +39,22 @@ const router = createRouter({
       component: ResetPasswordPage,
     },
     {
-      path: "/dashboard",
-      component: DashboardPage,
+      path: "/user/day-quest",
+      component: DayQuestPage,
     },
+    {
+      path: "/user/day-comment",
+      component: DayCommentPage,
+    },
+    {
+      path: "/user/day-balance",
+      component: DayBalancePage,
+    },
+    {
+      path: "/user/settings",
+      component: SettingsPage,
+    },
+  
   ],
   history: createWebHistory(),
 })
@@ -47,7 +63,7 @@ router.beforeEach(async (to) => {
   if (to.path === "/auth/login" || to.path === "/auth/register") {
     try {
       await queryClient.ensureQueryData(getMeQueryOptions);
-      return { path: "/dashboard" };
+      return { path: "/user/day-quest" };
     } catch (error) {
       // do nothing
     }

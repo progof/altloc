@@ -14,10 +14,9 @@ export type User = {
 
 export type Task = {
   id: string;
+  categoryId: string;
   name: string;
-  // isCompleted: boolean;
-  // createdAt: Date;
-  // updatedAt: Date;
+  isCompleted: boolean;
 };
 
 

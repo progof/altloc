@@ -22,7 +22,6 @@ export class DayQuestController {
     // this.router.post("/dayquest/task/update",this.updateDayQuestTask.bind(this),);
     this.router.delete("/dayquest/task/delete/:task_id",this.deleteDayQuestTask.bind(this),);
     this.router.get("/dayquest/tasks",this.getDayQuestTask.bind(this),);
-    this.router.post("/dayquest/add/taskToCategory/:category_id/:task_id", this.addDayQuestTaskToCategory.bind(this),);
     
   }
 
@@ -62,15 +61,6 @@ export class DayQuestController {
 
   
   async updateDayQuestCategory(req: Request, res: Response) {
-
-  }
-
-  async deleteDayQuestCategory(req: Request, res: Response) {
-    
-  }
-
-  // function to add task to category
-  async addDayQuestTaskToCategory(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
           errors: [{ message: "Not found session" }],
@@ -81,34 +71,77 @@ export class DayQuestController {
 
     const parsedResult = z.object({
         category_id: z.string().uuid(),
-        task_id: z.string().uuid(),
     }).safeParse(req.params);
     
     if (!parsedResult.success) {
       console.error(
-        "Category ID or Task ID is missing:",
+        "Reset token or user ID or new password is missing:",
         parsedResult.error.issues,
       );
       return res.status(400).json({ errors: parsedResult.error.issues });
     }
 
-    const { category_id, task_id } = parsedResult.data;
+    const { category_id } = parsedResult.data;
+    console.log("updateDayQuestCategory -> category_id", category_id );
+    const body = createCategoryBodySchema.safeParse(req.body);
 
+    if (!body.success) {
+      console.error("Validation failed:", body.error.issues);
+      return res.status(400).send({ errors: body.error.issues });
+    }
     try{
-        await this.categoryService.addTaskToCategory(db,{
+        await this.categoryService.updateCategory(db,{
             creatorId: user.id,
             categoryId: category_id,
-            taskId: task_id,
+            body: body.data,
         });
-
     }catch(error){
         console.error(error);
         return res.status(500).send({
-            errors: [{ message: "Failed to add task to category" }],
+            errors: [{ message: "Failed to update category" }],
         });
     }
-    
+
   }
+
+  async deleteDayQuestCategory(req: Request, res: Response) {
+    if (!req.session.user) {
+        return res.status(401).send({
+          errors: [{ message: "Not found session" }],
+        });
+    }
+
+    const user = req.session.user;
+
+    const parsedResult = z.object({
+        category_id: z.string().uuid(),
+    }).safeParse(req.params);
+    
+    if (!parsedResult.success) {
+      console.error(
+        "Reset token or user ID or new password is missing:",
+        parsedResult.error.issues,
+      );
+      return res.status(400).json({ errors: parsedResult.error.issues });
+    }
+
+    const { category_id } = parsedResult.data;
+    console.log("deleteDayQuestCategory -> category_id", category_id);
+    try{
+        await this.categoryService.deleteCategory(db,{
+            creatorId: user.id,
+            categoryId: category_id
+        });
+    }catch(error){
+        console.error(error);
+        return res.status(500).send({
+            errors: [{ message: "Failed to delete category" }],
+        });
+    }
+ 
+  }
+
+ 
 
   async getDayQuestCategory(req: Request, res: Response) {
     if (!req.session.user) {
@@ -192,7 +225,7 @@ export class DayQuestController {
     }
 
     const { task_id } = parsedResult.data;
-
+    console.log("deleteDayQuestTask -> task_id", task_id);
     try{
         await this.taskService.deleteTask(db,{
             userId: user.id,
