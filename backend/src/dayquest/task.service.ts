@@ -32,14 +32,38 @@ export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 export class TasksService {
 	constructor() {}
 
-	async getUserTasks(
+	async getTaskById(
 		db: Database | Transaction,
-		userId: string,
+		options: {
+			userId: string;
+			taskId: string;
+		},
+	): Promise<Task> {
+		const task = (
+			await db
+				.select()
+				.from(dayQuestTasksTable)
+				.where(
+					and(
+						eq(dayQuestTasksTable.id, options.taskId), 
+						eq(dayQuestTasksTable.creatorId, options.userId))
+					)
+		).at(0);
+		if (!task) {
+			throw new HTTPError({ message: "Task not found", status: 404 });
+		}
+
+		return taskSchema.parse(task);
+	}
+
+	async getUserTasksByCategoryId(
+		db: Database | Transaction,
+		categoryId: string,
 	): Promise<Task[]> {
 		const tasks = await db
 			.select()
 			.from(dayQuestTasksTable)
-			.where(eq(dayQuestTasksTable.creatorId, userId));
+			.where(eq(dayQuestTasksTable.categoryId, categoryId));
 
 		return z.array(taskSchema).parse(tasks);
 	}
@@ -98,6 +122,88 @@ export class TasksService {
 		});
 	}
 
+	async completeTask(
+		db: Database | Transaction,
+		options: {
+			userId: string;
+			taskId: string;
+		},
+	): Promise<Task> {
+		const { taskId, userId } = options;
+
+		const task = (
+			await db
+				.select()
+				.from(dayQuestTasksTable)
+				.where(
+					and(
+						eq(dayQuestTasksTable.id, taskId), 
+					eq(dayQuestTasksTable.creatorId, userId)))
+		).at(0);
+
+		if (!task) {
+			throw new HTTPError({ message: "Task not found", status: 404 });
+		}
+
+		if (task.creatorId !== userId) {
+			throw new HTTPError({
+				message: "You are not allowed to complete this task",
+				status: 403,
+			});
+		}
+
+		await db.update(dayQuestTasksTable).set({
+			isCompleted: true,
+		}).where(
+			and(
+				eq(dayQuestTasksTable.id, taskId), 
+			eq(dayQuestTasksTable.creatorId, userId))
+	
+			);
+		return taskSchema.parse(task);
+	}
+
+	async unCompleteTask(
+		db: Database | Transaction,
+		options: {
+			userId: string;
+			taskId: string;
+		},
+	): Promise<Task> {
+		const { taskId, userId } = options;
+
+		const task = (
+			await db
+				.select()
+				.from(dayQuestTasksTable)
+				.where(
+					and(
+						eq(dayQuestTasksTable.id, taskId), 
+					eq(dayQuestTasksTable.creatorId, userId)))
+		).at(0);
+
+		if (!task) {
+			throw new HTTPError({ message: "Task not found", status: 404 });
+		}
+
+		if (task.creatorId !== userId) {
+			throw new HTTPError({
+				message: "You are not allowed to complete this task",
+				status: 403,
+			});
+		}
+
+		await db.update(dayQuestTasksTable).set({
+			isCompleted: false,
+		}).where(
+			and(
+				eq(dayQuestTasksTable.id, taskId), 
+			eq(dayQuestTasksTable.creatorId, userId))
+	
+			);
+		return taskSchema.parse(task);
+	}
+
 	async deleteTask(
 		db: Database | Transaction,
 		options: {
@@ -137,3 +243,4 @@ export class TasksService {
 		return taskSchema.parse(task);
 	}
 }
+

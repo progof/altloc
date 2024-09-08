@@ -18,12 +18,16 @@ export class DayQuestController {
     this.router.patch("/dayquest/category/update/:category_id",this.updateDayQuestCategory.bind(this),);
     this.router.delete("/dayquest/category/delete/:category_id",this.deleteDayQuestCategory.bind(this),);
     this.router.get("/dayquest/categories",this.getDayQuestCategory.bind(this),);
+    this.router.get("/dayquest/category/:category_id",this.getDayQuestCategoryById.bind(this),);
     this.router.post("/dayquest/task/create",this.createDayQuestTask.bind(this),);
     this.router.delete("/dayquest/task/delete/:task_id",this.deleteDayQuestTask.bind(this),);
-    this.router.get("/dayquest/tasks",this.getDayQuestTask.bind(this),);
-    
+    this.router.get("/dayquest/tasks/:category_id",this.getDayQuestTask.bind(this),);
+    this.router.patch("/dayquest/task/complete/:task_id",this.completeTask.bind(this),);
+    this.router.patch("/dayquest/task/uncomplete/:task_id",this.completeTask.bind(this),);
+    this.router.get("/dayquest/task/:task_id",this.getTaskById.bind(this),);
   }
 
+  // Create a new category
   async createDayQuestCategory(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -56,6 +60,51 @@ export class DayQuestController {
     }
 }
 
+// Get category by ID
+async getDayQuestCategoryById(req: Request, res: Response) {
+    if (!req.session.user) {
+        return res.status(401).send({
+          errors: [{ message: "Not found session" }],
+        });
+    }
+
+    const user = req.session.user;
+
+    const parsedResult = z.object({
+        category_id: z.string().uuid(),
+    }).safeParse(req.params);
+
+    if (!parsedResult.success) {
+      console.error("Invalid category ID for get operation:", parsedResult.error.issues);
+      return res.status(400).json({ errors: parsedResult.error.issues });
+    }
+
+    const { category_id } = parsedResult.data;
+    console.log("getDayQuestCategoryById -> category_id", category_id);
+
+    try {
+        const category = await this.categoryService.getCategory(db, {
+            creatorId: user.id,
+            categoryId: category_id,
+        });
+
+        if (!category) {
+            console.log("getDayQuestCategoryById -> No category found for user:", category_id);
+            return res.status(404).send({ message: "No category found" });
+        }
+
+        console.log("getDayQuestCategoryById -> category", category);
+        return res.status(200).send({ category });
+    }catch(error){
+        console.error("Error while fetching category:", error);
+        return res.status(500).send({
+            errors: [{ message: "Failed to get category" }],
+        });
+    }
+}
+
+
+// Update category
   async updateDayQuestCategory(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -100,6 +149,7 @@ export class DayQuestController {
     }
 }
 
+// Delete category
   async deleteDayQuestCategory(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -139,7 +189,7 @@ export class DayQuestController {
 
 
  
-
+// Get all categories
   async getDayQuestCategory(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -163,7 +213,7 @@ export class DayQuestController {
   }
 
 
-
+// Create a new task
   async createDayQuestTask(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -197,7 +247,131 @@ export class DayQuestController {
     }
 }
 
+// Get task by ID
+  async getTaskById(req: Request, res: Response) {
+    if (!req.session.user) {
+        return res.status(401).send({
+          errors: [{ message: "No active session found" }],
+        });
+    }
 
+    const user = req.session.user;
+
+    const parsedResult = z.object({
+        task_id: z.string().uuid(),
+    }).safeParse(req.params);
+
+    if (!parsedResult.success) {
+      console.error("Invalid task ID for get operation:", parsedResult.error.issues);
+      return res.status(400).json({ errors: parsedResult.error.issues });
+    }
+
+    const { task_id } = parsedResult.data;
+    console.log("getTaskById -> task_id", task_id);
+
+    try {
+        const task = await this.taskService.getTaskById(db, {
+          taskId: task_id,
+          userId: user.id,
+          
+        });
+
+        console.log("getTaskById -> task", task);
+
+        if (!task) {
+            console.log("getTaskById -> No task found for user:", task_id);
+            return res.status(404).send({ message: "No task found" });
+        }
+
+        console.log("getTaskById -> task", task);
+        return res.status(200).send({ task });
+    } catch (error) {
+        console.error("Error while fetching task:", error);
+        return res.status(500).send({
+            errors: [{ message: "Failed to get task" }],
+        });
+    }
+}
+
+// Complete a task
+  async completeTask(req: Request, res: Response) {
+    if (!req.session.user) {
+        return res.status(401).send({
+          errors: [{ message: "No active session found" }],
+        });
+    }
+
+    const user = req.session.user;
+
+    const parsedResult = z.object({
+        task_id: z.string().uuid(),
+    }).safeParse(req.params);
+
+    if (!parsedResult.success) {
+      console.error("Invalid task ID for complete operation:", parsedResult.error.issues);
+      return res.status(400).json({ errors: parsedResult.error.issues });
+    }
+
+    const { task_id } = parsedResult.data;
+    console.log("completeTask -> task_id", task_id);
+
+    try {
+        const task = await this.taskService.completeTask(db, {
+            userId: user.id,
+            taskId: task_id,
+        });
+
+        console.log("completeTask -> task", task);
+        return res.status(200).send({ message: "Task completed successfully", task });
+    } catch (error) {
+        console.error("Error while completing task:", error);
+        return res.status(500).send({
+            errors: [{ message: "Failed to complete task" }],
+        });
+    }
+}
+
+// Uncmplete a task
+
+async UnCompleteTask(req: Request, res: Response) {
+  if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "No active session found" }],
+      });
+  }
+
+  const user = req.session.user;
+
+  const parsedResult = z.object({
+      task_id: z.string().uuid(),
+  }).safeParse(req.params);
+
+  if (!parsedResult.success) {
+    console.error("Invalid task ID for complete operation:", parsedResult.error.issues);
+    return res.status(400).json({ errors: parsedResult.error.issues });
+  }
+
+  const { task_id } = parsedResult.data;
+  console.log("UnCompleteTask -> task_id", task_id);
+
+  try {
+      const task = await this.taskService.unCompleteTask(db, {
+          userId: user.id,
+          taskId: task_id,
+      });
+
+      console.log("UnCompleteTask -> task", task);
+      return res.status(200).send({ message: "Task uncompleted successfully", task });
+  } catch (error) {
+      console.error("Error while uncompleting task:", error);
+      return res.status(500).send({
+          errors: [{ message: "Failed to complete task" }],
+      });
+  }
+}
+
+
+// Delete a task
   async deleteDayQuestTask(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -234,6 +408,7 @@ export class DayQuestController {
     }
 }
 
+// Get all tasks by categoryId
   async getDayQuestTask(req: Request, res: Response) {
     if (!req.session.user) {
         return res.status(401).send({
@@ -241,15 +416,24 @@ export class DayQuestController {
         });
     }
 
-    const user = req.session.user;
-    console.log("getDayQuestTask -> user ID:", user.id);
+    const parsedResult = z.object({
+      category_id: z.string().uuid(),
+  }).safeParse(req.params);
+
+  if (!parsedResult.success) {
+    console.error("Invalid task ID for get operation:", parsedResult.error.issues);
+    return res.status(400).json({ errors: parsedResult.error.issues });
+  }
+
+  const { category_id } = parsedResult.data;
+  console.log("getDayQuestTask -> category_id", category_id);
 
     try {
   
-        const tasks = await this.taskService.getUserTasks(db, user.id);
+        const tasks = await this.taskService.getUserTasksByCategoryId(db, category_id);
 
         if (!tasks || tasks.length === 0) {
-            console.log("getDayQuestTask -> No tasks found for user:", user.id);
+            console.log("getDayQuestTask -> No tasks found for user:", category_id);
             return res.status(404).send({ message: "No tasks found" });
         }
 

@@ -1,19 +1,23 @@
 import { z , ZodType } from "zod";
 import { FetchError } from "@/utils/fetch";
 import { queryOptions, useQueryClient, useMutation } from "@tanstack/vue-query";
+import {categoriesQuery, userCategoryQuery} from "@/services/dayQuest/category.service";
+import { Category } from "shared";
 
 export interface Task {
+	categoryId: string;
 	id: string;
 	name: string;
-    // isCompleted: boolean;
+    isCompleted: boolean;
     // updatedAt: string;
     // createdAt: string;
 }
 
 export const taskSchema = z.object({
+	categoryId: z.string(),
 	id: z.string(),
 	name: z.string(),
-    // isCompleted: z.boolean(),
+    isCompleted: z.boolean(),
     // updatedAt: z.string(),
     // createdAt: z.string(),
 }) satisfies ZodType<Task>;
@@ -28,7 +32,7 @@ export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 export const tasksQuery = queryOptions({
 	queryKey: ["api", "dayquest", "tasks"],
 	queryFn: async ({ signal }) => {
-		const res = await fetch("/api/dayquest/tasks", { signal });
+		const res = await fetch(`/api/dayquest/tasks/`, { signal });
 
 		if (!res.ok) {
 			throw new FetchError(res);
@@ -38,32 +42,50 @@ export const tasksQuery = queryOptions({
 	},
 });
 
-export function useCreateTaskMutation() {
-	const queryClient = useQueryClient();
-
-	return useMutation({
-		mutationFn: async (body: CreateTaskBody) => {
-			const res = await fetch("/api/dayquest/task/create", {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(body),  
-			});
-
+export const meTaskQuery = (taskId: string) =>
+	queryOptions({
+		queryKey: ["api", "tasks", "detail", taskId],
+		queryFn: async ({ signal }) => {
+			const res = await fetch(`/api/dayquest/task/${taskId}`, { signal });
 			if (!res.ok) {
 				throw new FetchError(res);
 			}
 
 			return res.json() as Promise<Task>;
 		},
-		onSuccess: (createdTask) => {
-			queryClient.setQueryData(tasksQuery.queryKey, (tasks) => {
-				if (!tasks) return [createdTask];
-				return [...tasks, createdTask];
-			});
-		},
 	});
+
+export function useCreateTaskMutation() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (body: CreateTaskBody) => {
+            const res = await fetch("/api/dayquest/task/create", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            });
+
+            if (!res.ok) {
+                throw new FetchError(res);
+            }
+
+            return res.json() as Promise<Task>;
+        },
+		onSuccess: (newTask) => {
+			const { queryKey } = userCategoryQuery(newTask.categoryId);
+			queryClient.setQueryData(queryKey, (category: Category | undefined)  => {
+				if (!category) return;
+				return {
+					...category,
+					tasks: [...(category.tasks || []), newTask]  
+				};
+			});
+			queryClient.invalidateQueries(categoriesQuery);
+		},
+    });
 }
 
 
@@ -81,11 +103,100 @@ export function useDeleteTaskMutation() {
 			}
 		},
 		onSuccess: (_, taskId) => {
-			queryClient.setQueryData(tasksQuery.queryKey, (tasks) => {
-				if (!tasks) return [];
-				return tasks.filter((task) => task.id !== taskId);
-			});
+			queryClient.invalidateQueries(categoriesQuery);
+			queryClient.removeQueries(userCategoryQuery(taskId));
 		},
 	});
 }
 
+
+// export function useCompleteTaskMutation() {
+// 	const queryClient = useQueryClient();
+
+// 	return useMutation({
+// 		mutationFn: async (taskId: string) => {
+// 			const res = await fetch(`/api/dayquest/task/complete/${taskId}`, {
+// 				method: "PATCH",
+// 			});
+
+// 			if (!res.ok) {
+// 				throw new FetchError(res);
+// 			}
+// 		},
+// 		onSuccess: (_, taskId) => {
+// 			// queryClient.invalidateQueries(tasksQuery);
+// 			queryClient.invalidateQueries(meTaskQuery(taskId));
+// 		},
+// 	});
+// }
+
+export function useCompleteTaskMutation() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (taskId: string) => {
+            const res = await fetch(`/api/dayquest/task/complete/${taskId}`, {
+                method: "PATCH",
+            });
+
+            if (!res.ok) {
+                throw new FetchError(res);
+            }
+
+            return res.json(); // Возвращаем обновленную задачу
+        },
+        onSuccess: (updatedTask) => {
+            // Обновляем кэш с задачами
+            queryClient.setQueryData(tasksQuery.queryKey, (tasks: Task[] | undefined) => {
+                if (!tasks) return [];
+
+                // Обновляем статус задачи в списке
+                return tasks.map(task =>
+                    task.id === updatedTask.id ? { ...task, isCompleted: true } : task
+                );
+            });
+
+            // Обновляем кэш для отдельной задачи, если требуется
+            queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
+
+            // Опционально перезапрашиваем данные по задачам
+            // queryClient.invalidateQueries(tasksQuery.queryKey);
+        },
+    });
+}
+
+
+export function useUnCompleteTaskMutation() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (taskId: string) => {
+            const res = await fetch(`/api/dayquest/task/uncomplete/${taskId}`, {
+                method: "PATCH",
+            });
+
+            if (!res.ok) {
+                throw new FetchError(res);
+            }
+
+            return res.json(); // Возвращаем обновленную задачу
+        },
+        onSuccess: (updatedTask) => {
+            // Обновляем кэш с задачами
+            queryClient.setQueryData(tasksQuery.queryKey, (tasks: Task[] | undefined) => {
+                if (!tasks) return [];
+
+                // Обновляем статус задачи в списке
+                return tasks.map(task =>
+                    task.id === updatedTask.id ? { ...task, isCompleted: true } : task
+                );
+            });
+
+            // Обновляем кэш для отдельной задачи, если требуется
+            queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
+
+            // Опционально перезапрашиваем данные по задачам
+            // queryClient.invalidateQueries(tasksQuery.queryKey);
+        },
+    });
+}

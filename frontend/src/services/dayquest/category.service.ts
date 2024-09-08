@@ -1,7 +1,7 @@
 import { useMutation, queryOptions, useQueryClient} from "@tanstack/vue-query";
 import { z } from "zod";
 import { FetchError } from "@/utils/fetch";
-import { Category } from "shared";
+import { Category, Task } from "shared";
 
 export const updateCategoryBodySchema = z
 	.object({
@@ -52,6 +52,21 @@ export const categoriesQuery = queryOptions({
 	},
 });
 
+
+export const userCategoryQuery = (categoryId: string) =>
+	queryOptions({
+		queryKey: ["api", "conferences", "detail", categoryId],
+		queryFn: async ({ signal }) => {
+			const res = await fetch(`/api/dayquest/category/${categoryId}`, { signal });
+			if (!res.ok) {
+				throw new FetchError(res);
+			}
+
+			return res.json() as Promise<Category>;
+		},
+	});
+
+	
 
 export function useDeleteCategoryMutation() {
 	const queryClient = useQueryClient();

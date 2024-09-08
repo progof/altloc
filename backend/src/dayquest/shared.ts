@@ -31,6 +31,7 @@ export async function getCategoryTasks(
 			categoryId: dayQuestTasksTable.categoryId,
 			taskId: dayQuestTasksTable.id,
 			name: dayQuestTasksTable.name,
+			isCompleted: dayQuestTasksTable.isCompleted,
 		})
 		.from(dayQuestTasksTable)
 		.innerJoin(
@@ -39,19 +40,20 @@ export async function getCategoryTasks(
 		)
 		.where(inArray(dayQuestTasksTable.categoryId, categoryIds));
 
-	// Initialize a record with category IDs as keys and empty arrays as values
 	const categoryIdToTasks = Object.fromEntries(
 		categoryIds.map((id) => [id, [] as Task[]]),
 	);
 
-	// Populate the record with tasks
 	for (const task of tasks) {
 		categoryIdToTasks[task.categoryId]?.push({
 			id: task.taskId,
 			name: task.name,
+			categoryId: task.categoryId, 
+			isCompleted: task.isCompleted,
 		});
 	}
 
 	return categoryIdToTasks;
 }
+
 

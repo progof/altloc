@@ -16,7 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DotsHorizontalIcon from "@/assets/icons/dots-horizontal.svg?component";
 import DayQuestActionDropdownMenu from "@/components/dayquest/DayQuestActionDropdownMenu.vue";
-import { useDeleteTaskMutation } from "@/services/dayquest/task.service";
+import {
+  useDeleteTaskMutation,
+  useCompleteTaskMutation,
+  useUnCompleteTaskMutation,
+} from "@/services/dayquest/task.service";
 import DeleteIcon from "@/assets/icons/delete.svg?component";
 import { EditDayQuestForm } from "@/components/edit-dayquest-form";
 
@@ -29,6 +33,12 @@ console.log(categories);
 
 const { mutate: deleteTask, isPending: IsDeleteTaskPeding } =
   useDeleteTaskMutation();
+
+const { mutate: completeTask, isPending: IsCompletedPending } =
+  useCompleteTaskMutation();
+
+const { mutate: unCompleteTask, isPending: IsUnCompletedPending } =
+  useUnCompleteTaskMutation();
 
 const isOpenDayQuestDialog = ref(false);
 const isOpenTaskDialog = ref(false);
@@ -49,8 +59,6 @@ function handleOpenModal(
     isOpenEditTaskDialog.value = true;
   }
 }
-
-// const dialogType = ref<"delete" | "edit" | "create" | "statistics">();
 </script>
 
 <template>
@@ -87,33 +95,6 @@ function handleOpenModal(
                     {{ category.name }} ({{ category.tasks.length }})
                   </span>
                 </div>
-                <!-- <Button
-                  size="sm"
-                  class="bg-transparent hover:bg-transparent"
-                  title="Add task"
-                  @click="
-                    () => {
-                      modalProps = { categoryId: category.id };
-                      isOpenTaskDialog = true;
-                    }
-                  "
-                >
-                  <PlusIcon
-                    class="size-5 stroke-size-4 stroke-[1.7] text-zinc-700"
-                  />
-                </Button>
-                <Button
-                  size="sm"
-                  :desibled="IsDeleteCategoryPeding"
-                  class="bg-transparent hover:bg-transparent"
-                  @click="
-                    () => {
-                      deleteCategory(category.id);
-                    }
-                  "
-                >
-                  <DeleteIcon class="size-5 text-red-200 hover:text-red-400" />
-                </Button> -->
                 <DropdownMenu :modal="false">
                   <DropdownMenuTrigger
                     class="flex items-center p-1 hover:bg-black/5 rounded data-[state=open]:bg-black/5"
@@ -138,7 +119,17 @@ function handleOpenModal(
                   v-if="category.tasks"
                 >
                   <div class="flex items-center gap-3">
-                    <Checkbox :id="task.id" :modelValue="task.isCompleted" />
+                    <Checkbox
+                      :id="task.id"
+                      :modelValue="task.isCompleted"
+                      @click="
+                        () => {
+                          task.isCompleted === false
+                            ? completeTask(task.id)
+                            : unCompleteTask(task.id);
+                        }
+                      "
+                    />
                     <label :for="task.id" class="text-zinc-500">{{
                       task.name
                     }}</label>
