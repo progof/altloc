@@ -2,6 +2,7 @@
 import ProfileDropdownMenu from "@/layouts/ProfileDropdownMenu.vue";
 import { getMeQueryOptions } from "@/services/user.service";
 import { useQuery } from "@tanstack/vue-query";
+import MapIcon from "@/assets/icons/map.svg?component";
 
 const { data: user } = useQuery(getMeQueryOptions);
 </script>
@@ -11,7 +12,10 @@ const { data: user } = useQuery(getMeQueryOptions);
     class="pointer-events-auto flex bg-indigo-200 md:justify-center items-center p-3"
   >
     <div class="flex justify-between items-center flex-1">
-      <span class="font-semibold text-lg text-zinc-800">AltLoc</span>
+      <div class="flex gap-1 items-center">
+        <span class="font-semibold text-xl text-zinc-800">AltLoc</span>
+        <MapIcon class="size-7 stroke-[1.7] text-zinc-800" />
+      </div>
       <ProfileDropdownMenu v-if="user" :user="user" class="md:hidden" />
     </div>
   </header>

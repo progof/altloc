@@ -110,26 +110,6 @@ export function useDeleteTaskMutation() {
 }
 
 
-// export function useCompleteTaskMutation() {
-// 	const queryClient = useQueryClient();
-
-// 	return useMutation({
-// 		mutationFn: async (taskId: string) => {
-// 			const res = await fetch(`/api/dayquest/task/complete/${taskId}`, {
-// 				method: "PATCH",
-// 			});
-
-// 			if (!res.ok) {
-// 				throw new FetchError(res);
-// 			}
-// 		},
-// 		onSuccess: (_, taskId) => {
-// 			// queryClient.invalidateQueries(tasksQuery);
-// 			queryClient.invalidateQueries(meTaskQuery(taskId));
-// 		},
-// 	});
-// }
-
 export function useCompleteTaskMutation() {
     const queryClient = useQueryClient();
 
@@ -143,24 +123,21 @@ export function useCompleteTaskMutation() {
                 throw new FetchError(res);
             }
 
-            return res.json(); // Возвращаем обновленную задачу
+            return res.json();
         },
-        onSuccess: (updatedTask) => {
-            // Обновляем кэш с задачами
+        onSuccess: (updatedTask: Task) => {
+           
             queryClient.setQueryData(tasksQuery.queryKey, (tasks: Task[] | undefined) => {
                 if (!tasks) return [];
 
-                // Обновляем статус задачи в списке
+           
                 return tasks.map(task =>
                     task.id === updatedTask.id ? { ...task, isCompleted: true } : task
                 );
             });
 
-            // Обновляем кэш для отдельной задачи, если требуется
-            queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
 
-            // Опционально перезапрашиваем данные по задачам
-            // queryClient.invalidateQueries(tasksQuery.queryKey);
+            queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
         },
     });
 }
@@ -179,24 +156,19 @@ export function useUnCompleteTaskMutation() {
                 throw new FetchError(res);
             }
 
-            return res.json(); // Возвращаем обновленную задачу
+            return res.json(); 
         },
         onSuccess: (updatedTask) => {
-            // Обновляем кэш с задачами
+  
             queryClient.setQueryData(tasksQuery.queryKey, (tasks: Task[] | undefined) => {
                 if (!tasks) return [];
 
-                // Обновляем статус задачи в списке
                 return tasks.map(task =>
                     task.id === updatedTask.id ? { ...task, isCompleted: true } : task
                 );
             });
-
-            // Обновляем кэш для отдельной задачи, если требуется
             queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
 
-            // Опционально перезапрашиваем данные по задачам
-            // queryClient.invalidateQueries(tasksQuery.queryKey);
         },
     });
 }

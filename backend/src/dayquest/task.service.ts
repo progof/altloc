@@ -24,6 +24,7 @@ export const createTaskBodySchema = z.object({
 	categoryId: z.string(),
 	name: z.string().min(1).max(256),
 	isCompleted: z.boolean().optional().default(false),  
+	// createdAt: z.string().optional(),
 });
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;

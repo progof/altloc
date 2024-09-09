@@ -19,6 +19,13 @@ export type Task = {
   isCompleted: boolean;
 };
 
+export type Comment = {
+  id: string;
+  creatorId: string;
+  description: string;
+  createdAt: Date;
+};
+
 
 export type DayQuestTaskCategory = {
   taskId: string;

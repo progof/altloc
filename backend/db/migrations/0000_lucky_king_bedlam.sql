@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS "day_quest_tasks" (
 	"category_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
-	"is_completed" boolean DEFAULT false NOT NULL
+	"is_completed" boolean DEFAULT false NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "email_activations" (

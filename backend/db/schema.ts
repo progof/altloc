@@ -72,7 +72,21 @@ export const dayQuestTasksTable = pgTable("day_quest_tasks", {
     creatorId: uuid("user_id").notNull(),
     name: text("name").notNull(),
     isCompleted: boolean("is_completed").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: false })
+		.notNull()
+		.defaultNow(),
+
 
 });
 
 export type DayQuestTask = typeof dayQuestTasksTable.$inferSelect;
+
+
+export const dayQuestCommentsTable = pgTable("day_quest_comments", {
+    id: uuid("id").defaultRandom().primaryKey(),
+    creatorId: uuid("user_id").notNull(),
+    description: text("description").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type DayQuestComment = typeof dayQuestCommentsTable.$inferSelect;

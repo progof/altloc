@@ -9,6 +9,7 @@ import { categoriesQuery } from "@/services/dayquest/category.service";
 import { CreateTaskDialogContent } from "@/components/tasks-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import PlusIcon from "@/assets/icons/plus.svg?component";
+import InfoIcon from "@/assets/icons/info.svg?component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,11 +35,9 @@ console.log(categories);
 const { mutate: deleteTask, isPending: IsDeleteTaskPeding } =
   useDeleteTaskMutation();
 
-const { mutate: completeTask, isPending: IsCompletedPending } =
-  useCompleteTaskMutation();
+const { mutate: completeTask } = useCompleteTaskMutation();
 
-const { mutate: unCompleteTask, isPending: IsUnCompletedPending } =
-  useUnCompleteTaskMutation();
+const { mutate: unCompleteTask } = useUnCompleteTaskMutation();
 
 const isOpenDayQuestDialog = ref(false);
 const isOpenTaskDialog = ref(false);
@@ -68,6 +67,7 @@ function handleOpenModal(
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
             <h2 class="text-2xl font-bold tracking-tight">DayQuest</h2>
+
             <Button
               size="md"
               @click="
@@ -78,6 +78,13 @@ function handleOpenModal(
             >
               <PlusIcon class="size-5 stroke-[1.7] text-zinc-50" />
             </Button>
+          </div>
+          <div class="flex items-center gap-1">
+            <InfoIcon class="size-4 stroke-[1.7] text-zinc-500" />
+            <span
+              class="text-[12px] text-zinc-500 font-semibold underline-offset-1 underline"
+              >Each day's assignments will be reset to 00:05</span
+            >
           </div>
 
           <div
@@ -124,9 +131,11 @@ function handleOpenModal(
                       :modelValue="task.isCompleted"
                       @click="
                         () => {
-                          task.isCompleted === false
-                            ? completeTask(task.id)
-                            : unCompleteTask(task.id);
+                          if (task.isCompleted) {
+                            completeTask(task.id);
+                          } else {
+                            unCompleteTask(task.id);
+                          }
                         }
                       "
                     />

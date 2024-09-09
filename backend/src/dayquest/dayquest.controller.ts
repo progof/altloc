@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Request, Response, Router } from "express";
 import { TasksService, createTaskBodySchema } from "@/dayquest/task.service";
 import { CategoriesService, createCategoryBodySchema } from "@/dayquest/category.service";
+import { CommentsService, createCommentBodySchema } from "@/dayquest/comment.service";
 import { db } from "@/db";
 
 export class DayQuestController {
@@ -11,6 +12,7 @@ export class DayQuestController {
   constructor(
     private readonly taskService: TasksService,
     private readonly categoryService: CategoriesService,
+    private readonly commentService: CommentsService,
  
 
     ) {
@@ -25,6 +27,12 @@ export class DayQuestController {
     this.router.patch("/dayquest/task/complete/:task_id",this.completeTask.bind(this),);
     this.router.patch("/dayquest/task/uncomplete/:task_id",this.completeTask.bind(this),);
     this.router.get("/dayquest/task/:task_id",this.getTaskById.bind(this),);
+    this.router.post("/dayquest/comment/create", this.createDayQuestComment.bind(this),);
+    this.router.patch("/dayquest/comment/update/:comment_id",this.updateDayQuestCategory.bind(this),);
+    this.router.delete("/dayquest/comment/delete/:comment_id",this.deleteDayQuestComment.bind(this),);
+    this.router.get("/dayquest/comments",this.getDayQuestCategory.bind(this),);
+    this.router.get("/dayquest/comment/:comment_id",this.getDayQuestCategoryById.bind(this),);
+
   }
 
   // Create a new category
@@ -58,7 +66,7 @@ export class DayQuestController {
             errors: [{ message: "Failed to create category" }],
         });
     }
-}
+  }
 
 // Get category by ID
 async getDayQuestCategoryById(req: Request, res: Response) {
@@ -276,7 +284,7 @@ async getDayQuestCategoryById(req: Request, res: Response) {
           
         });
 
-        console.log("getTaskById -> task", task);
+        console.log("(ME) getTaskById -> task", task);
 
         if (!task) {
             console.log("getTaskById -> No task found for user:", task_id);
@@ -447,6 +455,193 @@ async UnCompleteTask(req: Request, res: Response) {
     }
 }
 
+
+// Create a new comment
+async createDayQuestComment(req: Request, res: Response) {
+  if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "Not found session" }],
+      });
+  }
+
+  const user = req.session.user;
+  console.log("createDayQuestComment -> user", user.id);
+
+  const body = createCommentBodySchema.safeParse(req.body);
+  console.log("createDayQuestComment -> body", body);
+
+  if (!body.success) {
+    console.error("Validation failed for createDayQuestComment:", body.error.issues);
+    return res.status(400).send({ errors: body.error.issues });
+  }
+
+  try {
+      const comment = await this.commentService.createComment(db, {
+          userId: user.id,
+          body: body.data,
+      });
+      return res.status(201).send({ message: "Comment created successfully", comment });
+  } catch (error) {
+      console.error("Error while creating comment:", error);
+      return res.status(500).send({
+          errors: [{ message: "Failed to create comment" }],
+      });
+  }
+}
+
+// Update comment
+
+async updateDayQuestComment(req: Request, res: Response) {
+  if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "Not found session" }],
+      });
+  }
+
+  const user = req.session.user;
+
+  const parsedResult = z.object({
+      comment_id: z.string().uuid(),
+  }).safeParse(req.params);
+
+  if (!parsedResult.success) {
+    console.error("Invalid comment ID:", parsedResult.error.issues);
+    return res.status(400).json({ errors: parsedResult.error.issues });
+  }
+
+  const { comment_id } = parsedResult.data;
+  console.log("updateDayQuestComment -> comment_id", comment_id);
+
+  const body = createCommentBodySchema.safeParse(req.body);
+
+  if (!body.success) {
+    console.error("Validation failed for updateDayQuestComment:", body.error.issues);
+    return res.status(400).send({ errors: body.error.issues });
+  }
+
+  try {
+      const updatedComment = await this.commentService.updateComment(db, {
+          creatorId: user.id,
+          commentId: comment_id,
+          body: body.data,
+      });
+
+      return res.status(200).send({ message: "Comment updated successfully", comment: updatedComment });
+  } catch (error) {
+      console.error("Error while updating comment:", error);
+      return res.status(500).send({
+          errors: [{ message: "Failed to update comment" }],
+      });
+  }
+}
+
+// Delete comment
+
+async deleteDayQuestComment(req: Request, res: Response) {
+  if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "Not found session" }],
+      });
+  }
+
+  const user = req.session.user;
+
+  const parsedResult = z.object({
+      comment_id: z.string().uuid(),
+  }).safeParse(req.params);
+
+  if (!parsedResult.success) {
+    console.error("Invalid comment ID for delete operation:", parsedResult.error.issues);
+    return res.status(400).json({ errors: parsedResult.error.issues });
+  }
+
+  const { comment_id } = parsedResult.data;
+  console.log("deleteDayQuestComment -> comment_id", comment_id);
+
+  try {
+      await this.commentService.deleteComment(db, {
+          creatorId: user.id,
+          commentId: comment_id
+      });
+
+    
+      return res.status(200).send({ message: "Comment deleted successfully" });
+  } catch (error) {
+      console.error("Error while deleting comment:", error);
+      return res.status(500).send({
+          errors: [{ message: "Failed to delete comment" }],
+      });
+  }
+}
+
+// Get all comments
+
+async getDayQuestComment(req: Request, res: Response) {
+  if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "Not active found session" }],
+      });
+  }
+
+  const user = req.session.user;
+  console.log("getDayQuestComment -> user", user.id);
+
+  try{
+      const comments = await this.commentService.getComments(db, {
+          userId: user.id,
+      });
+      console.log("getDayQuestComment -> comments", comments);
+      return res.send(comments);
+  }catch(error){
+      console.error(error);
+      return res.status(500).send({
+          errors: [{ message: "Failed to get comments" }],
+      });
+  }
+}
+
+// Get comment by ID
+async getDayQuestCommentById(req: Request, res: Response) {
+  if (!req.session.user) {
+      return res.status(401).send({
+        errors: [{ message: "Not found session" }],
+      });
+  }
+
+  const user = req.session.user;
+
+  const parsedResult = z.object({
+      comment_id: z.string().uuid(),
+  }).safeParse(req.params);
+
+  if (!parsedResult.success) {
+    console.error("Invalid comment ID for get operation:", parsedResult.error.issues);
+    return res.status(400).json({ errors: parsedResult.error.issues });
+  }
+
+  const { comment_id } = parsedResult.data;
+  console.log("getDayQuestCommentById -> comment_id", comment_id);
+
+  try {
+      const comment = await this.commentService.getCommentById(db, {
+          userId: user.id,
+          commentId: comment_id,
+      });
+
+      if (!comment) {
+          console.log("getDayQuestCommentById -> No comment found for user:", comment_id);
+          return res.status(404).send({ message: "No comment found" });
+      }
+
+      console.log("getDayQuestCommentById -> comment", comment);
+      return res.status(200).send({ comment });
+  }catch(error){
+      console.error("Error while fetching comment:", error);
+      return res.status(500).send({
+          errors: [{ message: "Failed to get comment" }],
+      });
+  }
+}
 
 }   
 

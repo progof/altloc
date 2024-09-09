@@ -5,8 +5,6 @@ import cookieParser from "cookie-parser";
 import { config } from "@/config";  
 import { s3} from "@/s3";
 import { google } from "@/oauth";
-import multer from "multer";
-
 
 import { AuthPasswordService } from "./auth/password/auth.password.service";  
 import { AuthPasswordController } from "./auth/password/auth.password.controller";
@@ -14,6 +12,8 @@ import { AuthPasswordController } from "./auth/password/auth.password.controller
 import { DayQuestController } from "@/dayquest/dayquest.controller";
 import { TasksService } from "@/dayquest/task.service";
 import { CategoriesService } from "@/dayquest/category.service";
+import { CommentsService } from "@/dayquest/comment.service";
+import "@/dayquest/dayquest.cron";
 
 import { AuthGoogleService } from "./auth/google/auth.google.service";  
 import { AuthGoogleController } from "./auth/google/auth.google.controller";
@@ -41,7 +41,6 @@ app.use(
 
 
 
-
 export const authPasswordService = new AuthPasswordService(config);
 const authPasswordController = new AuthPasswordController(authPasswordService);
 app.use(authPasswordController.router);
@@ -51,9 +50,10 @@ const authGoogleController = new AuthGoogleController(authGoogleService, authPas
 app.use(authGoogleController.router);
 
 
-export const categoryService = new CategoriesService(s3, config.MINIO_BUCKET);
+export const categoryService = new CategoriesService();
 export const taskService = new TasksService();
-const dayQuestController = new DayQuestController(taskService, categoryService);
+export const commentService = new CommentsService();
+const dayQuestController = new DayQuestController(taskService, categoryService, commentService);
 app.use(dayQuestController.router);
 
 
