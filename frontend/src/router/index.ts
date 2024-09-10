@@ -8,7 +8,7 @@ import EmailVerificationPage from '@/pages/auth/email-verification.vue';
 import RecoveryPasswordPage from "@/pages/auth/recovery-password.vue";
 import ResetPasswordPage from "@/pages/auth/reset-password.vue";
 import DayQuestPage from '@/pages/user/dayQuest.vue';
-import DayCommentPage from '@/pages/user/daycomment.vue';
+import DayCommentPage from '@/pages/user/dayComment.vue';
 import DayBalancePage from '@/pages/user/dayBalance.vue';
 import SettingsPage from '@/pages/user/settings.vue';
 

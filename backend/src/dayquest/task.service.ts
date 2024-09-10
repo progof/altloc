@@ -1,4 +1,4 @@
-import { dayQuestTasksTable } from "@db/schema";
+import { dayQuestTasksTable, usersTable } from "@db/schema";
 import { z, ZodType } from "zod";
 // import {
 // 	S3Client,
@@ -131,7 +131,7 @@ export class TasksService {
 		},
 	): Promise<Task> {
 		const { taskId, userId } = options;
-
+	
 		const task = (
 			await db
 				.select()
@@ -139,30 +139,56 @@ export class TasksService {
 				.where(
 					and(
 						eq(dayQuestTasksTable.id, taskId), 
-					eq(dayQuestTasksTable.creatorId, userId)))
+						eq(dayQuestTasksTable.creatorId, userId)
+					)
+				)
 		).at(0);
-
+	
 		if (!task) {
 			throw new HTTPError({ message: "Task not found", status: 404 });
 		}
-
+	
 		if (task.creatorId !== userId) {
 			throw new HTTPError({
 				message: "You are not allowed to complete this task",
 				status: 403,
 			});
 		}
-
+	
+		if (task.isCompleted) {
+			throw new HTTPError({
+				message: "Task is already completed",
+				status: 400,
+			});
+		}
+	
 		await db.update(dayQuestTasksTable).set({
 			isCompleted: true,
 		}).where(
 			and(
 				eq(dayQuestTasksTable.id, taskId), 
-			eq(dayQuestTasksTable.creatorId, userId))
+				eq(dayQuestTasksTable.creatorId, userId)
+			)
+		);
 	
-			);
+		const user = (
+			await db
+				.select()
+				.from(usersTable)
+				.where(eq(usersTable.id, userId))
+		).at(0);
+	
+		if (!user) {
+			throw new HTTPError({ message: "User not found", status: 404 });
+		}
+	
+		await db.update(usersTable).set({
+			score: user.score + 1
+		}).where(eq(usersTable.id, userId));
+	
 		return taskSchema.parse(task);
 	}
+	
 
 	async unCompleteTask(
 		db: Database | Transaction,

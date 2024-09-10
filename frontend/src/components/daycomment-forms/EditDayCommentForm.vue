@@ -2,47 +2,68 @@
 import { z } from "zod";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import { useUpdateCategoryMutation } from "@/services/dayquest/category.service";
-import { TextField } from "@/components/ui/input";
+import {
+  useUpdateCommentMutation,
+  meCommentQuery,
+} from "@/services/dayquest/comment.service";
+import { TextArea } from "@/components/ui/text-area";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
 import { Button } from "@/components/ui/button";
 import { FetchError } from "@/utils/fetch";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useQuery } from "@tanstack/vue-query";
+import { watch } from "vue";
 
 const props = defineProps<{
-  categoryId: string;
+  commentId: string;
 }>();
 
-const { handleSubmit, meta, setFieldError } = useForm({
+const { handleSubmit, meta, setFieldError, resetForm } = useForm({
   validationSchema: toTypedSchema(
     z.object({
-      name: z.string().min(6).max(32),
+      description: z.string().min(1).max(256),
     })
   ),
 });
 
 const emit = defineEmits<{ close: [] }>();
 
-const { mutate: updateCategory, isPending } = useUpdateCategoryMutation();
+const { data: comment } = useQuery({
+  ...meCommentQuery(props.commentId),
+  // initialData: props.conference,
+});
+
+watch(
+  comment,
+  () => {
+    if (!comment.value) return;
+    resetForm({
+      values: {
+        description: comment.value.description,
+      },
+    });
+  },
+  {
+    immediate: true,
+  }
+);
+
+const { mutate: updateComment, isPending } = useUpdateCommentMutation();
 
 const onSubmit = handleSubmit((data) => {
-  // const formData = {
-  //   ...data,
-  //   categoryId: props.categoryId,
-  // };
-  console.log("Create dayQuest -> data:", data);
-  updateCategory(
+  console.log("Create dayComment -> data:", data);
+  updateComment(
     {
-      categoryId: props.categoryId,
+      commentId: props.commentId,
       body: data,
     },
     {
       onSuccess: () => {
-        location.assign("/user/day-quest");
+        location.assign("/user/day-comment");
       },
       onError: async (error) => {
         if (error instanceof FetchError) {
-          setFieldError("name", error.message);
+          setFieldError("description", error.message);
         }
       },
     }
@@ -53,10 +74,10 @@ const onSubmit = handleSubmit((data) => {
 <template>
   <DialogTitle class="text-xl font-bold tracking-tight">Edit</DialogTitle>
   <DialogDescription class="mt-2 text-sm text-zinc-600">
-    Edit the category
+    Edit the comment
   </DialogDescription>
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
-    <TextField name="name" label="Name" placeholder="Business" />
+    <TextArea name="description" label="Description" placeholder="Business" />
 
     <div class="mt-4 flex justify-end border-t border-zinc-200 pt-4">
       <Button
@@ -67,7 +88,7 @@ const onSubmit = handleSubmit((data) => {
           v-if="isPending"
           class="absolute mx-auto size-5 animate-spin stroke-[1.5]"
         />
-        <span :class="isPending ? 'invisible' : ''">Edit category</span>
+        <span :class="isPending ? 'invisible' : ''">Edit commet</span>
       </Button>
     </div>
   </form>

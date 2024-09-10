@@ -1,16 +1,16 @@
 import { z , ZodType } from "zod";
 import { FetchError } from "@/utils/fetch";
 import { queryOptions, useQueryClient, useMutation } from "@tanstack/vue-query";
-import {categoriesQuery, userCategoryQuery} from "@/services/dayQuest/category.service";
-import { Category } from "shared";
+import { categoriesQuery, userCategoryQuery } from "@/services/dayquest/category.service";
+import { Category, User } from "shared";
+import { getMeQueryOptions } from "../user.service";
 
 export interface Task {
 	categoryId: string;
 	id: string;
 	name: string;
     isCompleted: boolean;
-    // updatedAt: string;
-    // createdAt: string;
+    createdAt: string;
 }
 
 export const taskSchema = z.object({
@@ -18,8 +18,7 @@ export const taskSchema = z.object({
 	id: z.string(),
 	name: z.string(),
     isCompleted: z.boolean(),
-    // updatedAt: z.string(),
-    // createdAt: z.string(),
+    createdAt: z.string(),
 }) satisfies ZodType<Task>;
 
 export const createTaskBodySchema = z.object({
@@ -138,6 +137,8 @@ export function useCompleteTaskMutation() {
 
 
             queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
+			queryClient.invalidateQueries(getMeQueryOptions);
+			
         },
     });
 }

@@ -141,15 +141,13 @@ export class CommentsService {
 		const comments = await db
 			.select()
 			.from(dayQuestCommentsTable)
-			.where(
-				eq(dayQuestCommentsTable.creatorId, options.userId)
-			)
-			.orderBy(dayQuestCommentsTable.createdAt, "desc")
-			.all();
-
+			.where(eq(dayQuestCommentsTable.creatorId, options.userId))
+			.orderBy(dayQuestCommentsTable.createdAt);
+	
+		// Убедитесь, что результат запроса — массив
 		return comments.map((comment) => commentSchema.parse(comment));
 	}
-
+	
 	
 
 	async deleteComment(

@@ -8,6 +8,7 @@ export type User = {
   emailVerified: boolean;
   avatarKey: string | null;
   role: string;
+  score: number;
   createdAt: Date;
 };
 
@@ -23,7 +24,7 @@ export type Comment = {
   id: string;
   creatorId: string;
   description: string;
-  createdAt: Date;
+  createdAt: number;
 };
 
 

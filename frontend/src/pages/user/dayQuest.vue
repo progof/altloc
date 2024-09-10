@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DotsHorizontalIcon from "@/assets/icons/dots-horizontal.svg?component";
-import DayQuestActionDropdownMenu from "@/components/dayquest/DayQuestActionDropdownMenu.vue";
+import CategoryActionDropdownMenu from "@/components/dayquest/CategoryActionDropdownMenu.vue";
 import {
   useDeleteTaskMutation,
   useCompleteTaskMutation,
@@ -76,7 +76,7 @@ function handleOpenModal(
                 }
               "
             >
-              <PlusIcon class="size-5 stroke-[1.7] text-zinc-50" />
+              <PlusIcon class="size-5 stroke-[1.9] text-zinc-50" />
             </Button>
           </div>
           <div class="flex items-center gap-1">
@@ -111,7 +111,7 @@ function handleOpenModal(
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" class="min-w-40">
-                    <DayQuestActionDropdownMenu
+                    <CategoryActionDropdownMenu
                       :categoryId="category.id"
                       @openModal="handleOpenModal"
                     />

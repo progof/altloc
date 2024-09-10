@@ -28,10 +28,10 @@ export class DayQuestController {
     this.router.patch("/dayquest/task/uncomplete/:task_id",this.completeTask.bind(this),);
     this.router.get("/dayquest/task/:task_id",this.getTaskById.bind(this),);
     this.router.post("/dayquest/comment/create", this.createDayQuestComment.bind(this),);
-    this.router.patch("/dayquest/comment/update/:comment_id",this.updateDayQuestCategory.bind(this),);
+    this.router.patch("/dayquest/comment/update/:comment_id",this.updateDayQuestComment.bind(this),);
     this.router.delete("/dayquest/comment/delete/:comment_id",this.deleteDayQuestComment.bind(this),);
-    this.router.get("/dayquest/comments",this.getDayQuestCategory.bind(this),);
-    this.router.get("/dayquest/comment/:comment_id",this.getDayQuestCategoryById.bind(this),);
+    this.router.get("/dayquest/comments",this.getDayQuestComment.bind(this),);
+    this.router.get("/dayquest/comment/:comment_id",this.getDayQuestCommentById.bind(this),);
 
   }
 

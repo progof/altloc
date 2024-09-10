@@ -10,6 +10,13 @@ CREATE TABLE IF NOT EXISTS "day_quest_categories" (
 	CONSTRAINT "day_quest_categories_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "day_quest_comments" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"user_id" uuid NOT NULL,
+	"description" text NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "day_quest_tasks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"category_id" uuid NOT NULL,
@@ -57,6 +64,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"avatar_key" text,
 	"role" text DEFAULT 'user' NOT NULL,
+	"score" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );

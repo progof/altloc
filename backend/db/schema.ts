@@ -1,9 +1,11 @@
+
 import {
 	text,
 	timestamp,
 	uuid,
 	boolean,
 	pgTable,
+    integer,
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -13,6 +15,7 @@ export const usersTable = pgTable("users", {
 	emailVerified: boolean("email_verified").notNull().default(false),
 	avatarKey: text("avatar_key"),
     role: text("role").notNull().default("user"),
+    score: integer("score").notNull().default(0),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -75,8 +78,6 @@ export const dayQuestTasksTable = pgTable("day_quest_tasks", {
     createdAt: timestamp("created_at", { withTimezone: false })
 		.notNull()
 		.defaultNow(),
-
-
 });
 
 export type DayQuestTask = typeof dayQuestTasksTable.$inferSelect;
