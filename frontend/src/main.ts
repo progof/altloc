@@ -10,7 +10,7 @@ import { pinia } from "./stores/pinia";
 const app = createApp(App)
 
 app.use(router)
-app.use(VueQueryPlugin, { queryClient })
+app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true });
 app.use(pinia)
 
 

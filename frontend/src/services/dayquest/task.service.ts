@@ -136,8 +136,14 @@ export function useCompleteTaskMutation() {
             });
 
 
-            queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
-			queryClient.invalidateQueries(getMeQueryOptions);
+            queryClient.setQueryData(meTaskQuery(updatedTask.id).queryKey, updatedTask);
+			queryClient.setQueryData(getMeQueryOptions.queryKey, (user: User | undefined) => {  
+                if (!user) return;
+                return {
+                    ...user,
+                    score: user.score + 1,
+                };
+            });
 			
         },
     });
@@ -168,7 +174,7 @@ export function useUnCompleteTaskMutation() {
                     task.id === updatedTask.id ? { ...task, isCompleted: true } : task
                 );
             });
-            queryClient.setQueryData(meTaskQuery(updatedTask.id), updatedTask);
+            queryClient.setQueryData(meTaskQuery(updatedTask.id).queryKey, updatedTask);
 
         },
     });

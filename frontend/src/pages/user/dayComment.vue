@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DotsHorizontalIcon from "@/assets/icons/dots-horizontal.svg?component";
 import CommentActionDropdownMenu from "@/components/dayquest/CommentActionDropdownMenu.vue";
-import { formatFullDateTime } from "@/utils/dayjs";
+// import { formatFullDateTime } from "@/utils/dayjs";
 
 const { data: comments } = useQuery({
   ...commentsQuery,
@@ -48,7 +48,7 @@ function handleOpenModal(
       <div class="container flex w-auto flex-col gap-6">
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
-            <h2 class="text-2xl font-bold tracking-tight">DayComment</h2>
+            <h2 class="text-xl font-bold tracking-tight">DayComment</h2>
 
             <Button
               size="md"
