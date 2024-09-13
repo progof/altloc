@@ -61,7 +61,7 @@ const submitForm = async (event: Event) => {
       <PasswordField name="password" label="Password" />
       <span v-if="error" class="text-red-500">{{ error }}</span>
     </div>
-    <button
+    <Button
       type="submit"
       :disabled="isPending"
       class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-indigo-500 px-5 font-medium text-white transition-colors hover:bg-indigo-600/90 disabled:cursor-not-allowed disabled:opacity-50"
@@ -71,7 +71,6 @@ const submitForm = async (event: Event) => {
         v-if="isPending"
       />
       {{ isPending ? "Logging in..." : "Log in" }}
-    </button>
+    </Button>
   </form>
 </template>
-@/services/auth.password.service

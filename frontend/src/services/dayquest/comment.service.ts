@@ -82,7 +82,7 @@ export function useDeleteCommentMutation() {
 				throw new FetchError(res);
 			}
 		},
-		onSuccess: (_, commentId) => {
+		onSuccess: (_,) => {
 		queryClient.invalidateQueries(commentsQuery);
 		// queryClient.removeQueries(categoriesQuery(categoryId));
 		},

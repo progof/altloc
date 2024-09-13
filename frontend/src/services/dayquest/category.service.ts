@@ -1,7 +1,7 @@
 import { useMutation, queryOptions, useQueryClient} from "@tanstack/vue-query";
 import { z } from "zod";
 import { FetchError } from "@/utils/fetch";
-import { Category, Task } from "shared";
+import { Category} from "shared";
 
 export const updateCategoryBodySchema = z
 	.object({
@@ -82,7 +82,7 @@ export function useDeleteCategoryMutation() {
 				throw new FetchError(res);
 			}
 		},
-		onSuccess: (_, categoryId) => {
+		onSuccess: (_,) => {
 		queryClient.invalidateQueries(categoriesQuery);
 		// queryClient.removeQueries(categoriesQuery(categoryId));
 		},

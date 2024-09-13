@@ -1,7 +1,7 @@
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "./schema.ts";
+import * as schema from "./schema";
 import { config } from "../src/config";
 
 if (!process.env.DATABASE_URL) {

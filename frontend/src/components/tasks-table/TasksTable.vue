@@ -9,7 +9,6 @@ import {
 import { useQuery } from "@tanstack/vue-query";
 import { useField } from "vee-validate";
 import { computed, h, ref, watch, toRaw } from "vue";
-import CreateTaskDialogContent from "./CreateTaskDialogContent.vue";
 import Button from "@/components/ui/button/Button.vue";
 import {
   Table,
@@ -26,6 +25,7 @@ import {
   useDeleteTaskMutation,
   tasksQuery,
 } from "@/services/dayquest/task.service";
+// import CreateTaskDialogContent from "@/components/tasks-table/CreateTaskDialogContent.vue";
 
 const props = defineProps<{ name: string; categoryId: string }>();
 
@@ -118,7 +118,7 @@ const isDialogOpen = ref(false);
           <Button size="sm">Create task</Button>
         </DialogTrigger>
         <DialogContent>
-          <CreateTaskDialogContent @close="isDialogOpen = false" />
+          <!-- <CreateTaskDialogContent @close="isDialogOpen = false" /> -->
           <DialogClose />
         </DialogContent>
       </Dialog>

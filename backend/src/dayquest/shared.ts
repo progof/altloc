@@ -2,12 +2,8 @@ import {
 	dayQuestTasksTable,
     dayQuestCategoriesTable,
 } from "@db/schema";
-// import { categorySchema, type Category } from "@/server/categories";
-import { taskSchema, type Task } from "@/dayquest/task.service";
+import { type Task } from "@/dayquest/task.service";
 import type { Transaction } from "@/utils";
-
-// import { z, ZodType } from "zod";
-// import { dateToUTCTimestamp } from "@/utils";
 import { type DayQuestCategory } from "shared";
 import { inArray, eq } from "drizzle-orm";
 

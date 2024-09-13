@@ -6,10 +6,8 @@ import {
 } from "./shared";
 import {
 	dayQuestCategoriesTable,
-    dayQuestTasksTable,
 } from "@db/schema";
-import { and, eq, inArray } from "drizzle-orm";
-import type { Task } from "@/dayquest/task.service";
+import { and, eq } from "drizzle-orm";
 import { Category } from "shared";
 
 export const createCategoryBodySchema = z

@@ -40,7 +40,7 @@ export async function blockNotAuthenticated(
     const payload = jwt.verify(req.cookies.access_token, config.ACCESS_TOKEN_SECRET) as { userId: string, userRole: string };
 
     const user = await authPasswordService.getUserById(payload.userId);
-    const role = await authPasswordService.getUserRoleById(payload.userId);
+    // const role = await authPasswordService.getUserRoleById(payload.userId);
 
     if (!user) {
       return res.status(401).send({ errors: [{ message: "User not found" }] });

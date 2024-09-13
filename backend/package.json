@@ -6,6 +6,7 @@
 		"start": "node ./dist/main.js",
 		"dev": "nodemon ./src/main.ts",
 		"dev2": "tsx watch -r tsconfig-paths/register ./src/main.ts",
+		"build": "tsc",
 		"docker:up": "docker compose -f docker-compose.dev.yml up -d",
 		"docker:down": "docker compose -f docker-compose.dev.yml down",
 		"db:generate": "drizzle-kit generate",
