@@ -4,7 +4,7 @@ import type {
 	PostgresJsDatabase,
 	PostgresJsQueryResultHKT,
 } from "drizzle-orm/postgres-js";
-import * as schema from "@db/schema";
+import * as schema from "@db/schema.js";
 import { FormDataEntryValue } from "formdata-node";
 
 export class HTTPError extends Error {
@@ -14,7 +14,7 @@ export class HTTPError extends Error {
 
 	constructor(
 		opts: { status: number; message?: string },
-		options?: ErrorOptions,
+		options?: ErrorOptions
 	) {
 		super(opts.message, options);
 		this.status = opts.status;
@@ -37,7 +37,6 @@ export const utcTimestampToDate = (timestamp: number): Date => {
 	return new Date(timestamp * 1000);
 };
 
-
 export class FetchError extends Error {
 	override name = "FetchError";
 
@@ -53,9 +52,8 @@ export class FetchError extends Error {
 	}
 }
 
-
 export function formDataToObject(
-	formData: FormData,
+	formData: FormData
 ): Record<string, FormDataEntryValue | FormDataEntryValue[]> {
 	return Object.fromEntries(
 		Array.from(formData.keys()).map((key) => {
@@ -64,7 +62,7 @@ export function formDataToObject(
 				return [key, value[0]];
 			}
 			return [key, value];
-		}),
+		})
 	);
 }
 
@@ -77,7 +75,7 @@ export function objectToFromData(
 		| string
 		| Blob
 		| Array<boolean | number | string | Blob | undefined>
-	>,
+	>
 ): FormData {
 	const formData = new FormData();
 
@@ -101,5 +99,3 @@ export function objectToFromData(
 
 	return formData;
 }
-
-

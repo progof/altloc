@@ -1,7 +1,7 @@
-import { dayQuestTasksTable, dayQuestCategoriesTable } from "@db/schema";
-import { type Task } from "@/dayquest/task.service";
-import type { Transaction } from "@/utils";
-import { type DayQuestCategory } from "@shared/index";
+import { dayQuestTasksTable, dayQuestCategoriesTable } from "@db/schema.js";
+import { type Task } from "@/dayquest/task.service.js";
+import type { Transaction } from "@/utils.ts";
+import { type DayQuestCategory } from "@shared/index.js";
 import { inArray, eq } from "drizzle-orm";
 
 export function createBaseCategoryObject(options: {

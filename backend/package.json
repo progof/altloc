@@ -6,9 +6,7 @@
 		"start": "node ./dist/backend/db/migrate.js && node ./dist/backend/src/main.js",
 		"dev": "nodemon ./src/main.ts",
 		"dev2": "tsx watch -r tsconfig-paths/register ./src/main.ts",
-		"build": "tsc",
-		"docker:up": "docker compose -f docker-compose.dev.yml up -d",
-		"docker:down": "docker compose -f docker-compose.dev.yml down",
+		"build": "tsc && tsc-alias",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
@@ -49,6 +47,8 @@
 		"drizzle-kit": "0.24.0",
 		"nodemon": "^3.1.4",
 		"tsconfig-paths": "^4.2.0",
-		"typescript": "^5.5.4"
-	}
+		"typescript": "^5.5.4",
+		"tsc-alias": "^1.8.10"
+	},
+	"packageManager": "pnpm@9.10.0+sha256.355a8ab8dbb6ad41befbef39bc4fd6b5df85e12761d2724bd01f13e878de4b13"
 }

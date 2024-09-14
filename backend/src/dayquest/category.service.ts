@@ -1,9 +1,9 @@
-import { HTTPError, type Database, type Transaction } from "@/utils";
+import { HTTPError, type Database, type Transaction } from "@/utils.js";
 import { z } from "zod";
-import { createBaseCategoryObject, getCategoryTasks } from "./shared";
-import { dayQuestCategoriesTable } from "@db/schema";
+import { createBaseCategoryObject, getCategoryTasks } from "./shared.js";
+import { dayQuestCategoriesTable } from "@db/schema.js";
 import { and, eq } from "drizzle-orm";
-import { Category } from "@shared/index";
+import { Category } from "@shared/index.js";
 
 export const createCategoryBodySchema = z.object({
 	name: z.string().min(6).max(32),

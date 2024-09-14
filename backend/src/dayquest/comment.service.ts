@@ -1,8 +1,8 @@
-import { dayQuestCommentsTable } from "@db/schema";
+import { dayQuestCommentsTable } from "@db/schema.js";
 import { z, ZodType } from "zod";
 import { and, eq } from "drizzle-orm";
-import { HTTPError, type Database, type Transaction } from "@/utils";
-import { Comment } from "@shared/index";
+import { HTTPError, type Database, type Transaction } from "@/utils.js";
+import { Comment } from "@shared/index.js";
 
 export const commentSchema = z.object({
 	id: z.string(),

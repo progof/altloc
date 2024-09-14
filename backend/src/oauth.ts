@@ -1,8 +1,8 @@
 import { Google } from "arctic";
-import { config } from "./config";
+import { config } from "./config.js";
 
 export const google = new Google(
 	config.GOOGLE_CLIENT_ID,
 	config.GOOGLE_CLIENT_SECRET,
-	new URL("/api/auth/google/callback", config.CLIENT_URL).toString(),
+	new URL("/api/auth/google/callback", config.CLIENT_URL).toString()
 );

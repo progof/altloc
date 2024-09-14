@@ -7,19 +7,24 @@ FROM base AS build
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+ARG VITE_PUBLIC_CDN_URL
+ENV VITE_PUBLIC_CDN_URL=$VITE_PUBLIC_CDN_URL
 RUN pnpm run -r build
 RUN pnpm --filter=backend --prod deploy /prod/backend
-RUN pnpm --filter=frontend --prod deploy /prod/frontend
 
 FROM base AS backend
-COPY --from=build /prod/backend /prod/backend
+COPY --from=build /prod/backend/dist /prod/backend/dist
+COPY --from=build /prod/backend/node_modules /prod/backend/node_modules
+COPY --from=build /prod/backend/package.json /prod/backend/package.json
+COPY --from=build /prod/backend/db/migrations /prod/backend/db/migrations
 WORKDIR /prod/backend
 ENV APP_PORT=4000
 EXPOSE 4000
 CMD ["pnpm", "start"]
 
-FROM caddy:latest AS frontend
-COPY Caddyfile /etc/caddy/Caddyfile
-COPY --from=build /prod/frontend /prod/frontend 
-WORKDIR /prod/frontend
+FROM nginx:latest AS frontend
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /usr/src/app/frontend/dist /usr/share/nginx/html
+WORKDIR /usr/share/nginx/html
 EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
