@@ -1,27 +1,28 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "baseUrl": ".",
-    "paths": {
-      "@db/*": ["db/*"],
-      "@/*": ["src/*"]
-    },
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "outDir": "dist",
-    "removeComments": true,
-    "noFallthroughCasesInSwitch": true,
-    "useDefineForClassFields": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true,
-    "lib": ["esnext"]
-  },
-  "include": ["src", "db", "src/express-session.d.ts"],
-  "exclude": ["node_modules", "dist"]
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"baseUrl": ".",
+		"paths": {
+			"@db/*": ["db/*"],
+			"@/*": ["src/*"],
+			"@shared/*": ["../shared/*"]
+		},
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noUnusedLocals": true,
+		"outDir": "dist",
+		"removeComments": true,
+		"noFallthroughCasesInSwitch": true,
+		"useDefineForClassFields": true,
+		"skipLibCheck": true,
+		"strictNullChecks": true,
+		"lib": ["esnext"]
+	},
+	"include": ["src", "db", "src/express-session.d.ts"],
+	"exclude": ["node_modules", "dist"]
 }

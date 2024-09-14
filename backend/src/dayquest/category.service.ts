@@ -1,26 +1,19 @@
-import { HTTPError, type Database, type Transaction } from "@/utils";
+import { HTTPError, type Database, type Transaction } from "@/utils.js";
 import { z } from "zod";
-import {
-	createBaseCategoryObject,
-	getCategoryTasks,
-} from "./shared";
-import {
-	dayQuestCategoriesTable,
-} from "@db/schema";
+import { createBaseCategoryObject, getCategoryTasks } from "./shared.js";
+import { dayQuestCategoriesTable } from "@db/schema.js";
 import { and, eq } from "drizzle-orm";
-import { Category } from "shared";
+import { Category } from "@shared/index.js";
 
-export const createCategoryBodySchema = z
-	.object({
-		name: z.string().min(6).max(32),
-	});
+export const createCategoryBodySchema = z.object({
+	name: z.string().min(6).max(32),
+});
 
 export type CreateCategoryBody = z.infer<typeof createCategoryBodySchema>;
 
-export const updateCategoryBodySchema = z
-	.object({
-		name: z.string().min(6).max(32),
-	});
+export const updateCategoryBodySchema = z.object({
+	name: z.string().min(6).max(32),
+});
 
 export type UpdateCategoryBody = z.infer<typeof updateCategoryBodySchema>;
 
@@ -32,7 +25,7 @@ export class CategoriesService {
 		options: {
 			creatorId: string;
 			body: CreateCategoryBody;
-		},
+		}
 	): Promise<CreateCategoryBody> {
 		const { body, creatorId } = options;
 
@@ -61,7 +54,7 @@ export class CategoriesService {
 		options: {
 			creatorId: string;
 			body: CreateCategoryBody;
-		},
+		}
 	): Promise<CreateCategoryBody> {
 		const { body, creatorId } = options;
 
@@ -77,7 +70,7 @@ export class CategoriesService {
 		options: {
 			categoryId: string;
 			creatorId: string;
-		},
+		}
 	): Promise<Category> {
 		const { categoryId, creatorId } = options;
 
@@ -88,8 +81,8 @@ export class CategoriesService {
 				.where(
 					and(
 						eq(dayQuestCategoriesTable.id, categoryId),
-						eq(dayQuestCategoriesTable.creatorId, creatorId),
-					),
+						eq(dayQuestCategoriesTable.creatorId, creatorId)
+					)
 				);
 
 			const category = result[0];
@@ -98,9 +91,7 @@ export class CategoriesService {
 				throw new HTTPError({ status: 404, message: "Category not found" });
 			}
 
-			const [
-				tasksByCategoryId,
-			] = await Promise.all([
+			const [tasksByCategoryId] = await Promise.all([
 				getCategoryTasks(tx, [categoryId]),
 			]);
 
@@ -115,7 +106,7 @@ export class CategoriesService {
 
 	async getUserCategories(
 		db: Database | Transaction,
-		userId: string,
+		userId: string
 	): Promise<Category[]> {
 		return db.transaction(async (tx: any) => {
 			const result = await tx
@@ -127,9 +118,7 @@ export class CategoriesService {
 
 			if (categoryIds.length === 0) return [];
 
-			const [
-				tasksByCategoryId,
-			] = await Promise.all([
+			const [tasksByCategoryId] = await Promise.all([
 				getCategoryTasks(tx, categoryIds),
 			]);
 
@@ -148,7 +137,7 @@ export class CategoriesService {
 			creatorId: string;
 			categoryId: string;
 			body: UpdateCategoryBody;
-		},
+		}
 	): Promise<Category> {
 		const { body, creatorId, categoryId } = options;
 
@@ -172,7 +161,7 @@ export class CategoriesService {
 						id: categoryId,
 						name: body.name ?? category.name,
 						creatorId,
-					}
+					},
 				}),
 				tasks: category.tasks,
 			} satisfies Category;
@@ -184,7 +173,7 @@ export class CategoriesService {
 		options: {
 			categoryId: string;
 			creatorId: string;
-		},
+		}
 	): Promise<void> {
 		const { categoryId, creatorId } = options;
 
@@ -199,10 +188,9 @@ export class CategoriesService {
 				.where(
 					and(
 						eq(dayQuestCategoriesTable.id, categoryId),
-						eq(dayQuestCategoriesTable.creatorId, creatorId),
-					),
+						eq(dayQuestCategoriesTable.creatorId, creatorId)
+					)
 				);
 		});
 	}
-
 }
