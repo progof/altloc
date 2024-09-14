@@ -2,7 +2,7 @@ import { dayQuestCommentsTable } from "@db/schema";
 import { z, ZodType } from "zod";
 import { and, eq } from "drizzle-orm";
 import { HTTPError, type Database, type Transaction } from "@/utils";
-import { Comment } from "shared";
+import { Comment } from "@shared/index";
 
 export const commentSchema = z.object({
 	id: z.string(),
@@ -17,11 +17,9 @@ export const createCommentBodySchema = z.object({
 
 export type CreateCommentBody = z.infer<typeof createCommentBodySchema>;
 
-
-export const updateCommentBodySchema = z
-	.object({
-		description: z.string().min(1).max(256),
-	});
+export const updateCommentBodySchema = z.object({
+	description: z.string().min(1).max(256),
+});
 
 export type UpdateCategoryBody = z.infer<typeof updateCommentBodySchema>;
 
@@ -34,7 +32,7 @@ export class CommentsService {
 			creatorId: string;
 			commentId: string;
 			body: UpdateCategoryBody;
-		},
+		}
 	): Promise<Comment> {
 		const { body, creatorId, commentId } = options;
 
@@ -46,9 +44,10 @@ export class CommentsService {
 				})
 				.where(
 					and(
-						eq(dayQuestCommentsTable.id, commentId), 
-						eq(dayQuestCommentsTable.creatorId, creatorId))
+						eq(dayQuestCommentsTable.id, commentId),
+						eq(dayQuestCommentsTable.creatorId, creatorId)
 					)
+				)
 				.returning()
 		).at(0);
 		if (!comment) {
@@ -63,7 +62,7 @@ export class CommentsService {
 		options: {
 			userId: string;
 			commentId: string;
-		},
+		}
 	): Promise<Comment> {
 		const comment = (
 			await db
@@ -71,9 +70,10 @@ export class CommentsService {
 				.from(dayQuestCommentsTable)
 				.where(
 					and(
-						eq(dayQuestCommentsTable.id, options.commentId), 
-						eq(dayQuestCommentsTable.creatorId, options.userId))
+						eq(dayQuestCommentsTable.id, options.commentId),
+						eq(dayQuestCommentsTable.creatorId, options.userId)
 					)
+				)
 		).at(0);
 		if (!comment) {
 			throw new HTTPError({ message: "Comment not found", status: 404 });
@@ -82,25 +82,22 @@ export class CommentsService {
 		return commentSchema.parse(comment);
 	}
 
-
 	async _createComment(
 		db: Database | Transaction,
 		options: {
-			body: CreateCommentBody,
+			body: CreateCommentBody;
 			userId: string;
-		},
+		}
 	): Promise<Comment> {
-		const { body, userId,  } = options;
+		const { body, userId } = options;
 		const comment = (
 			await db
 				.insert(dayQuestCommentsTable)
 				.values({
 					creatorId: userId,
-					description: body.description
+					description: body.description,
 				})
 				.returning()
-				
-		
 		).at(0);
 		if (!comment) {
 			throw new Error("Failed to create task");
@@ -114,14 +111,13 @@ export class CommentsService {
 		options: {
 			body: CreateCommentBody;
 			userId: string;
-		},
+		}
 	): Promise<Comment> {
 		const { body, userId } = options;
 
-
 		return db.transaction(async (tx) => {
 			const [comment] = await Promise.all([
-				this._createComment(tx, { body, userId }).catch((error) => {		
+				this._createComment(tx, { body, userId }).catch((error) => {
 					throw error;
 				}),
 			]);
@@ -136,26 +132,24 @@ export class CommentsService {
 		db: Database | Transaction,
 		options: {
 			userId: string;
-		},
+		}
 	): Promise<Comment[]> {
 		const comments = await db
 			.select()
 			.from(dayQuestCommentsTable)
 			.where(eq(dayQuestCommentsTable.creatorId, options.userId))
 			.orderBy(dayQuestCommentsTable.createdAt);
-	
+
 		// Убедитесь, что результат запроса — массив
 		return comments.map((comment) => commentSchema.parse(comment));
 	}
-	
-	
 
 	async deleteComment(
 		db: Database | Transaction,
 		options: {
 			creatorId: string;
 			commentId: string;
-		},
+		}
 	): Promise<Comment> {
 		const { commentId, creatorId } = options;
 
@@ -165,8 +159,10 @@ export class CommentsService {
 				.from(dayQuestCommentsTable)
 				.where(
 					and(
-						eq(dayQuestCommentsTable.id, commentId), 
-					eq(dayQuestCommentsTable.creatorId, creatorId)))
+						eq(dayQuestCommentsTable.id, commentId),
+						eq(dayQuestCommentsTable.creatorId, creatorId)
+					)
+				)
 		).at(0);
 
 		if (!comment) {
@@ -180,13 +176,14 @@ export class CommentsService {
 			});
 		}
 
-		await db.delete(dayQuestCommentsTable).where(
-			and(
-				eq(dayQuestCommentsTable.id, commentId), 
-			eq(dayQuestCommentsTable.creatorId, creatorId))
-	
+		await db
+			.delete(dayQuestCommentsTable)
+			.where(
+				and(
+					eq(dayQuestCommentsTable.id, commentId),
+					eq(dayQuestCommentsTable.creatorId, creatorId)
+				)
 			);
 		return commentSchema.parse(comment);
 	}
 }
-

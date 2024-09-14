@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+.env.example
+.prettierrc.js
+.editorconfig
+.gitignore
+README.md
+.vscode
+.astro
+.DS_Store

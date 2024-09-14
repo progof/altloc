@@ -1,16 +1,12 @@
-import {
-	dayQuestTasksTable,
-    dayQuestCategoriesTable,
-} from "@db/schema";
+import { dayQuestTasksTable, dayQuestCategoriesTable } from "@db/schema";
 import { type Task } from "@/dayquest/task.service";
 import type { Transaction } from "@/utils";
-import { type DayQuestCategory } from "shared";
+import { type DayQuestCategory } from "@shared/index";
 import { inArray, eq } from "drizzle-orm";
-
 
 export function createBaseCategoryObject(options: {
 	category: typeof dayQuestCategoriesTable.$inferSelect;
-}): DayQuestCategory  {
+}): DayQuestCategory {
 	const { category } = options;
 	return {
 		id: category.id,
@@ -20,7 +16,7 @@ export function createBaseCategoryObject(options: {
 
 export async function getCategoryTasks(
 	tx: Transaction,
-	categoryIds: string[],
+	categoryIds: string[]
 ): Promise<Record<string, Task[]>> {
 	const tasks = await tx
 		.select({
@@ -32,24 +28,22 @@ export async function getCategoryTasks(
 		.from(dayQuestTasksTable)
 		.innerJoin(
 			dayQuestCategoriesTable,
-			eq(dayQuestTasksTable.categoryId, dayQuestCategoriesTable.id),
+			eq(dayQuestTasksTable.categoryId, dayQuestCategoriesTable.id)
 		)
 		.where(inArray(dayQuestTasksTable.categoryId, categoryIds));
 
 	const categoryIdToTasks = Object.fromEntries(
-		categoryIds.map((id) => [id, [] as Task[]]),
+		categoryIds.map((id) => [id, [] as Task[]])
 	);
 
 	for (const task of tasks) {
 		categoryIdToTasks[task.categoryId]?.push({
 			id: task.taskId,
 			name: task.name,
-			categoryId: task.categoryId, 
+			categoryId: task.categoryId,
 			isCompleted: task.isCompleted,
 		});
 	}
 
 	return categoryIdToTasks;
 }
-
-

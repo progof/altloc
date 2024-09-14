@@ -1,9 +1,9 @@
 {
-	"name": "cyberlive",
+	"name": "@altloc/backend",
 	"private": "true",
 	"type": "module",
 	"scripts": {
-		"start": "node ./dist/main.js",
+		"start": "node ./dist/backend/db/migrate.js && node ./dist/backend/src/main.js",
 		"dev": "nodemon ./src/main.ts",
 		"dev2": "tsx watch -r tsconfig-paths/register ./src/main.ts",
 		"build": "tsc",
@@ -17,7 +17,6 @@
 	"dependencies": {
 		"@aws-sdk/client-s3": "3.622.0",
 		"@types/nodemailer": "^6.4.15",
-		"@types/shared": "workspace:*",
 		"arctic": "^1.9.2",
 		"bcrypt": "^5.1.1",
 		"cookie-parser": "^1.4.6",

@@ -1,0 +1,11 @@
+{
+	auto_https off
+	debug
+}
+
+:80 {
+	root * /prod/frontend/
+	encode gzip
+	try_files {path} /index.html
+	file_server
+}

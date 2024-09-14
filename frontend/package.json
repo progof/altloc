@@ -1,45 +1,44 @@
 {
-  "name": "client-new",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
+	"name": "@altloc/frontend",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
 		"build": "vue-tsc && vite build",
 		"preview": "vite preview"
-  },
-  "dependencies": {
-    "pinia": "^2.2.1",
-    "vite-svg-loader": "^5.1.0",
-    "vue": "^3.4.37",
-    "vue-router": "^4.4.3",
-    "zod": "3.23.8",
-    "@tanstack/vue-query": "5.51.21",
+	},
+	"dependencies": {
+		"pinia": "^2.2.1",
+		"vite-svg-loader": "^5.1.0",
+		"vue": "^3.4.37",
+		"vue-router": "^4.4.3",
+		"zod": "3.23.8",
+		"@tanstack/vue-query": "5.51.21",
 		"@vee-validate/zod": "4.13.2",
-    "dayjs": "1.11.12",
-    "radix-vue": "1.9.3",
-    "tailwind-merge": "2.4.0",
-    "class-variance-authority": "0.7.0",
-    "@vuepic/vue-datepicker": "9.0.1",
-    "vee-validate": "4.13.2",
-    "pretty-bytes": "6.1.1",
-    "@vueuse/core": "10.11.0",
-    "@types/shared": "workspace:*"
-  },
-  "devDependencies": {
-    "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^22.1.0",
-    "@vitejs/plugin-vue": "^5.1.2",
-    "@vue/tsconfig": "^0.5.1",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.9",
-    "typescript": "~5.5.4",
-    "vite": "^5.4.0",
-    "vue-tsc": "^2.0.29",
-    "tailwindcss-animate": "1.0.7",
-    "prettier": "^3.3.3",
+		"dayjs": "1.11.12",
+		"radix-vue": "1.9.3",
+		"tailwind-merge": "2.4.0",
+		"class-variance-authority": "0.7.0",
+		"@vuepic/vue-datepicker": "9.0.1",
+		"vee-validate": "4.13.2",
+		"pretty-bytes": "6.1.1",
+		"@vueuse/core": "10.11.0"
+	},
+	"devDependencies": {
+		"@tsconfig/node20": "^20.1.4",
+		"@types/node": "^22.1.0",
+		"@vitejs/plugin-vue": "^5.1.2",
+		"@vue/tsconfig": "^0.5.1",
+		"autoprefixer": "^10.4.20",
+		"postcss": "^8.4.41",
+		"tailwindcss": "^3.4.9",
+		"typescript": "~5.5.4",
+		"vite": "^5.4.0",
+		"vue-tsc": "^2.0.29",
+		"tailwindcss-animate": "1.0.7",
+		"prettier": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.5",
-    "tsx": "^4.17.0"
-  }
+		"tsx": "^4.17.0"
+	}
 }
