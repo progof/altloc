@@ -26,5 +26,5 @@ FROM nginx:stable-alpine AS frontend
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/frontend/dist /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
-EXPOSE 3000
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
