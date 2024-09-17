@@ -44,7 +44,7 @@ const submitForm = async (event: Event) => {
 
   login(result.data, {
     onSuccess: () => {
-      router.push("/dashboard");
+      router.push("/user/day-quest");
     },
   });
 };
