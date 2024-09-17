@@ -26,7 +26,7 @@ const { handleSubmit, meta, setFieldError, resetForm } = useForm({
   ),
 });
 
-const emit = defineEmits<{ close: [] }>();
+defineEmits<{ close: [] }>();
 
 const { data: comment } = useQuery({
   ...meCommentQuery(props.commentId),

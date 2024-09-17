@@ -6,7 +6,7 @@ const props = defineProps<{
   conferenceId: string;
 }>();
 
-const emit = defineEmits<{ close: [] }>();
+defineEmits<{ close: [] }>();
 </script>
 
 <template>

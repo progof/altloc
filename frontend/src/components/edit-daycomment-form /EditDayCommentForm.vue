@@ -21,7 +21,7 @@ const { handleSubmit, meta, setFieldError } = useForm({
   ),
 });
 
-const emit = defineEmits<{ close: [] }>();
+defineEmits<{ close: [] }>();
 
 const { mutate: updateComment, isPending } = useUpdateCommentMutation();
 

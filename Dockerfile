@@ -22,9 +22,9 @@ ENV APP_PORT=4000
 EXPOSE 4000
 CMD ["pnpm", "start"]
 
-FROM nginx:latest AS frontend
+FROM nginx:stable-alpine AS frontend
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/frontend/dist /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 3000
 CMD ["nginx", "-g", "daemon off;"]

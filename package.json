@@ -2,7 +2,12 @@
 	"name": "altloc",
 	"private": true,
 	"scripts": {
-		"docker:up": "docker compose -f docker-compose.dev.yml up -d",
-		"docker:down": "docker compose -f docker-compose.dev.yml down"
+	  "docker:up": "docker compose -f docker-compose.dev.yml up -d",
+	  "docker:down": "docker compose -f docker-compose.dev.yml down",
+	  "docker:up:prod": "docker compose -f docker-compose.yml --env-file .env up -d",
+	  "docker:down:prod": "docker compose -f docker-compose.yml down",
+	  "docker:build:backend": "docker build . --target backend --tag altloc-backend:latest",
+	  "docker:build:frontend": "docker build . --target frontend --tag altloc-frontend:latest"
 	}
-}
+  }
+  
