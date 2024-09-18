@@ -6,6 +6,7 @@ import MapIcon from "@/assets/icons/map.svg?component";
 import DiamondIcon from "@/assets/icons/diamond.svg?component";
 
 const { data: user } = useQuery(getMeQueryOptions);
+console.log(user);
 </script>
 
 <template>

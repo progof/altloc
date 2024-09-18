@@ -4,8 +4,8 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
 	service: "gmail",
 	auth: {
-		user: config.APP_EMAILL_ADDRESS,
-		pass: config.APP_EMAILL_PASSWORD,
+		user: config.APP_EMAIL_ADDRESS,
+		pass: config.APP_EMAIL_PASSWORD,
 	},
 });
 
@@ -29,7 +29,7 @@ export const sendVerificationEmail = async ({
 	activation_token: string;
 }) => {
 	return await transporter.sendMail({
-		from: config.APP_EMAILL_ADDRESS,
+		from: config.APP_EMAIL_ADDRESS,
 		to: `${email}`,
 		subject: "[AltPlace] Account Verification Link",
 		text: `Hello, ${username}, 
@@ -55,7 +55,7 @@ export const sendPasswordRestToken = async ({
 	reset_token: string;
 }) => {
 	return await transporter.sendMail({
-		from: config.APP_EMAILL_ADDRESS,
+		from: config.APP_EMAIL_ADDRESS,
 		to: `${email}`,
 		subject: "[AltPlace] Account Reset Password",
 		text: `Hello,

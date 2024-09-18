@@ -23,7 +23,7 @@ EXPOSE 4000
 CMD ["pnpm", "start"]
 
 FROM nginx:stable-alpine AS frontend
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY .nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/frontend/dist /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
 EXPOSE 80
