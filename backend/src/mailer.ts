@@ -31,7 +31,7 @@ export const sendVerificationEmail = async ({
 	return await transporter.sendMail({
 		from: config.APP_EMAIL_ADDRESS,
 		to: `${email}`,
-		subject: "[AltPlace] Account Verification Link",
+		subject: "[AltLoc] Account Verification Link",
 		text: `Hello, ${username}, 
 		  Please verify your email by clicking this link :
 		  ${config.CLIENT_URL}/email-verification?user_id=${user_id}&activation_token=${activation_token} `,
