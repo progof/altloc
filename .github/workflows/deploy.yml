@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - main # или другая ветка, на которую вы хотите реагировать
 
 jobs:
   deploy:
@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
 
       - name: Cache pnpm modules
         uses: actions/cache@v3
