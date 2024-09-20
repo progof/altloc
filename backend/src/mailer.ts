@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
-	port: 25,
+	port: config.APP_EMAIL_PORT,
 	auth: {
 		user: config.APP_EMAIL_ADDRESS,
 		pass: config.APP_EMAIL_PASSWORD,
