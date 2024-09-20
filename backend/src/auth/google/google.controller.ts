@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express";
 import { generateState, generateCodeVerifier } from "arctic";
 import { google } from "@/oauth.js";
-import { AuthGoogleService } from "./auth.google.service.js";
-import { AuthPasswordService } from "@/auth/password/auth.password.service.js";
+import { AuthGoogleService } from "./google.service.js";
+import { AuthPasswordService } from "@/auth/password/password.service.js";
 
 export class AuthGoogleController {
 	public readonly router = Router();

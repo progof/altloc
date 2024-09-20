@@ -2,7 +2,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { sendPasswordRestToken, sendVerificationEmail } from "../../mailer.js";
 import { Request, Response, Router } from "express";
-import { AuthPasswordService } from "./auth.password.service.js";
+import { AuthPasswordService } from "./password.service.js";
 import {
 	blockNotAuthenticated,
 	blockNotVerifiedUser,
@@ -32,12 +32,6 @@ export class AuthPasswordController {
 			blockNotAuthenticated,
 			blockNotVerifiedUser,
 			this.userLogout.bind(this)
-		);
-		this.router.get(
-			"/auth/me",
-			blockNotAuthenticated,
-			blockNotVerifiedUser,
-			this.getMe.bind(this)
 		);
 		this.router.get(
 			"/auth/users/:user_id",
@@ -256,23 +250,6 @@ export class AuthPasswordController {
 		}
 	}
 
-	async getMe(req: Request, res: Response) {
-		if (!req.session.user) {
-			return res.status(401).send({
-				errors: [{ message: "Not found session" }],
-			});
-		}
-		const me = await this.authPasswordService.getUserById(req.session.user.id);
-		if (!me) {
-			return res.status(401).send({ errors: [{ message: "Not found user" }] });
-		}
-		return res.status(200).send({
-			data: {
-				...me,
-				password: undefined,
-			},
-		});
-	}
 
 	async handleRecoveryPassword(req: Request, res: Response) {
 		const bodySchema = z.object({

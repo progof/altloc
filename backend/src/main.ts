@@ -6,8 +6,10 @@ import { config } from "@/config.js";
 import { s3 } from "@/s3.js";
 import { google } from "@/oauth.js";
 
-import { AuthPasswordService } from "./auth/password/auth.password.service.js";
-import { AuthPasswordController } from "./auth/password/auth.password.controller.js";
+import { AuthPasswordService } from "./auth/password/password.service.js";
+import { AuthPasswordController } from "./auth/password/password.controller.js";
+ 
+import { AuthController } from "@/auth/auth.controller.js";
 
 import { DayQuestController } from "@/dayquest/dayquest.controller.js";
 import { TasksService } from "@/dayquest/task.service.js";
@@ -15,8 +17,8 @@ import { CategoriesService } from "@/dayquest/category.service.js";
 import { CommentsService } from "@/dayquest/comment.service.js";
 import "@/dayquest/dayquest.cron.js";
 
-import { AuthGoogleService } from "./auth/google/auth.google.service.js";
-import { AuthGoogleController } from "./auth/google/auth.google.controller.js";
+import { AuthGoogleService } from "./auth/google/google.service.js";
+import { AuthGoogleController } from "./auth/google/google.controller.js";
 import { db } from "./db.js";
 
 const app = express();
@@ -40,9 +42,14 @@ app.use(
 	})
 );
 
+
+
 export const authPasswordService = new AuthPasswordService(config);
 const authPasswordController = new AuthPasswordController(authPasswordService);
 app.use(authPasswordController.router);
+
+const authController = new AuthController(authPasswordService);
+app.use(authController.router);
 
 export const authGoogleService = new AuthGoogleService(
 	s3,

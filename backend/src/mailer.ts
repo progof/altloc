@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
 	service: "gmail",
+	port: 25,
 	auth: {
 		user: config.APP_EMAIL_ADDRESS,
 		pass: config.APP_EMAIL_PASSWORD,
@@ -57,7 +58,7 @@ export const sendPasswordRestToken = async ({
 	return await transporter.sendMail({
 		from: config.APP_EMAIL_ADDRESS,
 		to: `${email}`,
-		subject: "[AltPlace] Account Reset Password",
+		subject: "[AltLoc] Account Reset Password",
 		text: `Hello,
 			Please сlick on the link to reset your password :
 			${config.CLIENT_URL}/email-reset-password?user_id=${user_id}&reset_token=${reset_token} `,
