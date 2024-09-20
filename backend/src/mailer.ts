@@ -2,7 +2,7 @@ import { config } from "./config.js";
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
-	service: "gmail",
+  	host: config.APP_EMAIL_HOST,
 	port: config.APP_EMAIL_PORT,
 	auth: {
 		user: config.APP_EMAIL_ADDRESS,
