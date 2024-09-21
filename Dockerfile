@@ -24,6 +24,7 @@ CMD ["pnpm", "start"]
 
 FROM nginx:stable-alpine AS frontend
 COPY .nginx/nginx.conf /etc/nginx/nginx.conf
+COPY .nginx/altloc.com /etc/nginx/sites-available/altloc.com
 COPY --from=build /usr/src/app/frontend/dist /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
 EXPOSE 80
