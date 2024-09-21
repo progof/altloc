@@ -28,4 +28,5 @@ COPY .nginx/altloc.com /etc/nginx/sites-available/altloc.com
 COPY --from=build /usr/src/app/frontend/dist /usr/share/nginx/html
 WORKDIR /usr/share/nginx/html
 EXPOSE 80
+EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
