@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/vue-query";
 import { z } from "zod";
-import { User } from "@shared/index";
+import type { User } from "@shared/index";
 import { FetchError } from "@/utils/fetch";
 
 const errorSchema = z.object({

@@ -8,7 +8,7 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 ARG VITE_PUBLIC_CDN_URL
-ENV VITE_PUBLIC_CDN_URL=$VITE_PUBLIC_CDN_URL
+ENV VITE_PUBLIC_CDN_URL=$PUBLIC_CDN_URL
 RUN pnpm run -r build
 RUN pnpm --filter=backend --prod deploy /prod/backend
 
