@@ -2,17 +2,6 @@
 import RegisterFormIsland from "@/components/RegisterFormIsland.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import GoogleIcon from "@/assets/icons/google.svg?component";
-// import { useGoogleAuth } from "@/services/auth.google.service";
-
-// const { redirectToGoogle, isLoading, isError, error } = useGoogleAuth();
-
-// const handleGoogleAuth = async () => {
-//   try {
-//     await redirectToGoogle();
-//   } catch (err) {
-//     console.error("Error during Google auth:", err);
-//   }
-// };
 </script>
 
 <template>

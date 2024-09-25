@@ -25,16 +25,27 @@ export class AuthController {
 				errors: [{ message: "Not found session" }],
 			});
 		}
-		const me = await this.authPasswordService.getUserById(req.session.user.id);
-		if (!me) {
-			return res.status(401).send({ errors: [{ message: "Not found user" }] });
-		}
-		return res.status(200).send({
-			data: {
-				...me,
-				password: undefined,
-			},
-		});
-	}
+		console.log(req.session.user);
 
+		try {
+			const user = await this.authPasswordService.getUserById(req.session.user.id);
+			if (!user) {
+				return res.status(401).send({
+					errors: [{ message: "Not found user" }],
+				});
+			}
+			return res.status(200).send({
+				data: {
+					...user,
+					password: undefined,
+				},
+			});
+		}
+		catch (error) {
+			console.error(error);
+			return res.status(500).send({
+				errors: [{ message: "Internal server error" }],
+			});
+		}
+	}
 }
