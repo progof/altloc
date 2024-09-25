@@ -9,6 +9,11 @@ services:
       target: frontend
       args:
         VITE_PUBLIC_CDN_URL: ${PUBLIC_CDN_URL}
+        VITE_APP_NAME: ${APP_NAME}
+        VITE_MEDIA_FACEBOOK: ${MEDIA_FACEBOOK}
+        VITE_MEDIA_INSTAGRAM: ${MEDIA_INSTAGRAM}
+        VITE_MEDIA_TWITTER: ${MEDIA_TWITTER}
+        VITE_MEDIA_TELEGRAM: ${MEDIA_TELEGRAM}
     ports:
       - 80:80
       - 443:443 
