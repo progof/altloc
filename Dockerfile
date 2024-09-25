@@ -20,6 +20,7 @@ COPY --from=build /prod/backend/db/migrations /prod/backend/db/migrations
 WORKDIR /prod/backend
 ENV APP_PORT=4000
 EXPOSE 4000
+EXPOSE 465
 CMD ["pnpm", "start"]
 
 FROM nginx:stable-alpine AS frontend

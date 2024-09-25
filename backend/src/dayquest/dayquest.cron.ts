@@ -4,7 +4,7 @@ import { db } from "@/db.js";
 import { eq } from "drizzle-orm";
 
 cron.schedule(
-	"5 0 * * *",
+	"58 11 * * *",
 	async () => {
 		console.log("Running cron job to reset tasks");
 		try {
