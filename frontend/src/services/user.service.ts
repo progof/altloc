@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/vue-query";
 import { z } from "zod";
 import { User } from "@shared/index";
+import { FetchError } from "@/utils/fetch";
 
 const errorSchema = z.object({
 	errors: z.array(
@@ -37,9 +38,21 @@ export const getMeQueryOptions = queryOptions({
 	queryFn: async () => {
 		const res = await fetch("/api/auth/me");
 		if (!res.ok) {
-			const errors = errorSchema.parse(await res.json()).errors;
-			throw new Error(errors.at(0)?.message);
+			throw new FetchError(res);
 		}
 		return (await (res.json() as Promise<{ data: User }>)).data;
 	},
 });
+
+
+// export const getMeQueryOptions = queryOptions({
+// 	queryKey: ["api", "users"],
+// 	queryFn: async () => {
+// 		const res = await fetch("/api/auth/me");
+// 		if (!res.ok) {
+// 			throw new FetchError(res);
+// 		}
+
+// 		return res.json() as Promise<User>;
+// 	},
+// });

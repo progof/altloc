@@ -12,7 +12,7 @@ export function useGoogleAuth() {
 
     try {
       const response = await fetch("/api/auth/google", {
-        method: 'GET', // Убедитесь, что метод правильный
+        method: 'GET', 
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export function useGoogleAuth() {
         throw new Error(errorMessage);
       }
 
-      window.location.href = data.redirectUrl; // Перенаправление на URL
+      window.location.href = data.redirectUrl; 
 
     } catch (err) {
       isError.value = true;

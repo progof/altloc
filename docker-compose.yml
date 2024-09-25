@@ -34,7 +34,6 @@ services:
       target: backend
     ports:
       - 4000:4000
-      - 465:465
     environment:
       - DB_CONNECTION_URI=${DB_CONNECTION_URI}
       - MINIO_ENDPOINT=${MINIO_ENDPOINT}

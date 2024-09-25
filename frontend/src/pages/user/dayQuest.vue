@@ -83,7 +83,7 @@ function handleOpenModal(
             <InfoIcon class="size-4 stroke-[1.7] text-zinc-500" />
             <span
               class="text-[12px] text-zinc-500 font-semibold underline-offset-1 underline"
-              >Each day's assignments will be reset to 00:05</span
+              >Each day's assignments will be reset no 00:05</span
             >
           </div>
 
