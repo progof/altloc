@@ -11,7 +11,7 @@ export const getCDNImageURL = (key: string): string => {
 	return new URL(key, import.meta.env.VITE_PUBLIC_CDN_URL).toString();
 };
 
-// export const getAppName = (): string => import.meta.env.VITE_APP_NAME;
+export const getAppName = (): string => import.meta.env.VITE_APP_NAME;
 
-export const getSoialMediaURL = (platform: string): string => import.meta.env[`VITE_SOCIAL_MEDIA_${platform.toUpperCase()}`];
+export const getSoialMediaURL = (platform: string): string => import.meta.env[`VITE_MEDIA_${platform.toUpperCase()}`];
 
