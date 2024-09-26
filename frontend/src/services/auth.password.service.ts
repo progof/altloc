@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/vue-query";
 import { z } from "zod";
-// import { useAuthStore } from "@/stores/auth.store";
-// import { pinia } from "@/stores/pinia";
+import { useAuthStore } from "@/stores/auth.store";
+import { pinia } from "@/stores/pinia";
 
-// const authStore = useAuthStore(pinia);	
-// export const isAuthenticated = authStore.isAuthenticated;	
+const authStore = useAuthStore(pinia);	
+export const isAuthenticated = authStore.isAuthenticated;	
 
 const errorSchema = z.object({
 	errors: z.array(
@@ -56,11 +56,11 @@ export const useLoginMutation = () =>
 				const errors = errorSchema.parse(await res.json()).errors;
 				throw new Error(errors.at(0)?.message);
 			}
-			// Обновляем статус аутентификации через Pinia
-			// authStore.isAuthenticated = true;
-			// localStorage.setItem("isAuthenticated", "true");
-			// console.log("login pinia", authStore.isAuthenticated);
-			// console.log(await res.json());
+			//Обновляем статус аутентификации через Pinia
+			authStore.isAuthenticated = true;
+			localStorage.setItem("isAuthenticated", "true");
+			console.log("login pinia", authStore.isAuthenticated);
+			console.log(await res.json());
 			return;
 		},
 	});

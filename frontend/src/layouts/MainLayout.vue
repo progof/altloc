@@ -4,7 +4,7 @@ import InstagramIcon from "@/assets/icons/instagram.svg?component";
 import FacebookIcon from "@/assets/icons/facebook.svg?component";
 import XIcon from "@/assets/icons/x.svg?component";
 import { buttonVariant } from "@/components/ui/button";
-import { getAppName, getSoialMediaURL } from "@/utils";
+import { getSoialMediaURL } from "@/utils";
 </script>
 
 <template>
@@ -12,9 +12,10 @@ import { getAppName, getSoialMediaURL } from "@/utils";
     class="pointer-events-auto sticky top-0 z-20 bg-indigo-200 bg-opacity-90 px-6 py-3 backdrop-blur-[20px] backdrop-saturate-150 md:px-14"
   >
     <div class="container flex items-center justify-between gap-6">
-      <span class="text-center text-base text-zinc-700 font-semibold">
-        {{ getAppName() }}
-      </span>
+      <div class="flex gap-1 items-center">
+        <span class="font-semibold text-xl text-zinc-800">AltLoc</span>
+        <MapIcon class="size-7 stroke-[1.7] text-zinc-800" />
+      </div>
 
       <div class="flex gap-1 justify-center md:justify-end">
         <a

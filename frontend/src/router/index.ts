@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getMeQueryOptions } from "@/services/user.service";
 import { queryClient } from "@/services/queryClient";
+import { useAuthStore } from "@/stores/auth.store";
+import { pinia } from "@/stores/pinia";
 
 const router = createRouter({
 	routes: [
@@ -49,23 +51,20 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to) => {
-	if (to.path === "/auth/login" || to.path === "/auth/register") {
-		try {
-			await queryClient.ensureQueryData(getMeQueryOptions);
-			return { path: "/user/day-quest" };
-		} catch (error) {
-			// do nothing
-		}
-	}
-	if (to.meta.requiresAuth) {
-		try {
-			await queryClient.ensureQueryData(getMeQueryOptions);
-		} catch (error) {
-			return { path: "/auth/login" };
-		}
-	}
+    const { isAuthenticated } = useAuthStore(pinia); 
+    if (!isAuthenticated && (to.path === "/auth/login" || to.path === "/auth/register")) {
+        return true; 
+    }
 
-	return true;
+    if (to.meta.requiresAuth) {
+        try {
+            await queryClient.ensureQueryData(getMeQueryOptions);
+        } catch (error) {
+            return { path: "/auth/login" }; 
+        }
+    }
+
+    return true;
 });
 
 export default router;

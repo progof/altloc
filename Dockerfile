@@ -8,7 +8,7 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 ARG VITE_PUBLIC_CDN_URL
-ENV VITE_PUBLIC_CDN_URL=$VITE_PUBLIC_CDN_URL
+ENV VITE_PUBLIC_CDN_URL=http://cdn.altloc.com:9000/altloc/
 ARG VITE_APP_NAME
 ENV VITE_APP_NAME=$VITE_APP_NAME
 ARG VITE_MEDIA_TWITTER
