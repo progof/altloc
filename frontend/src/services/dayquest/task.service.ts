@@ -150,6 +150,7 @@ export function useCompleteTaskMutation() {
 					};
 				}
 			);
+			queryClient.invalidateQueries(getMeQueryOptions);
 		},
 	});
 }
