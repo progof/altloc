@@ -25,19 +25,19 @@ console.log("DayQuestActionDropdownMenu -> categoryId", props.categoryId);
   <DropdownMenuItem
     @click.prevent="emit('openModal', 'create', props.categoryId)"
   >
-    <PlusIcon class="mr-2 size-4 stroke-[1.7] text-zinc-500" />
-    Task
+    <PlusIcon class="mr-2 size-4 stroke-[1.7] text-zinc-700" />
+    <span class="text-zinc-700">Task</span>
   </DropdownMenuItem>
   <DropdownMenuItem @click="emit('openModal', 'edit', props.categoryId)">
     <EditIcon class="mr-2 size-4 stroke-[1.5] text-zinc-500" />
-    Edit
+    <span class="text-zinc-700">Edit</span>
   </DropdownMenuItem>
   <DropdownMenuItem
     @click="emit('openModal', 'statistics', props.categoryId)"
     disabled
   >
     <ChartIcon class="mr-2 size-4 stroke-[1.5] text-zinc-500" />
-    Chart
+    <span class="text-zinc-700">Chart</span>
   </DropdownMenuItem>
   <DropdownMenuItem
     @click="
@@ -47,6 +47,6 @@ console.log("DayQuestActionDropdownMenu -> categoryId", props.categoryId);
     "
   >
     <DeleteIcon class="mr-2 size-4 stroke-[1.5] text-zinc-500" />
-    Delete
+    <span class="text-zinc-700">Delete</span>
   </DropdownMenuItem>
 </template>

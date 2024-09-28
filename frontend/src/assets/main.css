@@ -5,14 +5,14 @@
 *,
 *::before,
 *::after {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Inter", sans-serif;
   /* background-color: #222629; */
 }
 
 body {
 	min-height: 100svh;
 	scrollbar-gutter: stable;
-	color: theme("colors.zinc.900");
+	color: theme("colors.blue.300");
 }
 
 :root {

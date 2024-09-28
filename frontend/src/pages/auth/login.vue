@@ -67,15 +67,20 @@ const submitForm = async (event: Event) => {
               type="email"
               placeholder="johndoe@example.com"
               autocomplete="email"
+              class="text-zinc-400"
             />
 
-            <PasswordField name="password" label="Password" />
+            <PasswordField
+              name="password"
+              label="Password"
+              class="text-zinc-400"
+            />
             <span v-if="error" class="text-red-500">{{ error }}</span>
           </div>
           <Button
             type="submit"
             :disabled="isPending"
-            class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-indigo-500 px-5 font-medium text-white transition-colors hover:bg-indigo-600/90 disabled:cursor-not-allowed disabled:opacity-50"
+            class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-blue-500 px-5 font-medium text-zinc-100 transition-colors hover:bg-blue-600/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <LoaderIcon
               class="mr-2 size-5 animate-spin stroke-[1.5] text-white"
@@ -86,22 +91,23 @@ const submitForm = async (event: Event) => {
         </form>
         <span class="text-sm text-zinc-500">or</span>
         <a
+          type="button"
           href="/api/auth/google"
-          class="flex h-11 w-full items-center justify-center rounded-full border border-zinc-100 bg-zinc-100 px-5 transition-colors hover:border-zinc-300 hover:bg-white"
+          class="flex h-11 w-full items-center justify-center rounded-full bg-blue-100 px-5 transition-colors hover:border-zinc-200 hover:bg-blue-200"
         >
           <GoogleIcon class="mr-2 size-4" />
-          <span class="font-medium text-zinc-950">Login with Google</span>
+          <span class="font-medium text-zinc-600">Login with Google</span>
         </a>
-        <span class="mt-2 flex text-[13px] font-medium">
+        <span class="mt-2 flex text-[13px] font-medium text-zinc-400">
           Don't have an account yet?&nbsp;<a
-            class="text-indigo-600 underline-offset-2 hover:underline"
+            class="text-blue-700 underline-offset-2 hover:underline"
             href="/auth/register"
             >Sign up</a
           >
         </span>
-        <span class="mt-2 flex text-[13px] font-medium">
+        <span class="mt-2 flex text-[13px] font-medium text-zinc-400">
           Forgot your password?&nbsp;<a
-            class="text-indigo-600 underline-offset-2 hover:underline"
+            class="text-blue-700 underline-offset-2 hover:underline"
             href="/auth/recovery-password"
             >Recover password</a
           >

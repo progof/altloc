@@ -22,7 +22,7 @@ console.log("DayQuestActionDropdownMenu -> categoryId", props.commentId);
 <template>
   <DropdownMenuItem @click="emit('openModal', 'edit', props.commentId)">
     <EditIcon class="mr-2 size-4 stroke-[1.5] text-zinc-500" />
-    Edit
+    <span class="text-zinc-700">Edit</span>
   </DropdownMenuItem>
   <DropdownMenuItem
     @click="
@@ -32,6 +32,6 @@ console.log("DayQuestActionDropdownMenu -> categoryId", props.commentId);
     "
   >
     <DeleteIcon class="mr-2 size-4 stroke-[1.5] text-zinc-500" />
-    Delete
+    <span class="text-zinc-700">Delete</span>
   </DropdownMenuItem>
 </template>

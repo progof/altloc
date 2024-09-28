@@ -49,7 +49,7 @@ const avatar = computed(() => {
 <template>
   <DropdownMenu :modal="false">
     <DropdownMenuTrigger class="flex items-center gap-2.5">
-      <span class="hidden text-sm font-semibold md:block">
+      <span class="hidden text-sm font-semibold md:block text-zinc-700">
         {{ user.username }}
       </span>
       <img
@@ -61,7 +61,7 @@ const avatar = computed(() => {
     <DropdownMenuContent align="end" class="min-w-48">
       <DropdownMenuLabel>
         <div class="flex flex-col">
-          <span>{{ user.username }}</span>
+          <span class="text-zinc-800">{{ user.username }}</span>
           <span class="text-xs font-normal text-zinc-600">
             {{ user.email }}
           </span>
@@ -71,22 +71,22 @@ const avatar = computed(() => {
       <DropdownMenuGroup>
         <DropdownMenuItem as="a" href="/user/day-quest">
           <GameControllerIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
-          <span>Quests</span>
+          <span class="text-zinc-800">Quests</span>
         </DropdownMenuItem>
         <DropdownMenuItem as="a" href="/user/day-comment">
           <CommentIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
-          <span>Comments</span>
+          <span class="text-zinc-800">Comments</span>
         </DropdownMenuItem>
         <DropdownMenuItem as="a" href="/user/day-balance" disabled>
           <ScalesIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
-          <span>Balances</span>
+          <span class="text-zinc-800">Balances</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem as="a" href="/user/settings" disabled>
           <SettingsIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
-          <span>Settings</span>
+          <span class="text-zinc-800"> Settings</span>
         </DropdownMenuItem>
         <DropdownMenuItem @select.prevent="logoutUser()">
           <LoaderIcon
@@ -94,7 +94,7 @@ const avatar = computed(() => {
             v-if="isPending"
           />
           <LogoutIcon v-else class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
-          <span>Logout</span>
+          <span class="text-zinc-800">Logout</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>

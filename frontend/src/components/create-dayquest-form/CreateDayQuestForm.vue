@@ -50,9 +50,14 @@ const onSubmit = handleSubmit((data) => {
     Create a new category for your dayQuest
   </DialogDescription>
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
-    <TextField name="name" label="Name" placeholder="Business" />
+    <TextField
+      name="name"
+      label="Name"
+      placeholder="Business"
+      class="text-zinc-700"
+    />
 
-    <div class="mt-4 flex justify-end border-t border-zinc-200 pt-4">
+    <div class="mt-4 flex justify-end border-zinc-200 pt-4">
       <Button
         :disabled="!meta.dirty || isPending"
         class="relative font-semibold"

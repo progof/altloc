@@ -129,55 +129,9 @@ export class AuthPasswordService {
 		const [password] = await db
 			.select()
 			.from(passwordAccountsTable)
-			.where(eq(passwordAccountsTable.userId, userId)); // Corrected here
+			.where(eq(passwordAccountsTable.userId, userId)); 
 		return password || null;
 	}
-
-	// async getUserWithPasswordByEmail(email: string): Promise<User | null> {
-
-	//   const usersQuery = await db
-	//     .select({
-	//       id: usersTable.id,
-	//       username: usersTable.username,
-	//       email: usersTable.email,
-	//       emailVerified: usersTable.emailVerified,
-	//       createdAt: usersTable.createdAt,
-	//       role: usersTable.role,
-
-	//     })
-	//     .from(usersTable)
-	//     .where(eq(usersTable.email, email))
-	//     .limit(1);
-
-	//   if (usersQuery.length === 0) {
-	//     return null;
-	//   }
-
-	//   const user = usersQuery[0];
-
-	//   if (!user) {
-	//     return null;
-	//   }
-
-	//   const passwordAccountQuery = await db
-	//     .select({
-	//       password: passwordAccountsTable.password,
-	//     })
-	//     .from(passwordAccountsTable)
-	//     .where(eq(passwordAccountsTable.userId, user.id))
-	//     .limit(1);
-
-	//   if (passwordAccountQuery.length === 0) {
-	//     return null;
-	//   }
-
-	//   const passwordAccount = passwordAccountQuery[0];
-
-	//   if (!passwordAccount) {
-	//     return null;
-	//   }
-
-	// }
 
 	async createUser(data: { username: string; email: string }) {
 		const { username, email } = data;

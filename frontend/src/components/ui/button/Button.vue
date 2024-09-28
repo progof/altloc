@@ -15,8 +15,8 @@ export const buttonVariants = cva(
       },
       variant: {
         primary:
-          "bg-indigo-500 text-white hover:bg-[#5A5CD5] disabled:bg-zinc-400",
-        secondary: "border border-zinc-300 text-zinc-900 hover:bg-zinc-100",
+          "bg-blue-500 text-zinc-200 hover:bg-blue-600 disabled:bg-zinc-400",
+        secondary: "text-zinc-200 hover:bg-blue-500  disabled:bg-zinc-400",
       },
     },
     defaultVariants: {

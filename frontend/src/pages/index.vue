@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import MainLayout from "@/layouts/MainLayout.vue";
 import { buttonVariant } from "@/components/ui/button/";
+import GameControllerIcon from "@/assets/icons/game-controller.svg?component";
+import CommentIcon from "@/assets/icons/comment.svg?component";
+import ScalesIcon from "@/assets/icons/scales.svg?component";
+import SpaceShipIcon from "@/assets/icons/space-ship.svg?component";
 </script>
 
 <template>
@@ -8,13 +12,13 @@ import { buttonVariant } from "@/components/ui/button/";
     <section class="relative mt-3 p-6 md:px-10">
       <div class="container flex flex-col gap-12">
         <div
-          class="flex flex-col bg-indigo-200 p-6 gap-3 bg-opacity-80 rounded-xl"
+          class="flex flex-col bg-blue-200 p-6 gap-3 bg-opacity-80 rounded-xl"
         >
-          <h3 class="text-zinc-900 font-medium text-xl flex justify-center">
+          <h3 class="font-semibold text-lg text-zinc-900 flex justify-center">
             The perfect platform for creating a circle of interest
           </h3>
-          <span class="text-zinc-500">
-            ISotus brings students together, creating an atmosphere where it is
+          <span class="text-zinc-700">
+            AltLoc brings students together, creating an atmosphere where it is
             easy to learn and realize projects. Join a community of like-minded
             people and discover new opportunities for joint creativity and
             learning.
@@ -23,30 +27,32 @@ import { buttonVariant } from "@/components/ui/button/";
             <a
               :class="
                 buttonVariant({
-                  size: 'md',
-                  variant: 'secondary',
-                  class: 'shrink-0 bg-indigo-50',
+                  size: 'xl',
+                  variant: 'primary',
+                  class: 'shrink-0 ',
                 })
               "
-              href="/auth/login"
-            >
-              Log in
-            </a>
-            <a
-              :class="buttonVariant({ size: 'md', class: 'shrink-0' })"
               href="/auth/register"
             >
-              Register
+              <span class="flex items-center font-semibold">
+                Join us
+                <SpaceShipIcon class="ml-2 size-5 stroke-[1.7] text-blue-50" />
+              </span>
             </a>
           </div>
         </div>
 
         <div
-          class="flex flex-col gap-3 bg-indigo-200 p-6 bg-opacity-80 rounded-xl"
+          class="flex flex-col gap-3 bg-blue-200 p-6 bg-opacity-80 rounded-xl"
         >
-          <h3 class="font-medium text-xl text-zinc-900">
-            Gamification of your life
-          </h3>
+          <div class="flex gap-3 items-center">
+            <h3 class="font-semibold text-lg text-zinc-900">
+              Gamification of your life
+            </h3>
+            <GameControllerIcon
+              class="mr-2 size-7 stroke-[1.7] text-zinc-800"
+            />
+          </div>
           <p class="text-zinc-500">
             Turn routine into an exciting game! Our web application helps you
             manage your daily tasks, develop healthy habits and make time for
@@ -57,11 +63,14 @@ import { buttonVariant } from "@/components/ui/button/";
           </p>
         </div>
         <div
-          class="flex flex-col gap-3 bg-indigo-200 p-6 bg-opacity-80 rounded-xl"
+          class="flex flex-col gap-3 bg-blue-200 p-6 bg-opacity-80 rounded-xl"
         >
-          <h3 class="font-medium text-xl text-zinc-900">
-            Community of interest
-          </h3>
+          <div class="flex gap-3 items-center">
+            <h3 class="font-semibold text-lg text-zinc-900">
+              Community of interest
+            </h3>
+            <CommentIcon class="mr-2 size-7 stroke-[1.7] text-zinc-800" />
+          </div>
           <p class="text-zinc-500">
             Find like-minded people and expand your social circle! Our hobby and
             interest matching service helps you find people who share your
@@ -72,11 +81,14 @@ import { buttonVariant } from "@/components/ui/button/";
           </p>
         </div>
         <div
-          class="flex flex-col gap-3 bg-indigo-200 p-6 bg-opacity-80 rounded-xl"
+          class="flex flex-col gap-3 bg-blue-200 p-6 bg-opacity-80 rounded-xl"
         >
-          <h3 class="font-medium text-xl text-zinc-900">
-            Time control with Day Balance
-          </h3>
+          <div class="flex gap-3 items-center">
+            <h3 class="font-semibold text-lg text-zinc-900">
+              Time control with Day Balance
+            </h3>
+            <ScalesIcon class="mr-2 size-7 stroke-[1.7] text-zinc-800" />
+          </div>
           <p class="text-zinc-500">
             You don't know where your time is going? We can help you find out!
             With Day Balance you can analyze in detail how your days are
@@ -90,4 +102,3 @@ import { buttonVariant } from "@/components/ui/button/";
     </section>
   </MainLayout>
 </template>
-@/components/ui/button

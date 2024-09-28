@@ -56,7 +56,12 @@ const onSubmit = handleSubmit((data) => {
     Edit the category
   </DialogDescription>
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
-    <TextField name="name" label="Name" placeholder="Business" />
+    <TextField
+      name="name"
+      label="Name"
+      placeholder="Business"
+      class="text-zinc-600"
+    />
 
     <div class="mt-4 flex justify-end border-t border-zinc-200 pt-4">
       <Button

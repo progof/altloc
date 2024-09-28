@@ -58,7 +58,7 @@ const onSubmit = handleSubmit((data) => {
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
     <TextField name="description" label="Description" placeholder="Business" />
 
-    <div class="mt-4 flex justify-end border-t border-zinc-200 pt-4">
+    <div class="mt-4 flex justify-endpt-4">
       <Button
         :disabled="!meta.dirty || isPending"
         class="relative font-semibold"
@@ -67,7 +67,7 @@ const onSubmit = handleSubmit((data) => {
           v-if="isPending"
           class="absolute mx-auto size-5 animate-spin stroke-[1.5]"
         />
-        <span :class="isPending ? 'invisible' : ''">Edit commet</span>
+        <span :class="isPending ? 'invisible' : ''">Edit comment</span>
       </Button>
     </div>
   </form>

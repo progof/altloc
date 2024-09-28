@@ -79,25 +79,29 @@ function handleOpenModal(
               <PlusIcon class="size-5 stroke-[1.9] text-zinc-50" />
             </Button>
           </div>
+          <span class="text-zinc-500 text-xs font-semibold">
+            Create categories of skills that you want to pump every day, and
+            then add tasks to them
+          </span>
           <div class="flex items-center gap-1">
             <InfoIcon class="size-4 stroke-[1.7] text-zinc-500" />
             <span
-              class="text-[12px] text-zinc-500 font-semibold underline-offset-1 underline"
-              >Each day's assignments will be reset no 00:05</span
+              class="text-xs text-zinc-500 font-semibold underline-offset-1 underline"
             >
+              Every day at 00:05 all tasks will be reset!
+            </span>
           </div>
 
           <div
-            class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2"
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 mt-5"
           >
             <div
-              class="flex flex-col gap-6 bg-zinc-100 p-3 rounded-xl w-full flex-1"
+              class="flex flex-col gap-6 bg-blue-100 p-3 rounded-xl w-full flex-1"
               v-for="category in categories"
               :key="category.id"
             >
               <div class="flex items-center gap-3 justify-between">
                 <div>
-                  <span class="bg-indigo-400 rounded-xl size-4" />
                   <span class="text-zinc-500 font-semibold">
                     {{ category.name }} ({{ category.tasks.length }})
                   </span>
@@ -154,7 +158,7 @@ function handleOpenModal(
                     "
                   >
                     <DeleteIcon
-                      class="size-5 text-red-200 hover:text-red-400"
+                      class="size-5 text-red-300 hover:text-red-500"
                     />
                   </Button>
                 </li>

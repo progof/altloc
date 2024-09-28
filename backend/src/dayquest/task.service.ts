@@ -119,74 +119,154 @@ export class TasksService {
 		});
 	}
 
+	// async completeTask(
+	// 	db: Database | Transaction,
+	// 	options: {
+	// 		userId: string;
+	// 		taskId: string;
+	// 	}
+	// ): Promise<Task> {
+	// 	const { taskId, userId } = options;
+
+	// 	const task = (
+	// 		await db
+	// 			.select()
+	// 			.from(dayQuestTasksTable)
+	// 			.where(
+	// 				and(
+	// 					eq(dayQuestTasksTable.id, taskId),
+	// 					eq(dayQuestTasksTable.creatorId, userId)
+	// 				)
+	// 			)
+	// 	).at(0);
+
+	// 	if (!task) {
+	// 		throw new HTTPError({ message: "Task not found", status: 404 });
+	// 	}
+
+	// 	if (task.creatorId !== userId) {
+	// 		throw new HTTPError({
+	// 			message: "You are not allowed to complete this task",
+	// 			status: 403,
+	// 		});
+	// 	}
+
+	// 	if (task.isCompleted) {
+	// 		throw new HTTPError({
+	// 			message: "Task is already completed",
+	// 			status: 400,
+	// 		});
+	// 	}
+
+	// 	await db
+	// 		.update(dayQuestTasksTable)
+	// 		.set({
+	// 			isCompleted: true,
+	// 		})
+	// 		.where(
+	// 			and(
+	// 				eq(dayQuestTasksTable.id, taskId),
+	// 				eq(dayQuestTasksTable.creatorId, userId)
+	// 			)
+	// 		);
+
+	// 	const user = (
+	// 		await db.select().from(usersTable).where(eq(usersTable.id, userId))
+	// 	).at(0);
+
+	// 	if (!user) {
+	// 		throw new HTTPError({ message: "User not found", status: 404 });
+	// 	}
+
+	// 	await db
+	// 		.update(usersTable)
+	// 		.set({
+	// 			score: user.score + 1,
+	// 		})
+	// 		.where(eq(usersTable.id, userId));
+
+	// 	return taskSchema.parse(task);
+	// }
+
 	async completeTask(
 		db: Database | Transaction,
 		options: {
-			userId: string;
-			taskId: string;
+		  userId: string;
+		  taskId: string;
 		}
-	): Promise<Task> {
+	  ): Promise<Task> {
 		const { taskId, userId } = options;
-
+	  
 		const task = (
-			await db
-				.select()
-				.from(dayQuestTasksTable)
-				.where(
-					and(
-						eq(dayQuestTasksTable.id, taskId),
-						eq(dayQuestTasksTable.creatorId, userId)
-					)
-				)
-		).at(0);
-
-		if (!task) {
-			throw new HTTPError({ message: "Task not found", status: 404 });
-		}
-
-		if (task.creatorId !== userId) {
-			throw new HTTPError({
-				message: "You are not allowed to complete this task",
-				status: 403,
-			});
-		}
-
-		if (task.isCompleted) {
-			throw new HTTPError({
-				message: "Task is already completed",
-				status: 400,
-			});
-		}
-
-		await db
-			.update(dayQuestTasksTable)
-			.set({
-				isCompleted: true,
-			})
+		  await db
+			.select()
+			.from(dayQuestTasksTable)
 			.where(
-				and(
-					eq(dayQuestTasksTable.id, taskId),
-					eq(dayQuestTasksTable.creatorId, userId)
-				)
-			);
-
-		const user = (
-			await db.select().from(usersTable).where(eq(usersTable.id, userId))
+			  and(
+				eq(dayQuestTasksTable.id, taskId),
+				eq(dayQuestTasksTable.creatorId, userId)
+			  )
+			)
 		).at(0);
-
-		if (!user) {
-			throw new HTTPError({ message: "User not found", status: 404 });
+	  
+		if (!task) {
+		  throw new HTTPError({ message: "Task not found", status: 404 });
 		}
-
+	  
+		if (task.creatorId !== userId) {
+		  throw new HTTPError({
+			message: "You are not allowed to complete this task",
+			status: 403,
+		  });
+		}
+	  
+		if (task.isCompleted) {
+		  throw new HTTPError({
+			message: "Task is already completed",
+			status: 400,
+		  });
+		}
+	  
+		// Обновляем задачу
 		await db
-			.update(usersTable)
-			.set({
-				score: user.score + 1,
-			})
-			.where(eq(usersTable.id, userId));
-
-		return taskSchema.parse(task);
-	}
+		  .update(dayQuestTasksTable)
+		  .set({
+			isCompleted: true,
+		  })
+		  .where(
+			and(
+			  eq(dayQuestTasksTable.id, taskId),
+			  eq(dayQuestTasksTable.creatorId, userId)
+			)
+		  );
+	  
+		// Получаем обновлённую задачу
+		const updatedTask = (
+		  await db
+			.select()
+			.from(dayQuestTasksTable)
+			.where(eq(dayQuestTasksTable.id, taskId))
+		).at(0);
+	  
+		// Обновляем очки пользователя
+		const user = (
+		  await db.select().from(usersTable).where(eq(usersTable.id, userId))
+		).at(0);
+	  
+		if (!user) {
+		  throw new HTTPError({ message: "User not found", status: 404 });
+		}
+	  
+		await db
+		  .update(usersTable)
+		  .set({
+			score: user.score + 1,
+		  })
+		  .where(eq(usersTable.id, userId));
+	  
+		return taskSchema.parse(updatedTask); // Возвращаем обновлённую задачу
+	  }
+	  
 
 	async unCompleteTask(
 		db: Database | Transaction,

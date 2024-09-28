@@ -83,7 +83,11 @@ const submitForm = async (event: Event) => {
             </span>
           </div>
 
-          <Button type="submit" :disabled="isPending">
+          <Button
+            type="submit"
+            class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-blue-500 px-5 font-medium text-zinc-100 transition-colors hover:bg-blue-600/90 disabled:cursor-not-allowed disabled:opacity-50"
+            :disabled="isPending"
+          >
             {{ isPending ? "Fetching..." : "Reset password" }}
           </Button>
         </form>
@@ -91,4 +95,3 @@ const submitForm = async (event: Event) => {
     </div>
   </AuthLayout>
 </template>
-@/services/auth.password.service

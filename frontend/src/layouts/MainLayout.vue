@@ -3,13 +3,14 @@ import TelegramIcon from "@/assets/icons/telegram.svg?component";
 import InstagramIcon from "@/assets/icons/instagram.svg?component";
 import FacebookIcon from "@/assets/icons/facebook.svg?component";
 import XIcon from "@/assets/icons/x.svg?component";
+import MapIcon from "@/assets/icons/map.svg?component";
 import { buttonVariant } from "@/components/ui/button";
 import { getSoialMediaURL } from "@/utils";
 </script>
 
 <template>
   <header
-    class="pointer-events-auto sticky top-0 z-20 bg-indigo-200 bg-opacity-90 px-6 py-3 backdrop-blur-[20px] backdrop-saturate-150 md:px-14"
+    class="pointer-events-auto sticky top-0 z-20 bg-blue-300 bg-opacity-90 px-6 py-3 backdrop-blur-[20px] backdrop-saturate-150 md:px-14"
   >
     <div class="container flex items-center justify-between gap-6">
       <div class="flex gap-1 items-center">
@@ -23,7 +24,7 @@ import { getSoialMediaURL } from "@/utils";
             buttonVariant({
               size: 'md',
               variant: 'secondary',
-              class: 'shrink-0',
+              class: 'shrink-0 text-blue-50',
             })
           "
           href="/auth/login"
@@ -31,7 +32,9 @@ import { getSoialMediaURL } from "@/utils";
           Log in
         </a>
         <a
-          :class="buttonVariant({ size: 'md', class: 'shrink-0' })"
+          :class="
+            buttonVariant({ size: 'md', class: 'shrink-0', variant: 'primary' })
+          "
           href="/auth/register"
         >
           Register
@@ -40,17 +43,17 @@ import { getSoialMediaURL } from "@/utils";
     </div>
   </header>
 
-  <main class="relative flex flex-1 flex-col bg-zinc-50">
+  <main class="relative flex flex-1 flex-col bg-blue-50">
     <slot />
   </main>
-  <footer class="bg-indigo-200 px-6 md:px-10">
+  <footer class="bg-blue-300 px-6 md:px-10">
     <div class="container flex flex-col">
       <div class="flex flex-col items-start gap-4 py-6 md:gap-2 md:py-4">
         <div
           class="flex w-full flex-col items-start justify-center gap-3 text-center md:flex-row md:items-center md:justify-between"
         >
           <span class="text-center text-lg font-medium text-zinc-700">
-            Sitelogo
+            AltLoc
           </span>
           <ul
             class="flex flex-wrap items-start justify-start gap-x-5 gap-y-2 md:justify-between"

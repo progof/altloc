@@ -100,4 +100,5 @@ services:
 
 volumes:
   postgres-data:
+    driver: local
   minio-data:

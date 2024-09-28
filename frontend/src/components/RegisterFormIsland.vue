@@ -62,6 +62,7 @@ const submitForm = async (event: Event) => {
         placeholder="John Doe"
         type="text"
         autocomplete="username"
+        class="text-zinc-400"
       />
       <TextField
         name="email"
@@ -69,9 +70,14 @@ const submitForm = async (event: Event) => {
         placeholder="johndoe@example.com"
         type="email"
         autocomplete="email"
+        class="text-zinc-400"
       />
-      <PasswordField name="password" label="Password" />
-      <PasswordField name="password_confirmation" label="Confirm password" />
+      <PasswordField name="password" label="Password" class="text-zinc-400" />
+      <PasswordField
+        name="password_confirmation"
+        label="Confirm password"
+        class="text-zinc-400"
+      />
     </div>
 
     <div>
@@ -92,14 +98,13 @@ const submitForm = async (event: Event) => {
     <Button
       type="submit"
       :disabled="isPending"
-      class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-indigo-500 px-5 font-medium text-white transition-colors hover:bg-indigo-600/90 disabled:cursor-not-allowed disabled:opacity-50"
+      class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-blue-500 px-5 font-medium text-zinc-100 transition-colors hover:bg-blue-600/90 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <LoaderIcon
         class="mr-2 size-5 animate-spin stroke-[1.5] text-zinc-400"
         v-if="isPending"
       />
-      {{ isPending ? "Registering..." : "Register" }}
+      {{ isPending ? "Registering..." : "Create account" }}
     </Button>
   </form>
 </template>
-@/services/auth.password.service

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <img
-      src="/images/bg.webp"
+      src="/images/abstract-space.jpg"
       alt=""
       class="fixed -z-10 hidden h-[100vh] w-screen select-none object-cover sm:block xl:w-[50vw]"
       loading="eager"
@@ -16,7 +16,7 @@
           <div
             class="mx-auto mb-5 w-full max-w-lg xl:mb-0 xl:max-w-none xl:flex-1"
           >
-            <a href="/" class="text-lg font-bold tracking-tight text-zinc-900">
+            <a href="/" class="text-lg font-bold tracking-tight text-zinc-300">
               AltLoc
             </a>
           </div>

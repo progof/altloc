@@ -64,7 +64,7 @@ const submitForm = async (event: Event) => {
     <Button
       type="submit"
       :disabled="isPending"
-      class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-indigo-500 px-5 font-medium text-white transition-colors hover:bg-indigo-600/90 disabled:cursor-not-allowed disabled:opacity-50"
+      class="mt-6 flex h-11 w-full items-center justify-center rounded-full bg-blue-500 px-5 font-medium text-zinc-100 transition-colors hover:bg-blue-600/90 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <LoaderIcon
         class="mr-2 size-5 animate-spin stroke-[1.5] text-white"

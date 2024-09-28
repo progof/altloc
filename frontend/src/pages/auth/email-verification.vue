@@ -28,11 +28,11 @@ verifyEmail(parsedParams);
       </div>
       <div class="flex w-full flex-col items-center gap-y-2">
         <span v-if="isPending">Verifiying your email...</span>
-        <span v-else-if="error">
-          {{ error }}
-        </span>
-        <div v-else>
-          <h1>Email successfully verified</h1>
+        <span v-else-if="error"> {{ error }}s </span>
+        <div v-else class="flex-col gap-6">
+          <h2 class="text-green-400 font-semibold">
+            Email successfully verified
+          </h2>
           <a
             :class="
               buttonVariant({
@@ -50,4 +50,3 @@ verifyEmail(parsedParams);
     </div>
   </AuthLayout>
 </template>
-@/components/ui/button @/services/auth.password.service

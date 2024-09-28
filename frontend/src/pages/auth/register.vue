@@ -11,7 +11,7 @@ import GoogleIcon from "@/assets/icons/google.svg?component";
         <h1 class="text-2xl font-bold tracking-[-0.015em]">
           Create your personal account
         </h1>
-        <p class="mt-2 text-sm font-medium text-zinc-500">
+        <p class="mt-2 text-sm font-medium text-zinc-600">
           Become part of a community of gamify life
         </p>
       </div>
@@ -21,14 +21,14 @@ import GoogleIcon from "@/assets/icons/google.svg?component";
         <a
           type="button"
           href="/api/auth/google"
-          class="flex h-11 w-full items-center justify-center rounded-full border border-zinc-100 bg-zinc-100 px-5 transition-colors hover:border-zinc-300 hover:bg-white"
+          class="flex h-11 w-full items-center justify-center rounded-full bg-blue-100 px-5 transition-colors hover:border-zinc-200 hover:bg-blue-200"
         >
           <GoogleIcon class="mr-2 size-4" />
-          <span class="font-medium text-zinc-950">Sign up with Google</span>
+          <span class="font-medium text-zinc-600">Sign up with Google</span>
         </a>
-        <span class="mt-2 flex text-[13px] font-medium">
+        <span class="mt-2 flex text-[13px] font-medium text-zinc-500">
           Already have an account?&nbsp;<a
-            class="text-indigo-600 underline-offset-2 hover:underline"
+            class="text-blue-700 underline-offset-2 hover:underline"
             href="/auth/login"
           >
             Log in
