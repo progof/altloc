@@ -36,7 +36,6 @@ const { mutate: deleteTask, isPending: IsDeleteTaskPeding } =
   useDeleteTaskMutation();
 
 const { mutate: completeTask } = useCompleteTaskMutation();
-
 const { mutate: unCompleteTask } = useUnCompleteTaskMutation();
 
 const isOpenDayQuestDialog = ref(false);
@@ -93,14 +92,14 @@ function handleOpenModal(
           </div>
 
           <div
-            class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 mt-5"
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 mt-5"
           >
             <div
-              class="flex flex-col gap-6 bg-blue-100 p-3 rounded-xl w-full flex-1"
+              class="flex flex-col gap-6 bg-blue-100 p-3 rounded-xl flex-1"
               v-for="category in categories"
               :key="category.id"
             >
-              <div class="flex items-center gap-3 justify-between">
+              <div class="flex items-center gap-3 justify-between w-full">
                 <div>
                   <span class="text-zinc-500 font-semibold">
                     {{ category.name }} ({{ category.tasks.length }})
@@ -135,7 +134,7 @@ function handleOpenModal(
                       :modelValue="task.isCompleted"
                       @click="
                         () => {
-                          if (task.isCompleted) {
+                          if (!task.isCompleted) {
                             completeTask(task.id);
                           } else {
                             unCompleteTask(task.id);

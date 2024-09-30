@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { FetchError } from "@/utils/fetch";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/vue-query";
-import { watch } from "vue";
+import { watch, onMounted, ref } from "vue";
 import { UserComment } from "@shared/index";
 
 const props = defineProps<{
@@ -52,7 +52,7 @@ watch(
 const { mutate: updateComment, isPending } = useUpdateCommentMutation();
 
 const onSubmit = handleSubmit((data) => {
-  console.log("Create dayComment -> data:", data);
+  console.log("Update dayComment -> data:", data);
   updateComment(
     {
       commentId: props.comment.id,
@@ -70,17 +70,27 @@ const onSubmit = handleSubmit((data) => {
     }
   );
 });
+
+const isMounted = ref(false);
+onMounted(() => (isMounted.value = true));
 </script>
 
 <template>
-  <DialogTitle class="text-xl font-bold tracking-tight">Edit</DialogTitle>
+  <DialogTitle class="text-xl font-bold tracking-tight">
+    Edit comment
+  </DialogTitle>
   <DialogDescription class="mt-2 text-sm text-zinc-500">
-    Edit the comment
+    You can update your comment of the day.
   </DialogDescription>
-  <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
-    <TextArea name="description" label="Description" placeholder="Business" />
+  <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-5">
+    <TextArea
+      name="description"
+      label="Description"
+      placeholder="Business"
+      v-if="isMounted"
+    />
 
-    <div class="mt-4 flex justify-end border-t border-zinc-200 pt-4">
+    <div class="mt-4 flex justify-end pt-4">
       <Button
         :disabled="!meta.dirty || isPending"
         class="relative font-semibold"
@@ -89,7 +99,7 @@ const onSubmit = handleSubmit((data) => {
           v-if="isPending"
           class="absolute mx-auto size-5 animate-spin stroke-[1.5]"
         />
-        <span :class="isPending ? 'invisible' : ''">Edit commet</span>
+        <span :class="isPending ? 'invisible' : ''">Edit comment</span>
       </Button>
     </div>
   </form>

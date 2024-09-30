@@ -111,20 +111,28 @@ export function useDeleteTaskMutation() {
 
 export function useCompleteTaskMutation() {
 	const queryClient = useQueryClient();
-
 	return useMutation({
 		mutationFn: async (taskId: string) => {
+			console.log("useCompleteTaskMutation Sending request to complete task with ID:", taskId);
 			const res = await fetch(`/api/dayquest/task/complete/${taskId}`, {
 				method: "PATCH",
 			});
+			console.log("Response status:", res.status); // Вывод статуса ответа
 
 			if (!res.ok) {
 				throw new FetchError(res);
 			}
 
-			return res.json();
+			if (res.ok) {
+				console.log("Task done!!!");
+			}
+
+			
+
+			return res.json() as Promise<Task>;;
 		},
 		onSuccess: (updatedTask: Task) => {
+			console.log("Task done!!!");
 			queryClient.setQueryData(
 				tasksQuery.queryKey,
 				(tasks: Task[] | undefined) => {
@@ -149,28 +157,37 @@ export function useCompleteTaskMutation() {
 						score: user.score + 1,
 					};
 				}
+				
 			);
 			
 		},
 	});
 }
 
+
 export function useUnCompleteTaskMutation() {
 	const queryClient = useQueryClient();
-
 	return useMutation({
 		mutationFn: async (taskId: string) => {
+			console.log("useUnCompleteTaskMutation Sending request to complete task with ID:", taskId);
 			const res = await fetch(`/api/dayquest/task/uncomplete/${taskId}`, {
 				method: "PATCH",
 			});
+			console.log("Response status: useUnCompleteTaskMutation", res.status); // Вывод статуса ответа
 
 			if (!res.ok) {
 				throw new FetchError(res);
 			}
 
-			return res.json();
+			if (res.ok) {
+				console.log("Task UnComplete done!!!");
+			}
+
+			
+
+			return res.json() as Promise<Task>;;
 		},
-		onSuccess: (updatedTask) => {
+		onSuccess: (updatedTask: Task) => {
 			queryClient.setQueryData(
 				tasksQuery.queryKey,
 				(tasks: Task[] | undefined) => {
@@ -181,10 +198,60 @@ export function useUnCompleteTaskMutation() {
 					);
 				}
 			);
+
 			queryClient.setQueryData(
 				meTaskQuery(updatedTask.id).queryKey,
 				updatedTask
 			);
+			queryClient.setQueryData(
+				getMeQueryOptions.queryKey,
+				(user: User | undefined) => {
+					if (!user) return;
+					return {
+						...user,
+						score: user.score - 1,
+					};
+				}
+				
+			);
+			
 		},
 	});
 }
+
+// export function useUnCompleteTaskMutation() {
+// 	const queryClient = useQueryClient();
+
+// 	return useMutation({
+// 		mutationFn: async (taskId: string) => {
+		
+// 			const res = await fetch(`/api/dayquest/task/uncomplete/${taskId}`, {
+// 				method: "PATCH",
+// 			});
+
+// 			if (!res.ok) {
+// 				throw new FetchError(res);
+// 			}
+
+// 			return res.json();
+// 		},
+// 		onSuccess: (updatedTask) => {
+// 			queryClient.setQueryData(
+// 				tasksQuery.queryKey,
+// 				(tasks: Task[] | undefined) => {
+// 					if (!tasks) return [];
+
+// 					return tasks.map((task) =>
+// 						task.id === updatedTask.id ? { ...task, isCompleted: true } : task
+// 					);
+// 				}
+// 			);
+// 			queryClient.setQueryData(
+// 				meTaskQuery(updatedTask.id).queryKey,
+// 				updatedTask
+// 			);
+// 		},
+// 	});
+// }
+
+
