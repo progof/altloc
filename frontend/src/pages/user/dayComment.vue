@@ -18,6 +18,7 @@ import {
 import DotsHorizontalIcon from "@/assets/icons/dots-horizontal.svg?component";
 import CommentActionDropdownMenu from "@/components/dayquest/CommentActionDropdownMenu.vue";
 import { formatDateToMonthDay } from "@/utils/dayjs";
+import { UserComment } from "@shared/index";
 
 const { data: comments } = useQuery({
   ...commentsQuery,
@@ -28,15 +29,15 @@ console.log(comments);
 
 const isOpenDayQuestDialog = ref(false);
 const isOpenEditCommentDialog = ref(false);
-const modalProps = ref<{ commentId: string }>();
+const modalProps = ref<{ comment: UserComment }>();
 
 function handleOpenModal(
   dialogType: "delete" | "edit" | "create" | "statistics",
-  commentId: string
+  comment: UserComment
 ) {
-  console.log(dialogType, commentId);
+  console.log(dialogType, comment);
   if (dialogType === "edit" && modalProps) {
-    modalProps.value = { commentId };
+    modalProps.value = { comment };
     isOpenEditCommentDialog.value = true;
   }
 }
@@ -51,7 +52,7 @@ function handleOpenModal(
             <h2 class="text-xl font-bold tracking-tight">DayComment</h2>
 
             <Button
-              size="md"
+              size="sm"
               @click="
                 () => {
                   isOpenDayQuestDialog = true;
@@ -63,7 +64,7 @@ function handleOpenModal(
           </div>
 
           <div
-            class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 min-w-[300px]"
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 min-w-[300px] mt-5"
           >
             <div
               class="flex flex-col gap-3 bg-blue-100 p-3 rounded-xl w-full flex-1"
@@ -89,7 +90,7 @@ function handleOpenModal(
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" class="min-w-40">
                     <CommentActionDropdownMenu
-                      :commentId="comment.id"
+                      :comment="comment"
                       @openModal="handleOpenModal"
                     />
                   </DropdownMenuContent>

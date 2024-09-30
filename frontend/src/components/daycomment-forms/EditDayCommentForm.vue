@@ -13,9 +13,10 @@ import { FetchError } from "@/utils/fetch";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/vue-query";
 import { watch } from "vue";
+import { UserComment } from "@shared/index";
 
 const props = defineProps<{
-  commentId: string;
+  comment: UserComment;
 }>();
 
 const { handleSubmit, meta, setFieldError, resetForm } = useForm({
@@ -29,8 +30,8 @@ const { handleSubmit, meta, setFieldError, resetForm } = useForm({
 defineEmits<{ close: [] }>();
 
 const { data: comment } = useQuery({
-  ...meCommentQuery(props.commentId),
-  // initialData: props.conference,
+  ...meCommentQuery(props.comment.id),
+  initialData: props.comment,
 });
 
 watch(
@@ -54,7 +55,7 @@ const onSubmit = handleSubmit((data) => {
   console.log("Create dayComment -> data:", data);
   updateComment(
     {
-      commentId: props.commentId,
+      commentId: props.comment.id,
       body: data,
     },
     {
@@ -73,7 +74,7 @@ const onSubmit = handleSubmit((data) => {
 
 <template>
   <DialogTitle class="text-xl font-bold tracking-tight">Edit</DialogTitle>
-  <DialogDescription class="mt-2 text-sm text-zinc-600">
+  <DialogDescription class="mt-2 text-sm text-zinc-500">
     Edit the comment
   </DialogDescription>
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">

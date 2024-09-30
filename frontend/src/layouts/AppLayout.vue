@@ -10,7 +10,7 @@ const { data: user } = useQuery(getMeQueryOptions);
 
 <template>
   <header
-    class="pointer-events-auto flex bg-blue-300 md:justify-center items-center p-3 px-6"
+    class="pointer-events-auto flex bg-blue-300 md:justify-center items-center p-3 px-6 md:px-10"
   >
     <div class="flex justify-between items-center flex-1">
       <div class="flex gap-1 items-center">
