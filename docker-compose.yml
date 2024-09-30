@@ -1,3 +1,5 @@
+version: '3.9'
+
 networks:
   dev:
 
@@ -22,8 +24,8 @@ services:
       - VITE_MEDIA_TWITTER=${VITE_MEDIA_TWITTER}
       - VITE_MEDIA_TELEGRAM=${VITE_MEDIA_TELEGRAM}
     ports:
-      - 80:80
-      - 443:443 
+      - "80:80"
+      - "443:443" 
     volumes:
       - .nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./certbot/conf/:/etc/letsencrypt  
@@ -34,13 +36,13 @@ services:
       - backend
 
   backend:
-    restart: "always"
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
       target: backend
     ports:
-      - 4000:4000
+      - "4000:4000"
     environment:
       - DB_CONNECTION_URI=${DB_CONNECTION_URI}
       - MINIO_ENDPOINT=${MINIO_ENDPOINT}
@@ -61,11 +63,11 @@ services:
 
   postgres:
     image: postgis/postgis:14-3.4-alpine
-    restart: unless-stopped
+    restart: always
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - altloc_postgres-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+     - "5432:5432"
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -76,7 +78,7 @@ services:
   minio:
     image: quay.io/minio/minio
     command: server /data --console-address ":9090"
-    restart: "always"
+    restart: always
     ports:
       - "9000:9000"
       - "9090:9090"
@@ -84,7 +86,7 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     volumes:
-      - minio-data:/data
+      - altloc_minio-data:/data
     networks:
       - dev
 
@@ -93,12 +95,13 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt 
       - ./certbot/www:/var/www/certbot 
-    entrypoint: ["/bin/sh", "-c", "trap 'exit 0' TERM; while :; do sleep 6h & wait $!; certbot renew; done"]
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email progof031@gmail.com -d altloc.com -d www.altloc.com --agree-tos
+    entrypoint: ["/bin/sh", "-c", "trap 'exit 0' TERM; while :; do sleep 6h & wait $!; certbot renew --non-interactive; done"]
+    command: certonly --webroot -w /var/www/certbot --force-renewal       --non-interactive --email progof031@gmail.com -d altloc.com -d www.altloc.com --agree-tos
     networks:
       - dev
 
 volumes:
-  postgres-data:
+  altloc_postgres-data:
     driver: local
-  minio-data:
+  altloc_minio-data:
+    driver: local

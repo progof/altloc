@@ -24,7 +24,7 @@ import { getSoialMediaURL } from "@/utils";
             buttonVariant({
               size: 'md',
               variant: 'secondary',
-              class: 'shrink-0 text-blue-50',
+              class: 'shrink-0 text-red-500',
             })
           "
           href="/auth/login"
