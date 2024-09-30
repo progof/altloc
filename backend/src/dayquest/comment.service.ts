@@ -71,7 +71,7 @@ export class CommentsService {
 			userId: string;
 			commentId: string;
 		}
-	): Promise<Comment> {
+	): Promise<UserComment> {
 		const comment = (
 			await db
 				.select()
@@ -87,7 +87,7 @@ export class CommentsService {
 			throw new HTTPError({ message: "Comment not found", status: 404 });
 		}
 
-		return commentSchema.parse(comment);
+		return userCommentSchema.parse(comment);
 	}
 
 	async _createComment(

@@ -57,7 +57,7 @@ export const meCommentQuery = (commentId: string) =>
 				throw new FetchError(res);
 			}
 
-			return res.json() as Promise<Comment>;
+			return res.json() as Promise<UserComment>;
 		},
 	});
 
