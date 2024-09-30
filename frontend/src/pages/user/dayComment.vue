@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DotsHorizontalIcon from "@/assets/icons/dots-horizontal.svg?component";
 import CommentActionDropdownMenu from "@/components/dayquest/CommentActionDropdownMenu.vue";
-// import { dateToUTCTimestamp } from "@/utils/date";
-// import { formatFullDateTime } from "@/utils/dayjs";
+import { formatDateToMonthDay } from "@/utils/dayjs";
 
 const { data: comments } = useQuery({
   ...commentsQuery,
@@ -76,8 +75,8 @@ function handleOpenModal(
                 v-if="comment.id"
               >
                 <div class="flex flex-col gap-3">
-                  <span class="text-zinc-400 text-[12px]">
-                    {{ comment.createdAt }}
+                  <span class="text-zinc-400 text-sm font-semibold">
+                    {{ formatDateToMonthDay(comment.createdAt) }}
                   </span>
                 </div>
                 <DropdownMenu :modal="false">

@@ -27,7 +27,7 @@ const { data: user } = useQuery(getMeQueryOptions);
       </div>
     </div>
   </header>
-  <div class="relative flex flex-1 flex-col bg-blue-50">
+  <div class="relative flex flex-1 flex-col bg-blue-50 h-screen">
     <slot />
   </div>
 </template>

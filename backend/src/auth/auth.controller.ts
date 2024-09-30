@@ -28,7 +28,7 @@ export class AuthController {
 		console.log(req.session.user);
 
 		try {
-			const user = await this.authPasswordService.getUserById(req.session.user.id);
+			const user = await this.authPasswordService.getUserById( req.session.user.id);
 			if (!user) {
 				return res.status(401).send({
 					errors: [{ message: "Not found user" }],

@@ -10,6 +10,21 @@ import {
 	PasswordAccount,
 } from "../../../db/schema.js";
 import { eq } from "drizzle-orm";
+import { HTTPError, dateToUTCTimestamp } from "@/utils.js";
+import { User } from "@shared/index.js";
+import { z, ZodType } from "zod";
+
+
+export const userSchema = z.object({
+	id: z.string(),
+	username: z.string(),
+	email: z.string(),
+	emailVerified: z.boolean(),
+	avatarKey: z.string().nullable(),
+	createdAt: z.number(),
+	role: z.string(),
+    score: z.number(),
+}) satisfies ZodType<User>;
 
 export class AuthPasswordService {
 	constructor(private readonly config: Config) {}
@@ -101,13 +116,53 @@ export class AuthPasswordService {
 			.where(eq(resetPasswordRequestsTable.userId, userId));
 	}
 
-	async getUserById(userId: string) {
-		const [user] = await db
-			.select()
-			.from(usersTable)
-			.where(eq(usersTable.id, userId));
-		return user || null;
+	async getUserById(userId: string):Promise<User> {
+		const user = (
+			await db
+				.select()
+				.from(usersTable)
+				.where(eq(usersTable.id, userId))
+		).at(0);
+
+		if (!user) {
+			throw new HTTPError({ status: 404, message: "User not found" });
+		}
+			
+		return userSchema.parse({
+			id: user.id,
+			username: user.username,
+			email: user.email,
+			emailVerified: user.emailVerified,
+			avatarKey: user.avatarKey,
+			createdAt: dateToUTCTimestamp(user.createdAt),
+			role: user.role,
+			score: user.score,
+		} satisfies User);
 	}
+
+	// async getUserById(db: Database | Transaction, userId: string): Promise<User> {
+	// 	const user = (
+	// 		await db
+	// 			.select()
+	// 			.from(usersTable)
+	// 			.where(eq(usersTable.id, userId))
+	// 	).at(0);
+
+	// 	if (!user) {
+	// 		throw new HTTPError({ status: 404, message: "User not found" });
+	// 	}
+
+	// 	return userSchema.parse({
+	// 		id: user.id,
+	// 		username: user.username,
+	// 		email: user.email,
+	// 		emailVerified: user.emailVerified,
+	// 		avatarKey: user.avatarKey,
+	// 		createdAt: dateToUTCTimestamp(user.createdAt),
+	// 		role: user.role,
+	// 		score: user.score,
+	// 	} satisfies User);
+	// }
 
 	async getUserRoleById(userId: string) {
 		const [user] = await db

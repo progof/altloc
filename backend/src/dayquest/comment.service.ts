@@ -1,14 +1,14 @@
 import { dayQuestCommentsTable } from "@db/schema.js";
 import { z, ZodType } from "zod";
 import { and, eq } from "drizzle-orm";
-import { HTTPError, type Database, type Transaction } from "@/utils.js";
+import { HTTPError, type Database, type Transaction, dateToUTCTimestamp } from "@/utils.js";
 import { Comment } from "@shared/index.js";
 
 export const commentSchema = z.object({
 	id: z.string(),
 	creatorId: z.string(),
 	description: z.string(),
-	createdAt: z.date(),
+	createdAt: z.number(),
 }) satisfies ZodType<Comment>;
 
 export const createCommentBodySchema = z.object({
@@ -140,8 +140,13 @@ export class CommentsService {
 			.where(eq(dayQuestCommentsTable.creatorId, options.userId))
 			.orderBy(dayQuestCommentsTable.createdAt);
 
-		// Убедитесь, что результат запроса — массив
-		return comments.map((comment) => commentSchema.parse(comment));
+		return comments.map((comment) => commentSchema.parse(
+			{
+				id: comment.id,
+				creatorId: comment.creatorId,
+				description: comment.description,
+				createdAt: dateToUTCTimestamp(comment.createdAt),
+			} satisfies Comment));
 	}
 
 	async deleteComment(

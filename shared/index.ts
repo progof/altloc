@@ -6,7 +6,7 @@ export interface User {
 	avatarKey: string | null;
 	role: string;
 	score: number;
-	createdAt: Date;
+	createdAt: number;
 }
 
 export interface Task {
@@ -20,7 +20,7 @@ export interface Comment {
 	id: string;
 	creatorId: string;
 	description: string;
-	createdAt: Date;
+	createdAt: number;
 }
 
 export interface DayQuestCategory {

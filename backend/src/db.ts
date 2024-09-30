@@ -9,6 +9,7 @@ import type { ExtractTablesWithRelations } from "drizzle-orm";
 import { config } from "@/config.js";
 
 const sql = postgres(config.DB_CONNECTION_URI);
+
 export const db = drizzle(sql, { schema });
 
 (async () => {
