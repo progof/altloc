@@ -56,7 +56,7 @@ const onSubmit = handleSubmit((data) => {
       placeholder="Cool day..."
     />
 
-    <div class="mt-4 flex justify-end border-t border-zinc-200 pt-4">
+    <div class="mt-4 flex justify-end pt-4">
       <Button
         :disabled="!meta.dirty || isPending"
         class="relative font-semibold"

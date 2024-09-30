@@ -63,15 +63,15 @@ function handleOpenModal(
           </div>
 
           <div
-            class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 min-w-[300px]"
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 min-w-[300px]"
           >
             <div
-              class="flex flex-col gap-6 bg-blue-100 p-3 rounded-xl w-full flex-1"
+              class="flex flex-col gap-3 bg-blue-100 p-3 rounded-xl w-full flex-1"
               v-for="comment in comments"
               :key="comment.id"
             >
               <div
-                class="flex items-center gap-3 justify-between"
+                class="flex items-center gap-1 justify-between"
                 v-if="comment.id"
               >
                 <div class="flex flex-col gap-3">

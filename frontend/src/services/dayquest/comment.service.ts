@@ -1,7 +1,7 @@
 import { useMutation, queryOptions, useQueryClient } from "@tanstack/vue-query";
 import { z } from "zod";
 import { FetchError } from "@/utils/fetch";
-import { Comment } from "@shared/index";
+import { UserComment } from "@shared/index";
 
 export const updateCommentBodySchema = z.object({
 	description: z.string().min(1).max(256),
@@ -44,7 +44,7 @@ export const commentsQuery = queryOptions({
 			throw new FetchError(res);
 		}
 
-		return res.json() as Promise<Comment[]>;
+		return res.json() as Promise<UserComment[]>;
 	},
 });
 

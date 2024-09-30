@@ -16,11 +16,18 @@ export interface Task {
 	isCompleted: boolean;
 }
 
-export interface Comment {
+export interface UserComment {
 	id: string;
 	creatorId: string;
 	description: string;
 	createdAt: number;
+}
+
+export interface Comment {
+	id: string;
+	creatorId: string;
+	description: string;
+	createdAt: Date;
 }
 
 export interface DayQuestCategory {

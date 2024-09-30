@@ -2,14 +2,22 @@ import { dayQuestCommentsTable } from "@db/schema.js";
 import { z, ZodType } from "zod";
 import { and, eq } from "drizzle-orm";
 import { HTTPError, type Database, type Transaction, dateToUTCTimestamp } from "@/utils.js";
-import { Comment } from "@shared/index.js";
+import { Comment, UserComment } from "@shared/index.js";
 
 export const commentSchema = z.object({
 	id: z.string(),
 	creatorId: z.string(),
 	description: z.string(),
-	createdAt: z.number(),
+	createdAt: z.date(),
 }) satisfies ZodType<Comment>;
+
+
+export const userCommentSchema = z.object({
+	id: z.string(),
+	creatorId: z.string(),
+	description: z.string(),
+	createdAt: z.number(),
+}) satisfies ZodType<UserComment>;
 
 export const createCommentBodySchema = z.object({
 	description: z.string().min(1).max(256),
@@ -100,7 +108,7 @@ export class CommentsService {
 				.returning()
 		).at(0);
 		if (!comment) {
-			throw new Error("Failed to create task");
+			throw new Error("Failed to create comment");
 		}
 
 		return commentSchema.parse(comment);
@@ -133,20 +141,20 @@ export class CommentsService {
 		options: {
 			userId: string;
 		}
-	): Promise<Comment[]> {
+	): Promise<UserComment[]> {
 		const comments = await db
 			.select()
 			.from(dayQuestCommentsTable)
 			.where(eq(dayQuestCommentsTable.creatorId, options.userId))
 			.orderBy(dayQuestCommentsTable.createdAt);
 
-		return comments.map((comment) => commentSchema.parse(
+		return comments.map((comment) => userCommentSchema.parse(
 			{
 				id: comment.id,
 				creatorId: comment.creatorId,
 				description: comment.description,
 				createdAt: dateToUTCTimestamp(comment.createdAt),
-			} satisfies Comment));
+			} satisfies UserComment));
 	}
 
 	async deleteComment(
