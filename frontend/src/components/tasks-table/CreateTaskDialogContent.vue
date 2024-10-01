@@ -48,7 +48,12 @@ const onSubmit = handleSubmit((data) => {
     </DialogDescription>
     <form @submit.prevent="onSubmit" class="mt-4 flex flex-col">
       <div class="mb-4 flex flex-col gap-3">
-        <TextField name="name" label="Name" placeholder="Make eat" />
+        <TextField
+          name="name"
+          label="Name"
+          placeholder="Make eat"
+          class="text-zinc-600"
+        />
       </div>
       <Button
         type="submit"

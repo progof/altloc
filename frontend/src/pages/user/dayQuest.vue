@@ -65,7 +65,9 @@ function handleOpenModal(
       <div class="container flex w-auto flex-col gap-6">
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
-            <h2 class="text-xl font-bold tracking-tight">DayQuest</h2>
+            <h2 class="text-xl font-bold tracking-tight text-blue-400">
+              DayQuest
+            </h2>
 
             <Button
               size="md"
@@ -100,9 +102,15 @@ function handleOpenModal(
               :key="category.id"
             >
               <div class="flex items-center gap-3 justify-between w-full">
-                <div>
+                <div class="flex gap-3 items-center">
+                  <span class="size-3 rounded-full bg-blue-500"></span>
                   <span class="text-zinc-500 font-semibold">
-                    {{ category.name }} ({{ category.tasks.length }})
+                    {{ category.name }}s
+                  </span>
+                  <span class="text-zinc-500">
+                    ({{
+                      category.tasks.filter((task) => task.isCompleted).length
+                    }}/{{ category.tasks.length }})
                   </span>
                 </div>
                 <DropdownMenu :modal="false">
@@ -149,7 +157,7 @@ function handleOpenModal(
                   <Button
                     size="sm"
                     :desibled="IsDeleteTaskPeding"
-                    class="bg-transparent hover:bg-transparent"
+                    class="bg-transparent hover:bg-transparent p-1"
                     @click="
                       () => {
                         deleteTask(task.id);
