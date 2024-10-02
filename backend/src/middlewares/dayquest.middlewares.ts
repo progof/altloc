@@ -14,9 +14,12 @@ export async function checkCategoriesLimit(
     req.session.user.id
   );
   if (categories.length >= 5) {
-    return res.status(400).json({
-      message: "You can't have more than 5 categories",
-    });
+    // return res.status(400).json({
+    //   message: "You can't have more than 5 categories",
+    // });
+    return res
+      .status(400)
+      .send({ errors: [{ message: "You can't have more than 5 categories" }] });
   }
   next();
 }

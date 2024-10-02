@@ -32,10 +32,11 @@ const { errorMessage, handleBlur, handleChange, handleReset, value } =
       :autocomplete="props.autocomplete"
       :placeholder="props.placeholder"
       @change="handleChange"
+      s
       @blue="handleBlur"
       @reset="handleReset"
     />
-    <span v-if="errorMessage" class="block text-xs text-red-600">
+    <span v-if="errorMessage" class="block text-xs text-red-600 mt-2">
       {{ errorMessage }}
     </span>
   </div>
