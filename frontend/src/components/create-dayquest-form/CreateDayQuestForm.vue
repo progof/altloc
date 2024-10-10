@@ -36,7 +36,10 @@ const onSubmit = handleSubmit((data) => {
       },
       onError: async (error) => {
         if (error instanceof FetchError) {
-          setFieldError("name", error.message);
+          const body = (await error.response.json()) as {
+            errors: { message: string }[];
+          };
+          setFieldError("name", body.errors[0].message);
         }
       },
     }

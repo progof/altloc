@@ -83,6 +83,8 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_DOMAIN: cdn.altloc.com
+      MINIO_SERVER_URL: http://cdn.altloc.com:9000
     volumes:
       - minio-data:/data
     networks:
