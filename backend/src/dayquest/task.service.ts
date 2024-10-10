@@ -69,6 +69,18 @@ export class TasksService {
 		return z.array(taskSchema).parse(tasks);
 	}
 
+	async getUserTasksByUserId(
+		db: Database | Transaction,
+		userId: string
+	): Promise<Task[]> {
+		const tasks = await db
+			.select()
+			.from(dayQuestTasksTable)
+			.where(eq(dayQuestTasksTable.creatorId, userId));
+
+		return z.array(taskSchema).parse(tasks);
+	}
+
 	async _createTask(
 		db: Database | Transaction,
 		options: {

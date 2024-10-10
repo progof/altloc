@@ -24,6 +24,7 @@ export const userSchema = z.object({
 	createdAt: z.number(),
 	role: z.string(),
     score: z.number(),
+	level: z.number(),
 }) satisfies ZodType<User>;
 
 export class AuthPasswordService {
@@ -137,6 +138,7 @@ export class AuthPasswordService {
 			createdAt: dateToUTCTimestamp(user.createdAt),
 			role: user.role,
 			score: user.score,
+			level: user.level,
 		} satisfies User);
 	}
 

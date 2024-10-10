@@ -9,10 +9,9 @@ import {
   useCreateTaskMutation,
   createTaskBodySchema,
 } from "@/services/dayquest/task.service";
+import { FetchError } from "@/utils/fetch";
 
-// import EditIcon from "@/assets/icons/edit.svg?component";
-
-const { handleSubmit, meta } = useForm({
+const { handleSubmit, meta, setFieldError } = useForm({
   validationSchema: toTypedSchema(createTaskBodySchema),
 });
 
@@ -22,8 +21,6 @@ const props = defineProps<{
   categoryId: string;
 }>();
 
-console.log("CreateTaskDialogContent -> categoryId", props.categoryId);
-
 const { mutate: createTask, isPending } = useCreateTaskMutation();
 
 const onSubmit = handleSubmit((data) => {
@@ -31,10 +28,24 @@ const onSubmit = handleSubmit((data) => {
     ...data,
     categoryId: props.categoryId,
   };
+  console.log("Create dayQuest -> data:", data);
+  createTask(
+    formData,
 
-  console.log("Create task -> data:", formData);
-
-  createTask(formData, { onSettled: () => emit("close") });
+    {
+      onSuccess: () => {
+        emit("close");
+      },
+      onError: async (error) => {
+        if (error instanceof FetchError) {
+          const body = (await error.response.json()) as {
+            errors: { message: string }[];
+          };
+          setFieldError("name", body.errors[0].message);
+        }
+      },
+    }
+  );
 });
 </script>
 

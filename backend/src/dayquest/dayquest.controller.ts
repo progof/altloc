@@ -10,7 +10,7 @@ import {
   createCommentBodySchema,
 } from "@/dayquest/comment.service.js";
 import { db } from "@/db.js";
-import { checkCategoriesLimit } from "../middlewares/dayquest.middlewares.js";
+import { checkCategoriesLimit, checkTasksLimit, checkLevel } from "../middlewares/dayquest.middlewares.js";
 
 export class DayQuestController {
   public readonly router = Router();
@@ -44,6 +44,7 @@ export class DayQuestController {
     );
     this.router.post(
       "/dayquest/task/create",
+      checkTasksLimit,
       this.createDayQuestTask.bind(this)
     );
     this.router.delete(
@@ -56,6 +57,7 @@ export class DayQuestController {
     );
     this.router.patch(
       "/dayquest/task/complete/:task_id",
+      checkLevel,
       this.completeTask.bind(this)
     );
     this.router.patch(

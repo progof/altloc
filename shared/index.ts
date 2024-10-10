@@ -6,6 +6,7 @@ export interface User {
 	avatarKey: string | null;
 	role: string;
 	score: number;
+	level: number;
 	createdAt: number;
 }
 

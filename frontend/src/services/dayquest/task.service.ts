@@ -30,6 +30,14 @@ export const createTaskBodySchema = z.object({
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 
+// const errorSchema = z.object({
+// 	errors: z.array(
+// 		z.object({
+// 			message: z.string(),
+// 		})
+// 	),
+// });
+
 export const tasksQuery = queryOptions({
 	queryKey: ["api", "dayquest", "tasks"],
 	queryFn: async ({ signal }) => {
@@ -72,6 +80,10 @@ export function useCreateTaskMutation() {
 			if (!res.ok) {
 				throw new FetchError(res);
 			}
+			// if (!res.ok) {
+			// 	const errors = errorSchema.parse(await res.json()).errors;
+			// 	throw new Error(errors.at(0)?.message);
+			// }
 
 			return res.json() as Promise<Task>;
 		},
@@ -158,6 +170,21 @@ export function useCompleteTaskMutation() {
 					};
 				}
 				
+			);
+			// queryClient for user upadate level
+			queryClient.setQueryData(
+				getMeQueryOptions.queryKey,
+				(user: User | undefined) => {
+					if (!user) return;
+					const needSroceForNextLevel = (user.level + 1) * 8;
+					if (user.score >= needSroceForNextLevel) {
+						return {
+							...user,
+							level: user.level + 1,
+						};
+					}
+					return user;
+				}
 			);
 			
 		},

@@ -15,6 +15,7 @@ export const usersTable = pgTable("users", {
 	avatarKey: text("avatar_key"),
 	role: text("role").notNull().default("user"),
 	score: integer("score").notNull().default(0),
+	level: integer("level").notNull().default(1),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -68,7 +69,9 @@ export type DayQuestCategory = typeof dayQuestCategoriesTable.$inferSelect;
 
 export const dayQuestTasksTable = pgTable("day_quest_tasks", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	categoryId: uuid("category_id").notNull(),
+	categoryId: uuid("category_id")
+		.notNull()
+		.references(() => dayQuestCategoriesTable.id, { onDelete: "cascade" }),
 	creatorId: uuid("user_id").notNull(),
 	name: text("name").notNull(),
 	isCompleted: boolean("is_completed").notNull().default(false),
@@ -76,6 +79,7 @@ export const dayQuestTasksTable = pgTable("day_quest_tasks", {
 		.notNull()
 		.defaultNow(),
 });
+
 
 export type DayQuestTask = typeof dayQuestTasksTable.$inferSelect;
 

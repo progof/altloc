@@ -4,10 +4,8 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useCreateCategoryMutation } from "@/services/dayquest/category.service";
 import { TextField } from "@/components/ui/input";
-// import { TasksTable } from "@/components/tasks-table";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
 import { Button } from "@/components/ui/button";
-// import DayQuestImageUpload from "./DayQuestImageUpload.vue";
 import { FetchError } from "@/utils/fetch";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
@@ -48,7 +46,7 @@ const onSubmit = handleSubmit((data) => {
 </script>
 
 <template>
-  <DialogTitle class="text-xl font-bold tracking-tight"> DayQuest </DialogTitle>
+  <DialogTitle class="text-xl font-bold tracking-tight"> DayQuest</DialogTitle>
   <DialogDescription class="mt-2 text-sm text-zinc-600">
     Create a new category for your dayQuest
   </DialogDescription>
