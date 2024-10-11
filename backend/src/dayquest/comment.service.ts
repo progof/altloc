@@ -92,6 +92,12 @@ export class CommentsService {
     }
 
     return commentSchema.parse(comment);
+    // return commentSchema.parse({
+    //   id: comment.id,
+    //   creatorId: comment.creatorId,
+    //   description: comment.description,
+    //   createdAt: dateToUTCTimestamp(comment.createdAt),
+    // });
   }
 
   async _createComment(

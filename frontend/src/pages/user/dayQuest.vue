@@ -61,7 +61,7 @@ function handleOpenModal(
 
 <template>
   <AppLayout>
-    <section class="relative mt-6 px-3 md:px-10">
+    <section class="relative mt-6 px-3 md:px-10 md:mb-">
       <div class="container flex w-auto flex-col gap-6">
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
@@ -105,7 +105,7 @@ function handleOpenModal(
                 <div class="flex gap-3 items-center">
                   <span class="size-3 rounded-full bg-blue-500"></span>
                   <span class="text-zinc-500 font-semibold">
-                    {{ category.name }}s
+                    {{ category.name }}
                   </span>
                   <span class="text-zinc-500">
                     ({{

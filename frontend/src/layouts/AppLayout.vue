@@ -22,15 +22,17 @@ const { data: user } = useQuery(getMeQueryOptions);
       <div class="flex items-center gap-x-6">
         <div class="flex items-center gap-1.5">
           <div
-            class="flex flex-col gap-1 bg-blue-200 p-2 rounded-xl items-center"
+            class="flex gap-3 bg-blue-200 p-2 rounded-xl items-center"
             title="Level"
           >
             <div class="flex gap-1">
               <StarIcon class="size-6 stroke-[1.7] text-zinc-700" />
-              <span class="text-zinc-700">{{ user?.level }}</span>
+              <span class="text-zinc-700" v-if="user"
+                >{{ user.level }} lvl</span
+              >
             </div>
-            <span class="text-zinc-500 text-xs" v-if="user">
-              {{ user?.score }} / {{ (user.level + 1) * 8 }}</span
+            <span class="text-zinc-500 text-sm" v-if="user">
+              Exp: {{ user.score }} / {{ (user.level + 1) * 8 }}</span
             >
           </div>
           <div

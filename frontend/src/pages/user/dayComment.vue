@@ -67,7 +67,7 @@ function handleOpenModal(
           </div>
 
           <div
-            class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:grid-rows-2 min-w-[300px] mt-5"
+            class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 min-w-[300px] mt-5"
           >
             <div
               class="flex flex-col gap-3 bg-blue-100 p-3 rounded-xl w-full flex-1"
@@ -107,6 +107,7 @@ function handleOpenModal(
               </div>
               <div v-if="!comment.id" class="text-zinc-500">
                 <span
+                  v-if="!comment.id"
                   class="text-zinc-400 flex items-center justify-center font-semibold"
                   >No comment yet</span
                 >

@@ -4,7 +4,7 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import {
   useUpdateCommentMutation,
-  meCommentQuery,
+  commentsQuery,
 } from "@/services/dayquest/comment.service";
 import { TextArea } from "@/components/ui/text-area";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { FetchError } from "@/utils/fetch";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/vue-query";
-import { watch, onMounted, ref } from "vue";
+import { watch } from "vue";
 import { UserComment } from "@shared/index";
 
 const props = defineProps<{
@@ -27,28 +27,29 @@ const { handleSubmit, meta, setFieldError, resetForm } = useForm({
   ),
 });
 
-defineEmits<{ close: [] }>();
-
-const { data: comment } = useQuery({
-  ...meCommentQuery(props.comment.id),
-  initialData: props.comment,
-});
-
+const { data: comments } = useQuery(commentsQuery);
+console.log("comment:", comments);
 watch(
-  comment,
+  comments,
   () => {
-    if (!comment.value) return;
-    resetForm({
-      values: {
-        description: comment.value.description,
-      },
-    });
+    const comment = comments.value?.find(
+      (comment) => comment.id === props.comment.id
+    );
+    console.log("comment:", comment);
+    if (comment) {
+      resetForm({
+        values: {
+          description: comment.description,
+        },
+      });
+    }
   },
   {
     immediate: true,
   }
 );
 
+const emit = defineEmits<{ close: [] }>();
 const { mutate: updateComment, isPending } = useUpdateCommentMutation();
 
 const onSubmit = handleSubmit((data) => {
@@ -60,7 +61,8 @@ const onSubmit = handleSubmit((data) => {
     },
     {
       onSuccess: () => {
-        location.assign("/user/day-comment");
+        // location.assign("/user/day-comment");
+        emit("close");
       },
       onError: async (error) => {
         if (error instanceof FetchError) {
@@ -70,9 +72,6 @@ const onSubmit = handleSubmit((data) => {
     }
   );
 });
-
-const isMounted = ref(false);
-onMounted(() => (isMounted.value = true));
 </script>
 
 <template>
@@ -87,7 +86,7 @@ onMounted(() => (isMounted.value = true));
       name="description"
       label="Description"
       placeholder="Business"
-      v-if="isMounted"
+      class="text-zinc-600"
     />
 
     <div class="mt-4 flex justify-end pt-4">
