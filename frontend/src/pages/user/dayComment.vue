@@ -67,6 +67,7 @@ function handleOpenModal(
           </div>
 
           <div
+            v-if="comments && comments.length > 0"
             class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 min-w-[300px] mt-5"
           >
             <div
@@ -105,14 +106,14 @@ function handleOpenModal(
                   {{ comment.description }}
                 </span>
               </div>
-              <div v-if="!comment.id" class="text-zinc-500">
-                <span
-                  v-if="!comment.id"
-                  class="text-zinc-400 flex items-center justify-center font-semibold"
-                  >No comment yet</span
-                >
-              </div>
             </div>
+          </div>
+          <div v-else class="text-zinc-500 mt-5">
+            <span
+              class="text-zinc-400 flex items-center justify-center font-semibold"
+            >
+              No comment yet
+            </span>
           </div>
         </div>
       </div>

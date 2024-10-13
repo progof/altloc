@@ -27,11 +27,11 @@ const { data: user } = useQuery(getMeQueryOptions);
           >
             <div class="flex gap-1">
               <StarIcon class="size-6 stroke-[1.7] text-zinc-700" />
-              <span class="text-zinc-700" v-if="user"
-                >{{ user.level }} lvl</span
-              >
+              <span class="text-zinc-700" v-if="user">
+                {{ user.level }} lvl
+              </span>
             </div>
-            <span class="text-zinc-500 text-sm" v-if="user">
+            <span class="text-zinc-500 text-sm hidden md:block" v-if="user">
               Exp: {{ user.score }} / {{ (user.level + 1) * 8 }}</span
             >
           </div>
