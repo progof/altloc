@@ -1,4 +1,4 @@
-import { dayQuestCommentsTable } from "@db/schema.js";
+import { dayCommentsTable } from "@db/schema.js";
 import { z, ZodType } from "zod";
 import { and, eq, desc } from "drizzle-orm";
 import {
@@ -54,14 +54,15 @@ export class CommentsService {
 
     const comment = (
       await db
-        .update(dayQuestCommentsTable)
+        .update(dayCommentsTable)
         .set({
           description: body.description,
+          emotionalState: body.emotionalState,
         })
         .where(
           and(
-            eq(dayQuestCommentsTable.id, commentId),
-            eq(dayQuestCommentsTable.creatorId, creatorId)
+            eq(dayCommentsTable.id, commentId),
+            eq(dayCommentsTable.creatorId, creatorId)
           )
         )
         .returning()
@@ -83,11 +84,11 @@ export class CommentsService {
     const comment = (
       await db
         .select()
-        .from(dayQuestCommentsTable)
+        .from(dayCommentsTable)
         .where(
           and(
-            eq(dayQuestCommentsTable.id, options.commentId),
-            eq(dayQuestCommentsTable.creatorId, options.userId)
+            eq(dayCommentsTable.id, options.commentId),
+            eq(dayCommentsTable.creatorId, options.userId)
           )
         )
     ).at(0);
@@ -114,7 +115,7 @@ export class CommentsService {
     const { body, userId } = options;
     const comment = (
       await db
-        .insert(dayQuestCommentsTable)
+        .insert(dayCommentsTable)
         .values({
           creatorId: userId,
           description: body.description,
@@ -160,9 +161,9 @@ export class CommentsService {
   ): Promise<UserComment[]> {
     const comments = await db
       .select()
-      .from(dayQuestCommentsTable)
-      .where(eq(dayQuestCommentsTable.creatorId, options.userId))
-      .orderBy(desc(dayQuestCommentsTable.createdAt));
+      .from(dayCommentsTable)
+      .where(eq(dayCommentsTable.creatorId, options.userId))
+      .orderBy(desc(dayCommentsTable.createdAt));
 
     return comments.map((comment) =>
       userCommentSchema.parse({
@@ -188,11 +189,11 @@ export class CommentsService {
     const comment = (
       await db
         .select()
-        .from(dayQuestCommentsTable)
+        .from(dayCommentsTable)
         .where(
           and(
-            eq(dayQuestCommentsTable.id, commentId),
-            eq(dayQuestCommentsTable.creatorId, creatorId)
+            eq(dayCommentsTable.id, commentId),
+            eq(dayCommentsTable.creatorId, creatorId)
           )
         )
     ).at(0);
@@ -209,11 +210,11 @@ export class CommentsService {
     }
 
     await db
-      .delete(dayQuestCommentsTable)
+      .delete(dayCommentsTable)
       .where(
         and(
-          eq(dayQuestCommentsTable.id, commentId),
-          eq(dayQuestCommentsTable.creatorId, creatorId)
+          eq(dayCommentsTable.id, commentId),
+          eq(dayCommentsTable.creatorId, creatorId)
         )
       );
     return commentSchema.parse(comment);

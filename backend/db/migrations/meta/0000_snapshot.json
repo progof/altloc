@@ -1,5 +1,5 @@
 {
-  "id": "45099b94-363a-4751-9acc-971151182de0",
+  "id": "356755a6-cbc7-4f37-b525-bd8d483c331c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -119,8 +119,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.day_quest_comments": {
-      "name": "day_quest_comments",
+    "public.comments": {
+      "name": "comments",
       "schema": "",
       "columns": {
         "id": {

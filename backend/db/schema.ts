@@ -133,7 +133,7 @@ export const emotionalStateEnum = pgEnum(
 );
 
 
-export const dayQuestCommentsTable = pgTable("day_quest_comments", {
+export const dayCommentsTable = pgTable("comments", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	creatorId: uuid("user_id").notNull(),
 	description: text("description").notNull(),
@@ -141,4 +141,4 @@ export const dayQuestCommentsTable = pgTable("day_quest_comments", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export type DayQuestComment = typeof dayQuestCommentsTable.$inferSelect;
+export type DayQuestComment = typeof dayCommentsTable.$inferSelect;

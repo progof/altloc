@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS "completed_tasks" (
 	"completed_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "day_quest_comments" (
+CREATE TABLE IF NOT EXISTS "comments" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"description" text NOT NULL,
