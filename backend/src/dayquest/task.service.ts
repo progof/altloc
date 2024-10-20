@@ -1,6 +1,6 @@
 import { completedTasksTable, habitTasksTable, usersTable } from "@db/schema.js";
 import { z, ZodType } from "zod";
-import { and, eq, sql, gte, lt } from "drizzle-orm";
+import { and, eq, sql, gte} from "drizzle-orm";
 import { HTTPError, type Database, type Transaction } from "@/utils.js";
 import { Task } from "@shared/index.js";
 

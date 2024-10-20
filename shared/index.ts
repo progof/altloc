@@ -65,6 +65,11 @@ export interface CategoryTask {
 	tasks: Task[];
 }
 
+export interface Category {
+	id: string;
+	name: string;
+}
+
 export const TASK_DIFFICULTY = {
 	EASY: "EASY",
 	MEDIUM: "MEDIUM",

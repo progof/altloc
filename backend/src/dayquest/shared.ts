@@ -1,6 +1,6 @@
 import { habitTasksTable, habitCategoriesTable, completedTasksTable } from "@db/schema.js";
 import { type Transaction } from "@/utils.js";
-import { UserTask, type HabitCategory } from "@shared/index.js";
+import { UserTask, type Category } from "@shared/index.js";
 import { inArray, eq, sql } from "drizzle-orm";
 
 const getStartOfToday = () => {
@@ -11,7 +11,7 @@ const getStartOfToday = () => {
 
 export function createBaseCategoryObject(options: {
 	category: typeof habitCategoriesTable.$inferSelect;
-}): HabitCategory {
+}): Category {
 	const { category } = options;
 	return {
 		id: category.id,
