@@ -12,7 +12,7 @@ const checked = defineModel<boolean>({ default: false });
     v-model:checked="checked"
     :class="
       twMerge(
-        'relative inline-flex size-4 shrink-0 items-center justify-center rounded-[3px] border border-zinc-300 outline-none ring-zinc-300/75 transition-[box-shadow] hover:bg-white/5 focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:focus-within:ring-blue-500/40',
+        'relative inline-flex size-4 shrink-0 items-center justify-center rounded-[3px] border border-zinc-500 outline-none ring-zinc-300/75 transition-[box-shadow] hover:bg-white/5 focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:focus-within:ring-blue-500/40',
         props.class
       )
     "

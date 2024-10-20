@@ -383,72 +383,6 @@ export class DayQuestController {
     }
   }
 
-  // Complete a task
-  // async completeTask(req: Request, res: Response) {
-  // 	if (!req.session.user) {
-  // 		return res.status(401).send({
-  // 			errors: [{ message: "No active session found" }],
-  // 		});
-  // 	}
-
-  // 	const user = req.session.user;
-
-  // 	const parsedResult = z
-  // 		.object({
-  // 			task_id: z.string().uuid(),
-  // 		})
-  // 		.safeParse(req.params);
-
-  // 	if (!parsedResult.success) {
-  // 		console.error(
-  // 			"Invalid task ID for complete operation:",
-  // 			parsedResult.error.issues
-  // 		);
-  // 		return res.status(400).json({ errors: parsedResult.error.issues });
-  // 	}
-
-  // 	const { task_id } = parsedResult.data;
-  // 	console.log("completeTask -> task_id", task_id);
-
-  // 	try {
-  // 		const taskData = await this.taskService.getTaskById(db, {
-  // 			taskId: task_id,
-  // 			userId: user.id,
-  // 		});
-
-  // 		console.log("completeTask -> taskData", taskData);
-
-  // 		// Проверяем состояние задачи
-  // 		if (taskData.isCompleted) {
-  // 			// Если задача завершена, восстанавливаем её
-  // 			await this.taskService.unCompleteTask(db, {
-  // 				userId: user.id,
-  // 				taskId: task_id,
-  // 			});
-  // 			console.log("Task marked as incomplete");
-  // 			return res.status(200).send({
-  // 				message: "Task marked as incomplete",
-  // 				task: { ...taskData, isCompleted: false }, // Возвращаем обновленные данные
-  // 			});
-  // 		} else {
-  // 			// Если задача не завершена, завершаем её
-  // 			const task = await this.taskService.completeTask(db, {
-  // 				userId: user.id,
-  // 				taskId: task_id,
-  // 			});
-  // 			console.log("completeTask -> task", task);
-  // 			return res.status(200).send({
-  // 				message: "Task completed successfully",
-  // 				task,
-  // 			});
-  // 		}
-  // 	} catch (error) {
-  // 		console.error("Error while completing task:", error);
-  // 		return res.status(500).send({
-  // 			errors: [{ message: "Failed to complete task" }],
-  // 		});
-  // 	}
-  // }
 
   async completeTask(req: Request, res: Response) {
     if (!req.session.user) {
@@ -476,19 +410,6 @@ export class DayQuestController {
     const { task_id } = parsedResult.data;
     console.log("completeTask -> task_id", task_id);
 
-    // const taskData = await this.taskService.getTaskById(db, {
-    // 	taskId: task_id,
-    // 	userId: user.id,
-    // });
-
-    // console.log("completeTask -> taskData", taskData);
-
-    // if (taskData.isCompleted === false) {
-    // 	await this.taskService.unCompleteTask(db, {
-    // 		userId: user.id,
-    // 		taskId: task_id,
-    // 	});
-    // }
 
     try {
       const task = await this.taskService.completeTask(db, {
@@ -623,7 +544,9 @@ export class DayQuestController {
     try {
       const tasks = await this.taskService.getUserTasksByCategoryId(
         db,
-        category_id
+
+      category_id,
+  
       );
 
       if (!tasks || tasks.length === 0) {

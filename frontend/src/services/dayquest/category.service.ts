@@ -1,7 +1,7 @@
 import { useMutation, queryOptions, useQueryClient } from "@tanstack/vue-query";
 import { z } from "zod";
 import { FetchError } from "@/utils/fetch";
-import { Category } from "@shared/index";
+import { HabitCategory } from "@shared/index";
 
 export const updateCategoryBodySchema = z.object({
 	name: z.string().min(6).max(32),
@@ -44,7 +44,7 @@ export const categoriesQuery = queryOptions({
 			throw new FetchError(res);
 		}
 
-		return res.json() as Promise<Category[]>;
+		return res.json() as Promise<HabitCategory[]>;
 	},
 });
 
@@ -59,7 +59,7 @@ export const userCategoryQuery = (categoryId: string) =>
 				throw new FetchError(res);
 			}
 
-			return res.json() as Promise<Category>;
+			return res.json() as Promise<HabitCategory>;
 		},
 	});
 

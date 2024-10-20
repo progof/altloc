@@ -24,6 +24,7 @@ import {
 } from "@/services/dayquest/task.service";
 import DeleteIcon from "@/assets/icons/delete.svg?component";
 import { EditDayQuestForm } from "@/components/edit-dayquest-form";
+import { Badge } from "@/components/ui/badge";
 
 const { data: categories } = useQuery({
   ...categoriesQuery,
@@ -80,16 +81,12 @@ function handleOpenModal(
               <PlusIcon class="size-5 stroke-[1.9] text-zinc-50" />
             </Button>
           </div>
-          <span class="text-zinc-500 text-xs font-semibold">
-            Create categories of skills that you want to pump every day, and
-            then add tasks to them
-          </span>
-          <div class="flex items-center gap-1">
-            <InfoIcon class="size-4 stroke-[1.7] text-zinc-500" />
-            <span
-              class="text-xs text-zinc-500 font-semibold underline-offset-1 underline"
-            >
-              Every day at 00:05 all tasks will be reset!
+
+          <div class="flex items-center gap-3">
+            <InfoIcon class="size-6 stroke-[1.7] text-zinc-500" />
+            <span class="text-xs text-zinc-500 font-semibold">
+              Create categories of skills that you want to pump every day, and
+              then add tasks to them
             </span>
           </div>
 
@@ -133,7 +130,7 @@ function handleOpenModal(
                 <li
                   v-for="task in category.tasks"
                   :key="task.id"
-                  class="flex items-center gap-2 justify-between"
+                  class="flex items-center gap-2 justify-between bg-blue-50 p-3 rounded-xl mb-3"
                   v-if="category.tasks"
                 >
                   <div class="flex items-center gap-3">
@@ -150,9 +147,22 @@ function handleOpenModal(
                         }
                       "
                     />
-                    <label :for="task.id" class="text-zinc-500">{{
-                      task.name
-                    }}</label>
+                    <div class="flex flex-col gap-3">
+                      <span
+                        :for="task.id"
+                        class="text-zinc-500 data-[state=checked]:stroke-indigo-50"
+                      >
+                        {{ task.name }}
+                      </span>
+                      <div class="flex gap-3 items-center">
+                        <Badge size="sm" variant="blue">
+                          {{ task.priority }}
+                        </Badge>
+                        <Badge size="sm" variant="green">
+                          {{ task.difficulty }}
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
                   <Button
                     size="sm"

@@ -13,6 +13,7 @@ export const commentSchema = z.object({
   id: z.string(),
   creatorId: z.string(),
   description: z.string(),
+  emotionalState: z.enum(["VERY_BAD", "BAD", "NEUTRAL", "GOOD", "VERY_GOOD"]),
   createdAt: z.date(),
 }) satisfies ZodType<Comment>;
 
@@ -20,17 +21,20 @@ export const userCommentSchema = z.object({
   id: z.string(),
   creatorId: z.string(),
   description: z.string(),
+  emotionalState: z.enum(["VERY_BAD", "BAD", "NEUTRAL", "GOOD", "VERY_GOOD"]),
   createdAt: z.number(),
 }) satisfies ZodType<UserComment>;
 
 export const createCommentBodySchema = z.object({
   description: z.string().min(1).max(256),
+  emotionalState: z.enum(["VERY_BAD", "BAD", "NEUTRAL", "GOOD", "VERY_GOOD"]),
 });
 
 export type CreateCommentBody = z.infer<typeof createCommentBodySchema>;
 
 export const updateCommentBodySchema = z.object({
   description: z.string().min(1).max(256),
+  emotionalState: z.enum(["VERY_BAD", "BAD", "NEUTRAL", "GOOD", "VERY_GOOD"]),
 });
 
 export type UpdateCategoryBody = z.infer<typeof updateCommentBodySchema>;
@@ -114,9 +118,11 @@ export class CommentsService {
         .values({
           creatorId: userId,
           description: body.description,
+          emotionalState: body.emotionalState,
         })
         .returning()
     ).at(0);
+    
     if (!comment) {
       throw new Error("Failed to create comment");
     }
@@ -162,7 +168,9 @@ export class CommentsService {
       userCommentSchema.parse({
         id: comment.id,
         creatorId: comment.creatorId,
+        emotionalState: comment.emotionalState,
         description: comment.description,
+
         createdAt: dateToUTCTimestamp(comment.createdAt),
       } satisfies UserComment)
     );

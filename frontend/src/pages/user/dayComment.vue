@@ -20,13 +20,12 @@ import DotsHorizontalIcon from "@/assets/icons/dots-horizontal.svg?component";
 import CommentActionDropdownMenu from "@/components/dayquest/CommentActionDropdownMenu.vue";
 import { formatDateToMonthDay } from "@/utils/dayjs";
 import { UserComment } from "@shared/index";
+import InfoIcon from "@/assets/icons/info.svg?component";
 
 const { data: comments } = useQuery({
   ...commentsQuery,
   enabled: true,
 });
-
-console.log(comments);
 
 const isOpenDayQuestDialog = ref(false);
 const isOpenEditCommentDialog = ref(false);
@@ -65,6 +64,13 @@ function handleOpenModal(
               <PlusIcon class="size-5 stroke-[1.9] text-zinc-50" />
             </Button>
           </div>
+          <div class="flex items-center gap-3 mt-2">
+            <InfoIcon class="size-6 stroke-[1.7] text-zinc-500" />
+            <span class="text-xs text-zinc-500 font-semibold">
+              Write a short note about what you remembered today and evaluate
+              your emotional well-being.
+            </span>
+          </div>
 
           <div
             v-if="comments && comments.length > 0"
@@ -85,6 +91,9 @@ function handleOpenModal(
                     {{ formatDateToMonthDay(comment.createdAt) }}
                   </span>
                 </div>
+                <span class="text-zinc-400 text-sm font-semibold">
+                  Emotional state: {{ comment.emotionalState }}
+                </span>
                 <DropdownMenu :modal="false">
                   <DropdownMenuTrigger
                     class="flex items-center p-1 hover:bg-black/5 rounded data-[state=open]:bg-black/5"

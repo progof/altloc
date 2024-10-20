@@ -5,6 +5,8 @@ import {
 	boolean,
 	pgTable,
 	integer,
+	uniqueIndex,
+	pgEnum
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -59,34 +61,83 @@ export const resetPasswordRequestsTable = pgTable("reset_password_requests", {
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
-export const dayQuestCategoriesTable = pgTable("day_quest_categories", {
+export const habitCategoriesTable = pgTable("habit_categories", {
 	id: uuid("id").primaryKey().defaultRandom(),
-	creatorId: uuid("user_id").notNull(),
+	creatorId: uuid("user_id").notNull()
+	.references(() => usersTable.id, { onDelete: "cascade" }),
 	name: text("name").notNull().unique(),
 });
 
-export type DayQuestCategory = typeof dayQuestCategoriesTable.$inferSelect;
+export type HabitCategory = typeof habitCategoriesTable.$inferSelect;
 
-export const dayQuestTasksTable = pgTable("day_quest_tasks", {
-	id: uuid("id").defaultRandom().primaryKey(),
-	categoryId: uuid("category_id")
-		.notNull()
-		.references(() => dayQuestCategoriesTable.id, { onDelete: "cascade" }),
-	creatorId: uuid("user_id").notNull(),
-	name: text("name").notNull(),
-	isCompleted: boolean("is_completed").notNull().default(false),
-	createdAt: timestamp("created_at", { withTimezone: false })
-		.notNull()
-		.defaultNow(),
+
+export const taskDifficultyEnum = pgEnum(
+	"task_difficulty",
+	["EASY", "MEDIUM", "HARD"],
+);
+
+export const taskPriorityEnum = pgEnum(
+	"task_priority",
+	["LOW", "MEDIUM", "HIGH"],
+);
+
+
+export const habitTasksTable = pgTable("habit_tasks", {
+    id: uuid("id").defaultRandom().primaryKey(),
+    categoryId: uuid("category_id")
+        .notNull()
+        .references(() => habitCategoriesTable.id, { onDelete: "cascade" }),
+    creatorId: uuid("user_id")
+        .notNull()
+        .references(() => usersTable.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+	difficulty: taskDifficultyEnum("difficulty").notNull(),
+    priority: taskPriorityEnum("priority").notNull(),	
+    createdAt: timestamp("created_at", { withTimezone: false })
+        .notNull()
+        .defaultNow(),
 });
 
+export type HabitTask = typeof habitTasksTable.$inferSelect;
 
-export type DayQuestTask = typeof dayQuestTasksTable.$inferSelect;
+export const completedTasksTable = pgTable(
+	"completed_tasks",
+	{
+		id: uuid("id").defaultRandom().primaryKey(),
+		taskId: uuid("task_id")
+			.notNull()
+			.references(() => habitTasksTable.id, { onDelete: "cascade" }),
+		userId: uuid("user_id")
+			.notNull()
+			.references(() => usersTable.id, { onDelete: "cascade" }),
+		completedAt: timestamp("completed_at", { withTimezone: true })
+			.notNull()
+			.defaultNow()
+	},
+	(table) => ({
+		uniqueTaskCompletion: uniqueIndex("unique_task_completion").on(
+			table.taskId,
+			table.userId,
+			table.completedAt
+		),
+	})
+);
+
+export type CompletedTask = typeof completedTasksTable.$inferSelect;
+
+// pgEnum for emotional state 
+
+export const emotionalStateEnum = pgEnum(
+	"emotional_state",
+	["VERY_BAD", "BAD", "NEUTRAL", "GOOD", "VERY_GOOD"],
+);
+
 
 export const dayQuestCommentsTable = pgTable("day_quest_comments", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	creatorId: uuid("user_id").notNull(),
 	description: text("description").notNull(),
+	emotionalState: emotionalStateEnum("emotional_state").notNull(),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

@@ -5,8 +5,20 @@ import {
 	categoriesQuery,
 	userCategoryQuery,
 } from "@/services/dayquest/category.service";
-import { Category, User } from "@shared/index";
+import { HabitCategory, User } from "@shared/index";
 import { getMeQueryOptions } from "../user.service";
+
+export const TASK_DIFFICULTY = {
+	EASY: "EASY",
+	MEDIUM: "MEDIUM",
+	HARD: "HARD",
+} as const;
+
+export const TASK_PRIORITY = {
+	LOW: "LOW",
+	MEDIUM: "MEDIUM",
+	HIGH: "HIGH",
+} as const;
 
 export interface Task {
 	categoryId: string;
@@ -24,8 +36,10 @@ export const taskSchema = z.object({
 	createdAt: z.string(),
 }) satisfies ZodType<Task>;
 
-export const createTaskBodySchema = z.object({
+export const  createTaskBodySchema = z.object({
 	name: z.string().min(1).max(32),
+	difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
+    priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
 });
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
@@ -89,17 +103,18 @@ export function useCreateTaskMutation() {
 		},
 		onSuccess: (newTask) => {
 			const { queryKey } = userCategoryQuery(newTask.categoryId);
-			queryClient.setQueryData(queryKey, (category: Category | undefined) => {
-				if (!category) return;
+			queryClient.setQueryData(queryKey, (category: HabitCategory | undefined) => {
+				if (!category) return undefined; // Если категории нет, возвращаем undefined
 				return {
 					...category,
-					tasks: [...(category.tasks || []), newTask],
-				};
+					tasks: [...(category.tasks || []), newTask], // Возвращаем обновленную категорию с новыми задачами
+				} as HabitCategory; // Явно указываем тип возвращаемого значения
 			});
 			queryClient.invalidateQueries(categoriesQuery);
 		},
 	});
 }
+
 
 export function useDeleteTaskMutation() {
 	const queryClient = useQueryClient();

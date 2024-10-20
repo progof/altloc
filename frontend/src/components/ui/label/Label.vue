@@ -6,12 +6,12 @@ const props = defineProps<LabelProps & { class?: ClassValue }>();
 </script>
 
 <template>
-	<Label
-		v-bind="{
-			...props,
-			class: cn('font-medium text-[13px] leading-5', props.class),
-		}"
-	>
-		<slot />
-	</Label>
+  <Label
+    v-bind="{
+      ...props,
+      class: cn('font-medium text-[13px] leading-5 text-zinc-500', props.class),
+    }"
+  >
+    <slot />
+  </Label>
 </template>

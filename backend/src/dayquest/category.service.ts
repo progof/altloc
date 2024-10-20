@@ -1,9 +1,9 @@
 import { HTTPError, type Database, type Transaction } from "@/utils.js";
 import { z } from "zod";
 import { createBaseCategoryObject, getCategoryTasks } from "./shared.js";
-import { dayQuestCategoriesTable } from "@db/schema.js";
+import { habitCategoriesTable } from "@db/schema.js";
 import { and, eq } from "drizzle-orm";
-import { Category } from "@shared/index.js";
+import { CategoryTask } from "@shared/index.js";
 
 export const createCategoryBodySchema = z.object({
   name: z.string().min(6).max(32),
@@ -31,7 +31,7 @@ export class CategoriesService {
 
     const category = (
       await tx
-        .insert(dayQuestCategoriesTable)
+        .insert(habitCategoriesTable)
         .values({
           name: body.name,
           creatorId,
@@ -71,17 +71,17 @@ export class CategoriesService {
       categoryId: string;
       creatorId: string;
     }
-  ): Promise<Category> {
+  ): Promise<CategoryTask> {
     const { categoryId, creatorId } = options;
 
     return db.transaction(async (tx: any) => {
       const result = await tx
         .select()
-        .from(dayQuestCategoriesTable)
+        .from(habitCategoriesTable)
         .where(
           and(
-            eq(dayQuestCategoriesTable.id, categoryId),
-            eq(dayQuestCategoriesTable.creatorId, creatorId)
+            eq(habitCategoriesTable.id, categoryId),
+            eq(habitCategoriesTable.creatorId, creatorId)
           )
         );
 
@@ -92,7 +92,7 @@ export class CategoriesService {
       }
 
       const [tasksByCategoryId] = await Promise.all([
-        getCategoryTasks(tx, [categoryId]),
+        getCategoryTasks(tx, [categoryId], categoryId),
       ]);
 
       return {
@@ -100,33 +100,33 @@ export class CategoriesService {
           category: category,
         }),
         tasks: tasksByCategoryId[categoryId] || [],
-      } satisfies Category;
+      } satisfies CategoryTask;
     });
   }
 
   async getUserCategories(
     db: Database | Transaction,
     userId: string
-  ): Promise<Category[]> {
+  ): Promise<CategoryTask[]> {
     return db.transaction(async (tx: any) => {
       const result = await tx
         .select()
-        .from(dayQuestCategoriesTable)
-        .where(eq(dayQuestCategoriesTable.creatorId, userId));
+        .from(habitCategoriesTable)
+        .where(eq(habitCategoriesTable.creatorId, userId));
 
       const categoryIds = result.map((row: any) => row.id);
 
       if (categoryIds.length === 0) return [];
 
       const [tasksByCategoryId] = await Promise.all([
-        getCategoryTasks(tx, categoryIds),
+        getCategoryTasks(tx, categoryIds, userId),
       ]);
 
       return result.map((row: any) => {
         return {
           ...createBaseCategoryObject({ category: row }),
           tasks: tasksByCategoryId[row.id] || [],
-        } satisfies Category;
+        } satisfies CategoryTask;
       });
     });
   }
@@ -138,7 +138,7 @@ export class CategoriesService {
       categoryId: string;
       body: UpdateCategoryBody;
     }
-  ): Promise<Category> {
+  ): Promise<CategoryTask> {
     const { body, creatorId, categoryId } = options;
 
     return db.transaction(async (tx: any) => {
@@ -148,12 +148,12 @@ export class CategoriesService {
       });
 
       await tx
-        .update(dayQuestCategoriesTable)
+        .update(habitCategoriesTable)
         .set({
           name: body.name,
           creatorId,
         })
-        .where(eq(dayQuestCategoriesTable.id, categoryId));
+        .where(eq(habitCategoriesTable.id, categoryId));
 
       return {
         ...createBaseCategoryObject({
@@ -164,7 +164,7 @@ export class CategoriesService {
           },
         }),
         tasks: category.tasks,
-      } satisfies Category;
+      } satisfies CategoryTask;
     });
   }
 
@@ -184,11 +184,11 @@ export class CategoriesService {
       });
 
       await tx
-        .delete(dayQuestCategoriesTable)
+        .delete(habitCategoriesTable)
         .where(
           and(
-            eq(dayQuestCategoriesTable.id, categoryId),
-            eq(dayQuestCategoriesTable.creatorId, creatorId)
+            eq(habitCategoriesTable.id, categoryId),
+            eq(habitCategoriesTable.creatorId, creatorId)
           )
         );
     });

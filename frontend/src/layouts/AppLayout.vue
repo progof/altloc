@@ -14,39 +14,35 @@ const { data: user } = useQuery(getMeQueryOptions);
     class="pointer-events-auto flex bg-blue-300 md:justify-center items-center p-3 px-6 md:px-10"
   >
     <div class="flex justify-between items-center flex-1">
-      <div class="flex gap-1 items-center">
+      <div class="flex gap-2 items-center">
         <span class="font-semibold text-xl text-zinc-700">AltLoc</span>
         <MapIcon class="size-7 stroke-[1.7] text-zinc-700" />
       </div>
 
-      <div class="flex items-center gap-x-6">
-        <div class="flex items-center gap-1.5">
-          <div
-            class="flex gap-3 bg-blue-200 p-2 rounded-xl items-center"
-            title="Level"
-          >
-            <div class="flex gap-1">
-              <StarIcon class="size-6 stroke-[1.7] text-zinc-700" />
-              <span class="text-zinc-700" v-if="user">
-                {{ user.level }} lvl
-              </span>
-            </div>
-            <span class="text-zinc-500 text-sm hidden md:block" v-if="user">
-              Exp: {{ user.score }} / {{ (user.level + 1) * 8 }}</span
-            >
-          </div>
-          <div
-            class="flex gap-1 bg-blue-200 p-2 rounded-xl items-center"
-            title="Score"
-          >
-            <DiamondIcon class="size-6 stroke-[1.7] text-zinc-700" />
-            <span class="text-zinc-700">{{ user?.score }}</span>
-          </div>
-        </div>
-        <ProfileDropdownMenu v-if="user" :user="user" class="md:hidden" />
-      </div>
+      <ProfileDropdownMenu v-if="user" :user="user" class="md:hidden" />
     </div>
   </header>
+  <div class="bg-blue-50 flex gap-3 p-3 items-center justify-end">
+    <div
+      class="flex gap-3 bg-blue-100 p-2 rounded-xl items-center"
+      title="Level"
+    >
+      <div class="flex gap-1">
+        <StarIcon class="size-6 stroke-[1.7] text-zinc-700" />
+        <span class="text-zinc-700" v-if="user"> {{ user.level }} lvl </span>
+      </div>
+      <span class="text-zinc-500 text-sm" v-if="user">
+        Exp: {{ user.score }} / {{ (user.level + 1) * 8 }}</span
+      >
+    </div>
+    <div
+      class="flex gap-1 bg-blue-100 p-2 rounded-xl items-center"
+      title="Score"
+    >
+      <DiamondIcon class="size-6 stroke-[1.7] text-zinc-700" />
+      <span class="text-zinc-700">{{ user?.score }}</span>
+    </div>
+  </div>
   <div class="relative flex flex-1 flex-col bg-blue-50 h-screen">
     <slot />
   </div>

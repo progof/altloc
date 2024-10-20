@@ -1,3 +1,4 @@
+// User type
 export interface User {
 	id: string;
 	username: string;
@@ -10,17 +11,37 @@ export interface User {
 	createdAt: number;
 }
 
+// Task type
 export interface Task {
 	id: string;
 	categoryId: string;
 	name: string;
+	difficulty: string;
+	priority: string;
+}
+
+export interface UserTask {
+	id: string;
+	categoryId: string;
+	name: string;
+	difficulty: string;
+	priority: string;
 	isCompleted: boolean;
+}
+
+export interface CompletedTask{
+	id: string;
+	userId: string;
+	taskId: string;
+	completedAt: number;
+
 }
 
 export interface UserComment {
 	id: string;
 	creatorId: string;
 	description: string;
+	emotionalState: string;
 	createdAt: number;
 }
 
@@ -28,29 +49,30 @@ export interface Comment {
 	id: string;
 	creatorId: string;
 	description: string;
+	emotionalState: string;
 	createdAt: Date;
 }
 
-export interface DayQuestCategory {
+export interface HabitCategory {
 	id: string;
 	name: string;
+	tasks: UserTask[];
 }
 
-export interface Category {
+export interface CategoryTask {
 	id: string;
 	name: string;
 	tasks: Task[];
 }
 
-export interface DayQuestTask {
-	id: string;
-	name: string;
-	isCompleted: boolean;
-	createdAt: Date;
-	updatedAt: Date;
-}
+export const TASK_DIFFICULTY = {
+	EASY: "EASY",
+	MEDIUM: "MEDIUM",
+	HARD: "HARD",
+} as const;
 
-export interface DayQuestTaskCategory {
-	taskId: string;
-	categoryId: string;
-}
+export const TASK_PRIORITY = {
+	LOW: "LOW",
+	MEDIUM: "MEDIUM",
+	HIGH: "HIGH",
+} as const;

@@ -1,31 +1,31 @@
-import { dayQuestTasksTable, usersTable } from "@db/schema.js";
+import { completedTasksTable, habitTasksTable, usersTable } from "@db/schema.js";
 import { z, ZodType } from "zod";
-// import {
-// 	S3Client,
-// } from "@aws-sdk/client-s3";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql, gte, lt } from "drizzle-orm";
 import { HTTPError, type Database, type Transaction } from "@/utils.js";
-
-export interface Task {
-	id: string;
-	categoryId: string;
-	name: string;
-	isCompleted: boolean;
-}
+import { Task } from "@shared/index.js";
 
 export const taskSchema = z.object({
 	id: z.string(),
 	categoryId: z.string(),
 	name: z.string(),
-	isCompleted: z.boolean(),
+	priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
+	difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
 }) satisfies ZodType<Task>;
 
 export const createTaskBodySchema = z.object({
 	categoryId: z.string(),
 	name: z.string().min(1).max(256),
-	isCompleted: z.boolean().optional().default(false),
-	// createdAt: z.string().optional(),
+	priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
+	difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
 });
+
+
+const getStartOfToday = () => {
+	const now = new Date();
+	return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate() +1, 0, 0, 0, 0));
+};
+
+console.log('getStartOfToday:', getStartOfToday().toISOString());
 
 export type CreateTaskBody = z.infer<typeof createTaskBodySchema>;
 
@@ -42,11 +42,11 @@ export class TasksService {
 		const task = (
 			await db
 				.select()
-				.from(dayQuestTasksTable)
+				.from(habitTasksTable)
 				.where(
 					and(
-						eq(dayQuestTasksTable.id, options.taskId),
-						eq(dayQuestTasksTable.creatorId, options.userId)
+						eq(habitTasksTable.id, options.taskId),
+						eq(habitTasksTable.creatorId, options.userId)
 					)
 				)
 		).at(0);
@@ -63,8 +63,8 @@ export class TasksService {
 	): Promise<Task[]> {
 		const tasks = await db
 			.select()
-			.from(dayQuestTasksTable)
-			.where(eq(dayQuestTasksTable.categoryId, categoryId));
+			.from(habitTasksTable)
+			.where(eq(habitTasksTable.categoryId, categoryId));
 
 		return z.array(taskSchema).parse(tasks);
 	}
@@ -75,8 +75,8 @@ export class TasksService {
 	): Promise<Task[]> {
 		const tasks = await db
 			.select()
-			.from(dayQuestTasksTable)
-			.where(eq(dayQuestTasksTable.creatorId, userId));
+			.from(habitTasksTable)
+			.where(eq(habitTasksTable.creatorId, userId));
 
 		return z.array(taskSchema).parse(tasks);
 	}
@@ -89,18 +89,15 @@ export class TasksService {
 		}
 	): Promise<Task> {
 		const { body, userId } = options;
-
-		// const createdAt = body.createdAt || new Date().toISOString();
 		const task = (
 			await db
-				.insert(dayQuestTasksTable)
+				.insert(habitTasksTable)
 				.values({
 					categoryId: body.categoryId,
 					creatorId: userId,
 					name: body.name,
-					// isCompleted: body.isCompleted,
-					// createdAt: createdAt,
-					// updatedAt: createdAt,
+					priority: body.priority,
+					difficulty: body.difficulty,
 				})
 				.returning()
 		).at(0);
@@ -137,17 +134,17 @@ export class TasksService {
 		  userId: string;
 		  taskId: string;
 		}
-	  ): Promise<Task> {
+	  ) {
 		const { taskId, userId } = options;
 	  
 		const task = (
 		  await db
 			.select()
-			.from(dayQuestTasksTable)
+			.from(habitTasksTable)
 			.where(
 			  and(
-				eq(dayQuestTasksTable.id, taskId),
-				eq(dayQuestTasksTable.creatorId, userId)
+				eq(habitTasksTable.id, taskId),
+				eq(habitTasksTable.creatorId, userId)
 			  )
 			)
 		).at(0);
@@ -162,36 +159,38 @@ export class TasksService {
 			status: 403,
 		  });
 		}
+
+
+        // Получаем все выполненные задачи пользователя за сегодня в данной категории
+        const completedTasks = (
+            await db
+                .select()
+                .from(completedTasksTable)
+                .where(
+                    and(
+                        eq(completedTasksTable.taskId, taskId),
+                        eq(completedTasksTable.userId, userId),
+                        gte(completedTasksTable.completedAt, getStartOfToday())
+                    )
+                )
+        ).length > 0;
 	  
-		if (task.isCompleted) {
+		if (completedTasks) {
 		  throw new HTTPError({
 			message: "Task is already completed",
 			status: 400,
 		  });
 		}
-	  
-		// Обновляем задачу
+
 		await db
-		  .update(dayQuestTasksTable)
-		  .set({
-			isCompleted: true,
+		  .insert(completedTasksTable)
+		  .values({
+			taskId: taskId,
+			userId: userId,
 		  })
-		  .where(
-			and(
-			  eq(dayQuestTasksTable.id, taskId),
-			  eq(dayQuestTasksTable.creatorId, userId)
-			)
-		  );
+		  .returning();
+	
 	  
-		// Получаем обновлённую задачу
-		const updatedTask = (
-		  await db
-			.select()
-			.from(dayQuestTasksTable)
-			.where(eq(dayQuestTasksTable.id, taskId))
-		).at(0);
-	  
-		// Обновляем очки пользователя
 		const user = (
 		  await db.select().from(usersTable).where(eq(usersTable.id, userId))
 		).at(0);
@@ -203,11 +202,9 @@ export class TasksService {
 		await db
 		  .update(usersTable)
 		  .set({
-			score: user.score + 1,
+			score: sql`${usersTable.score} + 1`,
 		  })
 		  .where(eq(usersTable.id, userId));
-	  
-		return taskSchema.parse(updatedTask); // Возвращаем обновлённую задачу
 	  }
 	  
 	  async unCompleteTask(
@@ -216,17 +213,17 @@ export class TasksService {
 		  userId: string;
 		  taskId: string;
 		}
-	  ): Promise<Task> {
+	  ){
 		const { taskId, userId } = options;
 	  
 		const task = (
 		  await db
 			.select()
-			.from(dayQuestTasksTable)
+			.from(habitTasksTable)
 			.where(
 			  and(
-				eq(dayQuestTasksTable.id, taskId),
-				eq(dayQuestTasksTable.creatorId, userId)
+				eq(habitTasksTable.id, taskId),
+				eq(habitTasksTable.creatorId, userId)
 			  )
 			)
 		).at(0);
@@ -241,42 +238,47 @@ export class TasksService {
 			status: 403,
 		  });
 		}
+
+        const todayStart = getStartOfToday();
+
+        const completedTasks = (
+            await db
+                .select()
+                .from(completedTasksTable)
+                .where(
+                    and(
+                        eq(completedTasksTable.taskId, taskId),
+                        eq(completedTasksTable.userId, userId),
+                        gte(completedTasksTable.completedAt, todayStart),
+                    )
+                )
+        ).length > 0;
 	  
-		if (!task.isCompleted) {
+		if (completedTasks) {
 		  throw new HTTPError({
 			message: "Task is already UnCompleted",
 			status: 400,
 		  });
 		}
-	  
-		// Обновляем задачу
+	
+
 		await db
-		  .update(dayQuestTasksTable)
-		  .set({
-			isCompleted: false,
-		  })
+		  .delete(completedTasksTable)
 		  .where(
 			and(
-			  eq(dayQuestTasksTable.id, taskId),
-			  eq(dayQuestTasksTable.creatorId, userId)
+			  eq(completedTasksTable.taskId, taskId),
+			  eq(completedTasksTable.userId, userId)
 			)
 		  );
 	  
-		// Получаем обновлённую задачу
-		const updatedTask = (
-		  await db
-			.select()
-			.from(dayQuestTasksTable)
-			.where(eq(dayQuestTasksTable.id, taskId))
-		).at(0);
-	  
-		// Обновляем очки пользователя
+	
 		const user = (
 		  await db.select().from(usersTable).where(eq(usersTable.id, userId))
 		).at(0);
 	  
 		if (!user) {
 		  throw new HTTPError({ message: "User not found", status: 404 });
+
 		}
 	  
 		console.log("unCompleteTask score:",user.score);
@@ -286,8 +288,6 @@ export class TasksService {
 			score: user.score - 1,
 		  })
 		  .where(eq(usersTable.id, userId));
-	  
-		return taskSchema.parse(updatedTask); // Возвращаем обновлённую задачу
 	  }
 
 	async deleteTask(
@@ -302,11 +302,11 @@ export class TasksService {
 		const task = (
 			await db
 				.select()
-				.from(dayQuestTasksTable)
+				.from(habitTasksTable)
 				.where(
 					and(
-						eq(dayQuestTasksTable.id, taskId),
-						eq(dayQuestTasksTable.creatorId, userId)
+						eq(habitTasksTable.id, taskId),
+						eq(habitTasksTable.creatorId, userId)
 					)
 				)
 		).at(0);
@@ -323,11 +323,11 @@ export class TasksService {
 		}
 
 		await db
-			.delete(dayQuestTasksTable)
+			.delete(habitTasksTable)
 			.where(
 				and(
-					eq(dayQuestTasksTable.id, taskId),
-					eq(dayQuestTasksTable.creatorId, userId)
+					eq(habitTasksTable.id, taskId),
+					eq(habitTasksTable.creatorId, userId)
 				)
 			);
 		return taskSchema.parse(task);

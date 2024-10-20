@@ -48,13 +48,13 @@ const onSubmit = handleSubmit((data) => {
 <template>
   <DialogTitle class="text-xl font-bold tracking-tight"> DayQuest</DialogTitle>
   <DialogDescription class="mt-2 text-sm text-zinc-600">
-    Create a new category for your dayQuest
+    Create a category of habit or goal that you will develop each day.
   </DialogDescription>
   <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
     <TextField
       name="name"
       label="Name"
-      placeholder="Business"
+      placeholder="Learn B2 English"
       class="text-zinc-700"
     />
 

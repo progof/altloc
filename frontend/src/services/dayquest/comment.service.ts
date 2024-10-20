@@ -11,9 +11,20 @@ export type UpdateCommentBody = z.infer<typeof updateCommentBodySchema>;
 
 const createCommentBodySchema = z.object({
 	description: z.string().min(1).max(256),
+	emotionalState: z.enum(["VEVY_BAD", "BAD", "NEUTRAL", "GOOD", "VERY_GOOD"]),
 });
 
 export type CreateCommentBody = z.infer<typeof createCommentBodySchema>;
+
+
+export const EMOTIONAL_STATE = {
+	VERY_BAD: "VERY_BAD",
+	BAD: "BAD",
+	NEUTRAL: "NEUTRAL",
+	GOOD: "GOOD",
+	VERY_GOOD: "VERY_GOOD",
+} as const;
+
 
 export function useCreateCommentMutation() {
 	return useMutation({
