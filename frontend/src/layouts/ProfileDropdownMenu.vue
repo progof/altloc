@@ -49,7 +49,7 @@ const avatar = computed(() => {
 <template>
   <DropdownMenu :modal="false">
     <DropdownMenuTrigger class="flex items-center gap-2.5">
-      <span class="hidden text-sm font-semibold md:block text-zinc-700">
+      <span class="text-sm font-semibold text-zinc-700">
         {{ user.username }}
       </span>
       <img
@@ -86,7 +86,7 @@ const avatar = computed(() => {
       <DropdownMenuGroup>
         <DropdownMenuItem as="a" href="/user/settings" disabled>
           <SettingsIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
-          <span class="text-zinc-800"> Settings</span>
+          <span class="text-zinc-800">Settings</span>
         </DropdownMenuItem>
         <DropdownMenuItem @select.prevent="logoutUser()">
           <LoaderIcon

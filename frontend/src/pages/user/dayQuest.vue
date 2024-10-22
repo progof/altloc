@@ -62,8 +62,8 @@ function handleOpenModal(
 
 <template>
   <AppLayout>
-    <section class="relative mt-6 px-3 md:px-10 md:mb-">
-      <div class="container flex w-auto flex-col gap-6">
+    <section class="relative mt-3 p-3 px-6 md:px-10">
+      <div class="container flex w-auto flex-col gap-1">
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
             <h2 class="text-xl font-bold tracking-tight text-blue-400">
@@ -104,7 +104,7 @@ function handleOpenModal(
                   <span class="text-zinc-500 font-semibold">
                     {{ category.name }}
                   </span>
-                  <span class="text-zinc-500">
+                  <span class="text-zinc-500" v-if="category.tasks.length">
                     ({{
                       category.tasks.filter((task) => task.isCompleted).length
                     }}/{{ category.tasks.length }})
