@@ -63,11 +63,18 @@ export async function checkLevel(
     return res.status(401).send({ errors: [{ message: "Unauthorized" }] });
   }
 
+  const baseLevelScore = 8;
   const currentUserLevel = req.session.user.level;
-  const currentUserScore = req.session.user.score;
+  const totalUserScore = req.session.user.score;
+  // user.score - user.level * baseLevelScore
+  const currentUserScore = totalUserScore - ((currentUserLevel + 1) * baseLevelScore);
+  
 
-  const needSroceForNextLevel = (currentUserLevel + 1) * 8;
+  const needSroceForNextLevel = (currentUserLevel + 1) * baseLevelScore;
   console.log("needSroceForNextLevel", needSroceForNextLevel);
+  console.log("currentUserScore", currentUserScore);
+
+
   if(currentUserScore >= needSroceForNextLevel) {
     await db
 		  .update(usersTable)

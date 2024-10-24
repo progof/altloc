@@ -128,167 +128,391 @@ export class TasksService {
 		});
 	}
 
+	// async completeTask(
+	// 	db: Database | Transaction,
+	// 	options: {
+	// 	  userId: string;
+	// 	  taskId: string;
+	// 	}
+	//   ) {
+	// 	const { taskId, userId } = options;
+	  
+	// 	const task = (
+	// 	  await db
+	// 		.select()
+	// 		.from(habitTasksTable)
+	// 		.where(
+	// 		  and(
+	// 			eq(habitTasksTable.id, taskId),
+	// 			eq(habitTasksTable.creatorId, userId)
+	// 		  )
+	// 		)
+	// 	).at(0);
+	  
+	// 	if (!task) {
+	// 	  throw new HTTPError({ message: "Task not found", status: 404 });
+	// 	}
+	  
+	// 	if (task.creatorId !== userId) {
+	// 	  throw new HTTPError({
+	// 		message: "You are not allowed to complete this task",
+	// 		status: 403,
+	// 	  });
+	// 	}
+
+
+    //     // Получаем все выполненные задачи пользователя за сегодня в данной категории
+    //     const completedTasks = (
+    //         await db
+    //             .select()
+    //             .from(completedTasksTable)
+    //             .where(
+    //                 and(
+    //                     eq(completedTasksTable.taskId, taskId),
+    //                     eq(completedTasksTable.userId, userId),
+    //                     gte(completedTasksTable.completedAt, getStartOfToday())
+    //                 )
+    //             )
+    //     ).length > 0;
+	  
+	// 	if (completedTasks) {
+	// 	  throw new HTTPError({
+	// 		message: "Task is already completed",
+	// 		status: 400,
+	// 	  });
+	// 	}
+
+	// 	await db
+	// 	  .insert(completedTasksTable)
+	// 	  .values({
+	// 		taskId: taskId,
+	// 		userId: userId,
+	// 	  })
+	// 	  .returning();
+	
+	  
+	// 	const user = (
+	// 	  await db.select().from(usersTable).where(eq(usersTable.id, userId))
+	// 	).at(0);
+	  
+	// 	if (!user) {
+	// 	  throw new HTTPError({ message: "User not found", status: 404 });
+	// 	}
+	  
+	// 	await db
+	// 	  .update(usersTable)
+	// 	  .set({
+	// 		score: sql`${usersTable.score} + 1`,
+	// 	  })
+	// 	  .where(eq(usersTable.id, userId));
+	//   }
+	  
 	async completeTask(
 		db: Database | Transaction,
 		options: {
-		  userId: string;
-		  taskId: string;
+			userId: string;
+			taskId: string;
 		}
-	  ) {
+	) {
 		const { taskId, userId } = options;
-	  
-		const task = (
-		  await db
-			.select()
-			.from(habitTasksTable)
-			.where(
-			  and(
-				eq(habitTasksTable.id, taskId),
-				eq(habitTasksTable.creatorId, userId)
-			  )
-			)
-		).at(0);
-	  
-		if (!task) {
-		  throw new HTTPError({ message: "Task not found", status: 404 });
-		}
-	  
-		if (task.creatorId !== userId) {
-		  throw new HTTPError({
-			message: "You are not allowed to complete this task",
-			status: 403,
-		  });
-		}
-
-
-        // Получаем все выполненные задачи пользователя за сегодня в данной категории
-        const completedTasks = (
-            await db
-                .select()
-                .from(completedTasksTable)
-                .where(
-                    and(
-                        eq(completedTasksTable.taskId, taskId),
-                        eq(completedTasksTable.userId, userId),
-                        gte(completedTasksTable.completedAt, getStartOfToday())
-                    )
-                )
-        ).length > 0;
-	  
-		if (completedTasks) {
-		  throw new HTTPError({
-			message: "Task is already completed",
-			status: 400,
-		  });
-		}
-
-		await db
-		  .insert(completedTasksTable)
-		  .values({
-			taskId: taskId,
-			userId: userId,
-		  })
-		  .returning();
 	
-	  
-		const user = (
-		  await db.select().from(usersTable).where(eq(usersTable.id, userId))
+		// Получаем задачу
+		const task = (
+			await db
+				.select()
+				.from(habitTasksTable)
+				.where(
+					and(
+						eq(habitTasksTable.id, taskId),
+						eq(habitTasksTable.creatorId, userId)
+					)
+				)
 		).at(0);
-	  
-		if (!user) {
-		  throw new HTTPError({ message: "User not found", status: 404 });
+	
+		if (!task) {
+			throw new HTTPError({ message: "Task not found", status: 404 });
 		}
-	  
+	
+		if (task.creatorId !== userId) {
+			throw new HTTPError({
+				message: "You are not allowed to complete this task",
+				status: 403,
+			});
+		}
+	
+		// Получаем все выполненные задачи пользователя за сегодня в данной категории
+		const completedTasks = (
+			await db
+				.select()
+				.from(completedTasksTable)
+				.where(
+					and(
+						eq(completedTasksTable.taskId, taskId),
+						eq(completedTasksTable.userId, userId),
+						gte(completedTasksTable.completedAt, getStartOfToday())
+					)
+				)
+		).length > 0;
+	
+		if (completedTasks) {
+			throw new HTTPError({
+				message: "Task is already completed",
+				status: 400,
+			});
+		}
+	
+		// Сохраняем выполнение задачи
 		await db
-		  .update(usersTable)
-		  .set({
-			score: sql`${usersTable.score} + 1`,
-		  })
-		  .where(eq(usersTable.id, userId));
-	  }
+			.insert(completedTasksTable)
+			.values({
+				taskId: taskId,
+				userId: userId,
+			})
+			.returning();
+	
+		// Получаем информацию о пользователе
+		const user = (
+			await db.select().from(usersTable).where(eq(usersTable.id, userId))
+		).at(0);
+	
+		if (!user) {
+			throw new HTTPError({ message: "User not found", status: 404 });
+		}
+	
+		// Получаем очки за выполнение задачи в зависимости от сложности
+		let experiencePoints = 0;
+	
+		switch (task.difficulty) {
+			case 'EASY':
+				experiencePoints = 1;
+				break;
+			case 'MEDIUM':
+				experiencePoints = 1; // 2
+				break;
+			case 'HARD':
+				experiencePoints = 1; // 3
+				break;
+			default:
+				experiencePoints = 0; // Или выбросить ошибку
+				break;
+		}
+	
+		// Начисляем очки опыта пользователю
+		const newScore = user.score + experiencePoints;
+	
+		// Определяем, сколько очков нужно для перехода на следующий уровень
+		const baseLevelScore = 8; // Базовая формула
+		const needScoreForNextLevel = (user.level + 1) * baseLevelScore;
+	
+		// Проверяем, достиг ли пользователь нового уровня
+		if (newScore >= needScoreForNextLevel) {
+			// Увеличиваем уровень пользователя
+			await db
+				.update(usersTable)
+				.set({
+					score: 0, // Сбрасываем очки
+					level: user.level + 1,
+					currency: sql`${usersTable.currency} + 10` // Начисляем 10 кристаллов
+				})
+				.where(eq(usersTable.id, userId));
+			
+			console.log(`Поздравляем! Вы достигли уровня ${user.level + 1} и получили 10 кристаллов.`);
+		} else {
+			// Обновляем очки пользователя
+			await db
+				.update(usersTable)
+				.set({
+					score: newScore
+				})
+				.where(eq(usersTable.id, userId));
+		}
+	}
+	
+	//   async unCompleteTask(
+	// 	db: Database | Transaction,
+	// 	options: {
+	// 	  userId: string;
+	// 	  taskId: string;
+	// 	}
+	//   ){
+	// 	const { taskId, userId } = options;
 	  
-	  async unCompleteTask(
+	// 	const task = (
+	// 	  await db
+	// 		.select()
+	// 		.from(habitTasksTable)
+	// 		.where(
+	// 		  and(
+	// 			eq(habitTasksTable.id, taskId),
+	// 			eq(habitTasksTable.creatorId, userId)
+	// 		  )
+	// 		)
+	// 	).at(0);
+	  
+	// 	if (!task) {
+	// 	  throw new HTTPError({ message: "Task not found", status: 404 });
+	// 	}
+	  
+	// 	if (task.creatorId !== userId) {
+	// 	  throw new HTTPError({
+	// 		message: "You are not allowed to complete this task",
+	// 		status: 403,
+	// 	  });
+	// 	}
+
+    //     const todayStart = getStartOfToday();
+
+    //     const completedTasks = (
+    //         await db
+    //             .select()
+    //             .from(completedTasksTable)
+    //             .where(
+    //                 and(
+    //                     eq(completedTasksTable.taskId, taskId),
+    //                     eq(completedTasksTable.userId, userId),
+    //                     gte(completedTasksTable.completedAt, todayStart),
+    //                 )
+    //             )
+    //     ).length > 0;
+	  
+	// 	if (completedTasks) {
+	// 	  throw new HTTPError({
+	// 		message: "Task is already UnCompleted",
+	// 		status: 400,
+	// 	  });
+	// 	}
+	
+
+	// 	await db
+	// 	  .delete(completedTasksTable)
+	// 	  .where(
+	// 		and(
+	// 		  eq(completedTasksTable.taskId, taskId),
+	// 		  eq(completedTasksTable.userId, userId)
+	// 		)
+	// 	  );
+	  
+	
+	// 	const user = (
+	// 	  await db.select().from(usersTable).where(eq(usersTable.id, userId))
+	// 	).at(0);
+	  
+	// 	if (!user) {
+	// 	  throw new HTTPError({ message: "User not found", status: 404 });
+
+	// 	}
+	  
+	// 	console.log("unCompleteTask score:",user.score);
+	// 	await db
+	// 	  .update(usersTable)
+	// 	  .set({
+	// 		score: user.score - 1,
+	// 	  })
+	// 	  .where(eq(usersTable.id, userId));
+	//   }
+
+	async unCompleteTask(
 		db: Database | Transaction,
 		options: {
-		  userId: string;
-		  taskId: string;
+			userId: string;
+			taskId: string;
 		}
-	  ){
+	) {
 		const { taskId, userId } = options;
-	  
+	
 		const task = (
-		  await db
-			.select()
-			.from(habitTasksTable)
-			.where(
-			  and(
-				eq(habitTasksTable.id, taskId),
-				eq(habitTasksTable.creatorId, userId)
-			  )
-			)
+			await db
+				.select()
+				.from(habitTasksTable)
+				.where(
+					and(
+						eq(habitTasksTable.id, taskId),
+						eq(habitTasksTable.creatorId, userId)
+					)
+				)
 		).at(0);
-	  
+	
 		if (!task) {
-		  throw new HTTPError({ message: "Task not found", status: 404 });
-		}
-	  
-		if (task.creatorId !== userId) {
-		  throw new HTTPError({
-			message: "You are not allowed to complete this task",
-			status: 403,
-		  });
-		}
-
-        const todayStart = getStartOfToday();
-
-        const completedTasks = (
-            await db
-                .select()
-                .from(completedTasksTable)
-                .where(
-                    and(
-                        eq(completedTasksTable.taskId, taskId),
-                        eq(completedTasksTable.userId, userId),
-                        gte(completedTasksTable.completedAt, todayStart),
-                    )
-                )
-        ).length > 0;
-	  
-		if (completedTasks) {
-		  throw new HTTPError({
-			message: "Task is already UnCompleted",
-			status: 400,
-		  });
+			throw new HTTPError({ message: "Task not found", status: 404 });
 		}
 	
-
+		if (task.creatorId !== userId) {
+			throw new HTTPError({
+				message: "You are not allowed to uncomplete this task",
+				status: 403,
+			});
+		}
+	
+		const todayStart = getStartOfToday();
+	
+		// Проверяем, была ли задача уже отменена
+		const completedTask = (
+			await db
+				.select()
+				.from(completedTasksTable)
+				.where(
+					and(
+						eq(completedTasksTable.taskId, taskId),
+						eq(completedTasksTable.userId, userId),
+						gte(completedTasksTable.completedAt, todayStart)
+					)
+				)
+		).at(0);
+	
+		if (!completedTask) {
+			throw new HTTPError({
+				message: "Task is not completed yet",
+				status: 400,
+			});
+		}
+	
+		// Удаляем запись о выполненной задаче
 		await db
-		  .delete(completedTasksTable)
-		  .where(
-			and(
-			  eq(completedTasksTable.taskId, taskId),
-			  eq(completedTasksTable.userId, userId)
-			)
-		  );
-	  
+			.delete(completedTasksTable)
+			.where(
+				and(
+					eq(completedTasksTable.taskId, taskId),
+					eq(completedTasksTable.userId, userId)
+				)
+			);
 	
 		const user = (
-		  await db.select().from(usersTable).where(eq(usersTable.id, userId))
+			await db.select().from(usersTable).where(eq(usersTable.id, userId))
 		).at(0);
-	  
+	
 		if (!user) {
-		  throw new HTTPError({ message: "User not found", status: 404 });
-
+			throw new HTTPError({ message: "User not found", status: 404 });
 		}
-	  
-		console.log("unCompleteTask score:",user.score);
+	
+		// Получаем количество очков опыта, соответствующее сложности задачи
+		const taskDifficulty = task.difficulty; // Предполагается, что поле difficulty хранит информацию о сложности
+		let experiencePoints = 0;
+	
+		switch (taskDifficulty) {
+			case 'EASY':
+				experiencePoints = 1;
+				break;
+			case 'MEDIUM':
+				experiencePoints = 2;
+				break;
+			case 'HARD':
+				experiencePoints = 3;
+				break;
+			default:
+				experiencePoints = 0; // На случай, если значение сложности некорректное
+		}
+	
+		// Обновляем очки пользователя, вычитая очки за отменённую задачу
 		await db
-		  .update(usersTable)
-		  .set({
-			score: user.score - 1,
-		  })
-		  .where(eq(usersTable.id, userId));
-	  }
+			.update(usersTable)
+			.set({
+				score: sql`${usersTable.score} - ${experiencePoints}`, // Снижаем очки пользователя
+			})
+			.where(eq(usersTable.id, userId));
+	
+		console.log("unCompleteTask score after deduction:", user.score - experiencePoints);
+	}
+	
 
 	async deleteTask(
 		db: Database | Transaction,

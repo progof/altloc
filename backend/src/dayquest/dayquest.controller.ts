@@ -406,10 +406,7 @@ export class DayQuestController {
       );
       return res.status(400).json({ errors: parsedResult.error.issues });
     }
-
     const { task_id } = parsedResult.data;
-    console.log("completeTask -> task_id", task_id);
-
 
     try {
       const task = await this.taskService.completeTask(db, {

@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"role" text DEFAULT 'user' NOT NULL,
 	"score" integer DEFAULT 0 NOT NULL,
 	"level" integer DEFAULT 1 NOT NULL,
+	"currency" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );

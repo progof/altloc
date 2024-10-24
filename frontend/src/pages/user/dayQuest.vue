@@ -66,7 +66,7 @@ function handleOpenModal(
       <div class="container flex w-auto flex-col gap-1">
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
-            <h2 class="text-xl font-bold tracking-tight text-blue-400">
+            <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayQuest
             </h2>
 
@@ -94,7 +94,7 @@ function handleOpenModal(
             class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 mt-5"
           >
             <div
-              class="flex flex-col gap-6 bg-blue-100 p-3 rounded-xl flex-1"
+              class="flex flex-col gap-6 bg-blue-200 p-3 rounded-xl flex-1"
               v-for="category in categories"
               :key="category.id"
             >

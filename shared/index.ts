@@ -8,6 +8,7 @@ export interface User {
 	role: string;
 	score: number;
 	level: number;
+	currency: number;
 	createdAt: number;
 }
 

@@ -37,7 +37,7 @@ export const taskSchema = z.object({
 }) satisfies ZodType<Task>;
 
 export const  createTaskBodySchema = z.object({
-	name: z.string().min(1).max(32),
+	name: z.string().min(1).max(256),
 	difficulty: z.enum(["EASY", "MEDIUM", "HARD"]),
     priority: z.enum(["LOW", "MEDIUM", "HIGH"]),
 });
@@ -179,6 +179,7 @@ export function useCompleteTaskMutation() {
 				getMeQueryOptions.queryKey,
 				(user: User | undefined) => {
 					if (!user) return;
+					
 					return {
 						...user,
 						score: user.score + 1,

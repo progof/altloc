@@ -49,7 +49,7 @@ function handleOpenModal(
       <div class="container flex w-auto flex-col gap-6">
         <div class="flex flex-col gap-3">
           <div class="flex justify-between">
-            <h2 class="text-xl font-bold tracking-tight text-blue-400">
+            <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayComment
             </h2>
 

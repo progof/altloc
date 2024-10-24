@@ -1,5 +1,5 @@
 {
-  "id": "356755a6-cbc7-4f37-b525-bd8d483c331c",
+  "id": "89e30f9f-c1ee-4e7f-be16-ba2bd064f630",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -523,6 +523,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": 1
+        },
+        "currency": {
+          "name": "currency",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

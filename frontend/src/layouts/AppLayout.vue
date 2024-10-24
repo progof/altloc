@@ -60,12 +60,12 @@ const progress = computed(() => {
 
 <template>
   <header
-    class="pointer-events-auto flex bg-blue-300 md:justify-center items-center p-3 px-6 md:px-10"
+    class="pointer-events-auto flex bg-blue-700 md:justify-center items-center p-3 px-6 md:px-10"
   >
     <div class="flex justify-between items-center flex-1">
       <div class="flex gap-2 items-center">
-        <span class="font-semibold text-xl text-zinc-700">AltLoc</span>
-        <AstronautIcon class="size-10 stroke-[4] text-zinc-700" />
+        <span class="font-semibold text-xl text-zinc-100">AltLoc</span>
+        <AstronautIcon class="size-10 stroke-[4] text-zinc-100" />
       </div>
 
       <ProfileDropdownMenu v-if="user" :user="user" class="md:hidden" />
@@ -80,11 +80,7 @@ const progress = computed(() => {
         >
           <span class="text-zinc-500 text-xs" v-if="user">
             Exp:
-            {{
-              user.level === 1
-                ? user.score
-                : (user.level + 1) * baseLevelScore - user.score
-            }}
+            {{ user.score }}
             / {{ (user.level + 1) * baseLevelScore }}
           </span>
           <!-- user.level === 1 ? user.score : (user.level + 1) * 8 - user.score  -->
@@ -94,7 +90,7 @@ const progress = computed(() => {
             class="flex gap-1 bg-blue-100 p-2 rounded-xl items-center"
             title="Level"
           >
-            <StarIcon class="size-6 stroke-[1.7] text-zinc-700" />
+            <StarIcon class="size-5 stroke-[1.7] text-zinc-700 text-sm" />
             <span class="text-zinc-700" v-if="user">
               {{ user.level }} lvl
             </span>
@@ -104,7 +100,7 @@ const progress = computed(() => {
             title="Score"
           >
             <DiamondIcon class="size-6 stroke-[1.7] text-zinc-700" />
-            <span class="text-zinc-700">{{ user?.score }}</span>
+            <span class="text-zinc-700">{{ user?.currency }}</span>
           </div>
         </div>
       </div>

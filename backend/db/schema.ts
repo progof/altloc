@@ -18,6 +18,7 @@ export const usersTable = pgTable("users", {
 	role: text("role").notNull().default("user"),
 	score: integer("score").notNull().default(0),
 	level: integer("level").notNull().default(1),
+	currency: integer("currency").notNull().default(0),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

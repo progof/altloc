@@ -25,6 +25,7 @@ export const userSchema = z.object({
 	role: z.string(),
     score: z.number(),
 	level: z.number(),
+	currency: z.number(),
 }) satisfies ZodType<User>;
 
 export class AuthPasswordService {
@@ -139,6 +140,7 @@ export class AuthPasswordService {
 			role: user.role,
 			score: user.score,
 			level: user.level,
+			currency: user.currency,
 		} satisfies User);
 	}
 

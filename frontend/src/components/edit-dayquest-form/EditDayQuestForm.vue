@@ -21,7 +21,7 @@ const props = defineProps<{
 const { handleSubmit, meta, setFieldError, resetForm } = useForm({
   validationSchema: toTypedSchema(
     z.object({
-      name: z.string().min(6).max(32),
+      name: z.string().min(6).max(256),
     })
   ),
 });

@@ -49,7 +49,7 @@ const avatar = computed(() => {
 <template>
   <DropdownMenu :modal="false">
     <DropdownMenuTrigger class="flex items-center gap-2.5">
-      <span class="text-sm font-semibold text-zinc-700">
+      <span class="text-sm font-semibold text-zinc-100">
         {{ user.username }}
       </span>
       <img
@@ -61,7 +61,7 @@ const avatar = computed(() => {
     <DropdownMenuContent align="end" class="min-w-48">
       <DropdownMenuLabel>
         <div class="flex flex-col">
-          <span class="text-zinc-800">{{ user.username }}</span>
+          <span class="text-zinc-700">{{ user.username }}</span>
           <span class="text-xs font-normal text-zinc-600">
             {{ user.email }}
           </span>
