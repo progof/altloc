@@ -10,6 +10,7 @@ import { CreateTaskDialogContent } from "@/components/tasks-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import PlusIcon from "@/assets/icons/plus.svg?component";
 import InfoIcon from "@/assets/icons/info.svg?component";
+import ClipboardCheckIcon from "@/assets/icons/clipboard-check.svg?component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -64,8 +65,10 @@ function handleOpenModal(
   <AppLayout>
     <section class="relative mt-3 p-3 px-6 md:px-10">
       <div class="container flex w-auto flex-col gap-1">
-        <div class="flex flex-col gap-3">
-          <div class="flex justify-between">
+        <div class="flex flex-col gap-6">
+          <div
+            class="flex justify-between items-center border-b border-zinc-700 py-3"
+          >
             <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayQuest
             </h2>
@@ -77,13 +80,18 @@ function handleOpenModal(
                   isOpenDayQuestDialog = true;
                 }
               "
+              class="bg-blue-400 hover:bg-blue-600 p-2 rounded-full"
+              title="Create new category"
+              alt="Create new category"
             >
-              <PlusIcon class="size-5 stroke-[1.9] text-zinc-50" />
+              <PlusIcon class="size-8 stroke-[3] text-white" />
             </Button>
           </div>
 
-          <div class="flex items-center gap-3">
-            <InfoIcon class="size-6 stroke-[1.7] text-zinc-500" />
+          <div
+            class="flex items-center gap-3 bg-blue-100 p-3 rounded-2xl drop-shadow-lg"
+          >
+            <InfoIcon class="size-6 stroke-[2] text-zinc-500 shrink-0" />
             <span class="text-xs text-zinc-500 font-semibold">
               Create categories of skills that you want to pump every day, and
               then add tasks to them
@@ -98,39 +106,83 @@ function handleOpenModal(
               v-for="category in categories"
               :key="category.id"
             >
-              <div class="flex items-center gap-3 justify-between w-full">
-                <div class="flex gap-3 items-center">
-                  <span class="size-3 rounded-full bg-blue-500"></span>
-                  <span class="text-zinc-500 font-semibold">
-                    {{ category.name }}
-                  </span>
-                  <span class="text-zinc-500" v-if="category.tasks.length">
-                    ({{
-                      category.tasks.filter((task) => task.isCompleted).length
-                    }}/{{ category.tasks.length }})
-                  </span>
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-3 justify-between">
+                  <div class="flex gap-3 items-center justify-center">
+                    <span class="size-3 rounded-full bg-blue-500"></span>
+                    <span class="text-zinc-700 font-semibold">
+                      {{ category.name }}
+                    </span>
+                  </div>
+                  <DropdownMenu :modal="false">
+                    <DropdownMenuTrigger
+                      class="flex items-center p-1 hover:bg-black/5 rounded data-[state=open]:bg-black/5"
+                    >
+                      <DotsHorizontalIcon
+                        class="size-5 stroke-[1.75] text-zinc-600"
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" class="min-w-40">
+                      <CategoryActionDropdownMenu
+                        :categoryId="category.id"
+                        @openModal="handleOpenModal"
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-                <DropdownMenu :modal="false">
-                  <DropdownMenuTrigger
-                    class="flex items-center p-1 hover:bg-black/5 rounded data-[state=open]:bg-black/5"
+
+                <div class="flex gap-3">
+                  <div
+                    class="flex gap-10 items-center justify-center bg-blue-50 p-1.5 rounded-xl flex-1"
                   >
-                    <DotsHorizontalIcon
-                      class="size-5 stroke-[1.75] text-zinc-600"
-                    />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" class="min-w-40">
-                    <CategoryActionDropdownMenu
-                      :categoryId="category.id"
-                      @openModal="handleOpenModal"
-                    />
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    <!-- <div
+                      class="text-zinc-500 text-xs font-semibold flex gap-1.5"
+                      v-if="category.tasks.length"
+                    >
+                      <ClipboardCheckIcon
+                        class="size-4 stroke-[1.5] text-zinc-700"
+                      />
+                      <span>
+                        {{
+                          category.tasks.filter((task) => task.isCompleted)
+                            .length
+                        }}
+                        / {{ category.tasks.length }}
+                      </span>
+                    </div> -->
+                    <span
+                      class="text-zinc-500 text-xs font-semibold"
+                      v-if="category.tasks.length"
+                    >
+                      Completed:
+                      {{
+                        category.tasks.filter((task) => task.isCompleted).length
+                      }}
+                      / {{ category.tasks.length }}
+                    </span>
+                    <span class="text-zinc-500 text-xs font-semibold">
+                      Tasks: {{ category.tasks.length }} / 5
+                    </span>
+                  </div>
+                  <Button
+                    size="sm"
+                    @click="
+                      () => {
+                        isOpenTaskDialog = true;
+                        modalProps = { categoryId: category.id };
+                      }
+                    "
+                    class="bg-blue-50 hover:bg-blue-400 p-2 rounded-2xl text-zinc-600 hover:text-zinc-50"
+                  >
+                    <PlusIcon class="size-5 stroke-[2]" />
+                  </Button>
+                </div>
               </div>
               <ul>
                 <li
                   v-for="task in category.tasks"
                   :key="task.id"
-                  class="flex items-center gap-2 justify-between bg-blue-50 p-3 rounded-xl mb-3"
+                  class="flex items-center gap-2 justify-between bg-blue-50 p-3 rounded-xl mb-3 shadow-lg"
                   v-if="category.tasks"
                 >
                   <div class="flex items-center gap-3">
@@ -148,12 +200,20 @@ function handleOpenModal(
                       "
                     />
                     <div class="flex flex-col gap-3">
+                      <!-- <span
+                        :for="task.id"
+                        class="text-zinc-500 data-[state=checked]:line-through"
+                      >
+                        {{ task.name }}
+                      </span> -->
                       <span
                         :for="task.id"
-                        class="text-zinc-500 data-[state=checked]:stroke-indigo-50"
+                        :class="{ 'line-through': task.isCompleted }"
+                        class="text-zinc-500"
                       >
                         {{ task.name }}
                       </span>
+
                       <div class="flex gap-3 items-center">
                         <Badge size="sm" variant="blue">
                           {{ task.priority }}
@@ -181,7 +241,7 @@ function handleOpenModal(
                 </li>
                 <li v-if="category.tasks.length === 0" class="text-zinc-500">
                   <span
-                    class="text-zinc-400 flex items-center justify-center font-semibold"
+                    class="text-zinc-600 flex items-center justify-center my-48 font-semibold"
                     >No tasks yet</span
                   >
                 </li>

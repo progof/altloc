@@ -2,59 +2,34 @@
 import ProfileDropdownMenu from "@/layouts/ProfileDropdownMenu.vue";
 import { getMeQueryOptions } from "@/services/user.service";
 import { useQuery } from "@tanstack/vue-query";
+import { categoriesQuery } from "@/services/dayquest/category.service";
 
 import DiamondIcon from "@/assets/icons/diamond.svg?component";
 import StarIcon from "@/assets/icons/star.svg?component";
 import { computed } from "vue";
 import { Progress } from "@/components/ui/progress";
 import AstronautIcon from "@/assets/icons/astronaut.svg?component";
+import CategoriesIcon from "@/assets/icons/categories.svg?component";
 
 const { data: user } = useQuery(getMeQueryOptions);
 
-// const baseLevelScore = 8; // use 8 for testing but 4 for production
-// const levels = new Array(200).fill(0).map((_, i) => baseLevelScore * i);
-
-// const levelScores = levels.map((_, level) => {
-//   let sum = 0;
-
-//   for (let [index, value] of levels.entries()) {
-//     if (index >= level) {
-//       return sum + value;
-//     }
-//     sum += value;
-//   }
-
-//   return sum;
-// });
-
-// function computeLevelByScore(score: number) {
-//   for (let [index, value] of levelScores.entries()) {
-//     if (score <= value) {
-//       return {
-//         level: index,
-//         value: levels[index],
-//       };
-//     }
-//   }
-// }
-
-// console.log("levels: ", levels);
-// console.log("levelScores: ", levelScores);
+const { data: categories } = useQuery({
+  ...categoriesQuery,
+  enabled: true,
+});
 
 const baseLevelScore = 8;
 
-// Вычисляем опыт, необходимый для следующего уровня
 const nextLevelScore = computed(() => {
-  if (!user.value) return 0; // Возвращаем 0, если user не загружен
+  if (!user.value) return 0;
   return (user.value.level + 1) * baseLevelScore;
 });
 
-// Вычисляем текущий прогресс в процентах (опыт / опыт до следующего уровня)
 const progress = computed(() => {
-  if (!user.value) return 0; // Возвращаем 0, если user не загружен
+  if (!user.value) return 0;
   const currentScore = user.value.score;
   const requiredScore = nextLevelScore.value;
-  return requiredScore ? (currentScore / requiredScore) * 100 : 0; // Убедитесь, что nextLevelScore не 0
+  return requiredScore ? (currentScore / requiredScore) * 100 : 0;
 });
 </script>
 
@@ -76,16 +51,24 @@ const progress = computed(() => {
       <div class="flex gap-3 justify-between">
         <div
           class="flex gap-3 bg-blue-100 p-2 rounded-xl items-center"
-          title="Exp"
+          title="Experience"
         >
-          <span class="text-zinc-500 text-xs" v-if="user">
+          <span class="text-zinc-700 text-xs" v-if="user">
             Exp:
             {{ user.score }}
             / {{ (user.level + 1) * baseLevelScore }}
           </span>
-          <!-- user.level === 1 ? user.score : (user.level + 1) * 8 - user.score  -->
         </div>
         <div class="flex gap-3">
+          <div
+            class="flex gap-1 bg-blue-100 p-2 rounded-xl items-center"
+            title="Categories"
+          >
+            <CategoriesIcon class="size-5 stroke-[1.7] text-zinc-700 text-sm" />
+            <span class="text-zinc-700" v-if="user">
+              {{ categories.length }} / 5
+            </span>
+          </div>
           <div
             class="flex gap-1 bg-blue-100 p-2 rounded-xl items-center"
             title="Level"

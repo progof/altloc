@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 import TelegramIcon from "@/assets/icons/telegram.svg?component";
 import InstagramIcon from "@/assets/icons/instagram.svg?component";
 import FacebookIcon from "@/assets/icons/facebook.svg?component";
@@ -7,11 +8,28 @@ import AstronautIcon from "@/assets/icons/astronaut.svg?component";
 import { buttonVariant } from "@/components/ui/button";
 import { getSoialMediaURL } from "@/utils";
 import MobileMenu from "./MobileMenu.vue";
+
+const isScrolled = ref(false);
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 0;
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>
 
 <template>
   <header
-    class="pointer-events-auto sticky top-0 z-20 bg-blue-700 bg-opacity-80 px-6 py-3 backdrop-blur-[20px] backdrop-saturate-150 md:px-14"
+    :class="[
+      'pointer-events-auto sticky top-0 z-20 px-6 py-3 backdrop-blur-[20px] backdrop-saturate-150 md:px-14',
+      isScrolled ? 'bg-blue-700 bg-opacity-80' : 'bg-blue-700',
+    ]"
   >
     <div class="container flex items-center justify-between gap-6">
       <div class="flex gap-1 items-center">
@@ -20,24 +38,12 @@ import MobileMenu from "./MobileMenu.vue";
       </div>
 
       <div class="flex gap-6 justify-center md:justify-end">
-        <!-- <a
-          :class="
-            buttonVariant({
-              size: 'md',
-              variant: 'secondary',
-              class: 'shrink-0 text-red-500',
-            })
-          "
-          href="/auth/login"
-        >
-          Log in
-        </a> -->
         <a
           :class="
             buttonVariant({
               size: 'md',
               class: 'shrink-0',
-              variant: 'primary',
+              variant: 'secondary',
             })
           "
           href="/auth/register"
@@ -52,6 +58,7 @@ import MobileMenu from "./MobileMenu.vue";
   <main class="relative flex flex-1 flex-col bg-blue-50">
     <slot />
   </main>
+
   <footer class="bg-blue-700 px-6 md:px-10">
     <div class="container flex flex-col">
       <div class="flex flex-col items-start gap-4 py-6 md:gap-2 md:py-4">

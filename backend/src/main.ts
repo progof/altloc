@@ -15,7 +15,6 @@ import { DayQuestController } from "@/dayquest/dayquest.controller.js";
 import { TasksService } from "@/dayquest/task.service.js";
 import { CategoriesService } from "@/dayquest/category.service.js";
 import { CommentsService } from "@/dayquest/comment.service.js";
-import "@/dayquest/dayquest.cron.js";
 
 import { AuthGoogleService } from "./auth/google/google.service.js";
 import { AuthGoogleController } from "./auth/google/google.controller.js";

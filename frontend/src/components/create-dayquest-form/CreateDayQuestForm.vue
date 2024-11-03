@@ -3,7 +3,7 @@ import { z } from "zod";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useCreateCategoryMutation } from "@/services/dayquest/category.service";
-import { TextField } from "@/components/ui/input";
+import { TextArea } from "@/components/ui/text-area/";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
 import { Button } from "@/components/ui/button";
 import { FetchError } from "@/utils/fetch";
@@ -46,19 +46,21 @@ const onSubmit = handleSubmit((data) => {
 </script>
 
 <template>
-  <DialogTitle class="text-xl font-bold tracking-tight"> DayQuest</DialogTitle>
-  <DialogDescription class="mt-2 text-sm text-zinc-600">
+  <DialogTitle class="text-xl font-bold tracking-tight text-blue-500"
+    >Create category of tasks</DialogTitle
+  >
+  <DialogDescription class="my-4 text-sm text-zinc-600">
     Create a category of habit or goal that you will develop each day.
   </DialogDescription>
-  <form @submit.prevent="onSubmit" class="flex flex-col gap-3 mt-2">
-    <TextField
+  <form @submit.prevent="onSubmit" class="flex flex-col gap-6 mt-2">
+    <TextArea
       name="name"
       label="Name"
       placeholder="Learn B2 English"
       class="text-zinc-700"
     />
 
-    <div class="mt-4 flex justify-end border-zinc-200 pt-4">
+    <div class="flex justify-center border-zinc-200">
       <Button
         :disabled="!meta.dirty || isPending"
         class="relative font-semibold"

@@ -413,8 +413,7 @@ export class DayQuestController {
         userId: user.id,
         taskId: task_id,
       });
-
-      console.log("completeTask -> task", task);
+      
       return res
         .status(200)
         .send({ message: "Task completed successfully", task });

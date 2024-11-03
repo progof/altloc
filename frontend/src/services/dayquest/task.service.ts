@@ -183,6 +183,7 @@ export function useCompleteTaskMutation() {
 					return {
 						...user,
 						score: user.score + 1,
+						
 					};
 				}
 				
@@ -197,6 +198,7 @@ export function useCompleteTaskMutation() {
 						return {
 							...user,
 							level: user.level + 1,
+							isCompleted: true,
 						};
 					}
 					return user;

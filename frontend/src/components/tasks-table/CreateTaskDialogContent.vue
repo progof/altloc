@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm, Field } from "vee-validate";
-import TextField from "@/components/ui/input/TextField.vue";
+import { TextArea } from "@/components/ui/text-area/";
 import Button from "@/components/ui/button/Button.vue";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
 import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -64,7 +64,7 @@ const onSubmit = handleSubmit((data) => {
 
 <template>
   <div class="flex flex-col">
-    <DialogTitle class="text-xl font-bold tracking-tight">
+    <DialogTitle class="text-xl font-bold tracking-tight text-blue-500">
       Create task
     </DialogTitle>
     <DialogDescription class="mt-2 text-sm text-zinc-600">
@@ -74,7 +74,7 @@ const onSubmit = handleSubmit((data) => {
     </DialogDescription>
     <form @submit.prevent="onSubmit" class="mt-4 flex flex-col">
       <div class="mb-4 flex flex-col gap-3">
-        <TextField
+        <TextArea
           name="name"
           label="Name"
           placeholder="Read 5 pages in English"
@@ -96,7 +96,7 @@ const onSubmit = handleSubmit((data) => {
             <SelectTrigger :invalid="!!errorMessage">
               <SelectValue placeholder="Select priority" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent class="text-zinc-600">
               <SelectItem :value="TASK_PRIORITY.LOW">Low</SelectItem>
               <SelectItem :value="TASK_PRIORITY.MEDIUM">Medium</SelectItem>
               <SelectItem :value="TASK_PRIORITY.HIGH">High</SelectItem>
@@ -121,7 +121,7 @@ const onSubmit = handleSubmit((data) => {
             <SelectTrigger :invalid="!!errorMessage">
               <SelectValue placeholder="Select difficulty" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent class="text-zinc-600">
               <SelectItem :value="TASK_DIFFICULTY.EASY">Easy</SelectItem>
               <SelectItem :value="TASK_DIFFICULTY.MEDIUM">Medium</SelectItem>
               <SelectItem :value="TASK_DIFFICULTY.HARD">Hard</SelectItem>
