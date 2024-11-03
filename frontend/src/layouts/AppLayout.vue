@@ -66,7 +66,7 @@ const progress = computed(() => {
           >
             <CategoriesIcon class="size-5 stroke-[1.7] text-zinc-700 text-sm" />
             <span class="text-zinc-700" v-if="user">
-              {{ categories.length }} / 5
+              {{ categories ? categories.length : 0 }} / 5
             </span>
           </div>
           <div
