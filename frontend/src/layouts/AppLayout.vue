@@ -39,7 +39,7 @@ const progress = computed(() => {
   >
     <div class="flex justify-between items-center flex-1">
       <div class="flex gap-2 items-center">
-        <span class="font-semibold text-xl text-zinc-100">AltLoc</span>
+        <span class="font-semibold text-xl text-zinc-100">ALTLOC</span>
         <AstronautIcon class="size-10 stroke-[4] text-zinc-100" />
       </div>
 
@@ -90,7 +90,7 @@ const progress = computed(() => {
       <Progress v-model="progress" class="flex" />
     </div>
   </div>
-  <div class="relative flex flex-1 flex-col bg-blue-50 h-full">
+  <div class="relative flex flex-1 flex-col bg-blue-50 h-screen">
     <slot />
   </div>
 </template>

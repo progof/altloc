@@ -64,26 +64,11 @@ function handleOpenModal(
     isOpenEditTaskDialog.value = true;
   }
 }
-
-// write function to detect the priority of the task and return the color of the badge based on the priority TASK_PRIORITY enum
-
-// function getTaskPriorityColor(priority: string) {
-//   switch (priority) {
-//     case TASK_PRIORITY.HIGH:
-//       return "red";
-//     case TASK_PRIORITY.MEDIUM:
-//       return "yellow";
-//     case TASK_PRIORITY.LOW:
-//       return "green";
-//     default:
-//       return "black";
-//   }
-// }
 </script>
 
 <template>
   <AppLayout>
-    <section class="relative mt-3 p-3 px-6 md:px-10">
+    <section class="relative p-3 px-6 md:px-10">
       <div class="container flex w-auto flex-col gap-1">
         <div class="flex flex-col gap-6">
           <div
@@ -210,7 +195,10 @@ function handleOpenModal(
                         :class="
                           cn([
                             'text-zinc-700 rounded-md p-2 w-full',
-                            { 'line-through bg-blue-100': task.isCompleted },
+                            {
+                              'line-through bg-blue-100 text-zinc-400':
+                                task.isCompleted,
+                            },
                             { 'bg-blue-200': !task.isCompleted },
                           ])
                         "

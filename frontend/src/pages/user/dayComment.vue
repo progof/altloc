@@ -11,6 +11,7 @@ import {
 import { commentsQuery } from "@/services/dayquest/comment.service";
 import PlusIcon from "@/assets/icons/plus.svg?component";
 import CalendarIcon from "@/assets/icons/calendar.svg?component";
+import EmotionIcon from "@/assets/icons/emotion.svg?component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,15 +46,15 @@ function handleOpenModal(
 function getEmotionalStateIcon(emotionalState: string) {
   switch (emotionalState) {
     case "VERY_BAD":
-      return "😭";
+      return "Very bad 😭";
     case "BAD":
-      return "😞";
+      return "Bad 😞";
     case "NEUTRAL":
-      return "😐";
+      return "Neutral 😐";
     case "GOOD":
-      return "😊";
+      return "Good 😊";
     case "VERY_GOOD":
-      return "😍";
+      return "Very good 😍";
     default:
       return "😐";
   }
@@ -62,8 +63,8 @@ function getEmotionalStateIcon(emotionalState: string) {
 
 <template>
   <AppLayout>
-    <section class="relative mt-6 px-3 md:px-10">
-      <div class="container flex w-auto flex-col gap-6">
+    <section class="relative p-3 px-6 md:px-10">
+      <div class="container flex w-auto flex-col gap-1">
         <div class="flex flex-col gap-6">
           <div
             class="flex justify-between items-center border-b border-blue-600 py-3"
@@ -111,18 +112,20 @@ function getEmotionalStateIcon(emotionalState: string) {
                 v-if="comment.id"
               >
                 <div
-                  class="flex gap-10 items-center bg-blue-50 p-1.5 rounded-xl px-3 justify-between w-full"
+                  class="flex gap-10 items-center bg-blue-50 p-1.5 rounded-xl px-3 w-full"
                 >
                   <div class="flex gap-2 items-center">
                     <CalendarIcon class="size-5 stroke-[1.7] text-zinc-700" />
-                    <span class="text-zinc-700 text-sm font-semibold">
+                    <span class="text-zinc-500 text-sm font-semibold">
                       {{ formatDateToMonthDay(comment.createdAt) }}
                     </span>
                   </div>
-                  <span class="text-zinc-700 text-sm font-semibold">
-                    Your state:
-                    {{ getEmotionalStateIcon(comment.emotionalState) }}
-                  </span>
+                  <div class="flex gap-2 items-center">
+                    <EmotionIcon class="size-5 stroke-[1.7] text-zinc-700" />
+                    <span class="text-zinc-500 text-sm font-semibold">
+                      {{ getEmotionalStateIcon(comment.emotionalState) }}
+                    </span>
+                  </div>
                 </div>
                 <DropdownMenu :modal="false">
                   <DropdownMenuTrigger

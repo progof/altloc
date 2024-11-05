@@ -32,8 +32,8 @@ onUnmounted(() => {
     ]"
   >
     <div class="container flex items-center justify-between gap-6">
-      <div class="flex gap-1 items-center">
-        <span class="font-semibold text-xl text-zinc-100">AltLoc</span>
+      <div class="flex gap-2 items-center">
+        <span class="font-semibold text-xl text-zinc-100">ALTLOC</span>
         <AstronautIcon class="size-10 stroke-[4] text-zinc-100" />
       </div>
 

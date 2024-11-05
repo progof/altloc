@@ -17,7 +17,7 @@
             class="mx-auto mb-5 w-full max-w-lg xl:mb-0 xl:max-w-none xl:flex-1"
           >
             <a href="/" class="text-lg font-bold tracking-tight text-zinc-300">
-              AltLoc
+              ALTLOC
             </a>
           </div>
           <div
