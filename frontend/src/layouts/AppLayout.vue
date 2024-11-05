@@ -39,8 +39,8 @@ const progress = computed(() => {
   >
     <div class="flex justify-between items-center flex-1">
       <div class="flex gap-2 items-center">
-        <span class="font-semibold text-xl text-zinc-100">ALTLOC</span>
         <AstronautIcon class="size-10 stroke-[4] text-zinc-100" />
+        <span class="font-semibold text-xl text-zinc-100">ALTLOC</span>
       </div>
 
       <ProfileDropdownMenu v-if="user" :user="user" class="md:hidden" />
