@@ -20,11 +20,13 @@ import CommentIcon from "@/assets/icons/comment.svg?component";
           <div
             class="absolute inset-0 z-[1] flex items-center justify-center bg-gradient-to-b from-blue-200/20 to-blue-400/90 p-6"
           >
-            <h1
-              class="md:text-5xl text-2xl font-bold tracking-tight text-zinc-700 items-center justify-center bg-blue-900/20 rounded-lg p-4"
+            <div
+              class="absolute flex w-full flex-col items-start gap-4 bg-gradient-to-t from-black/90 via-black/50 via-70% p-4 md:p-6"
             >
-              Switch to gamification: <br />turn habits into exciting quests!
-            </h1>
+              <h1 class="relative text-2xl font-bold text-zinc-700 bottom-8">
+                Switch to gamification: <br />turn habits into exciting quests!
+              </h1>
+            </div>
           </div>
         </div>
       </div>
@@ -32,24 +34,6 @@ import CommentIcon from "@/assets/icons/comment.svg?component";
 
     <section class="relative mt-3 p-6 md:px-10">
       <div class="container flex flex-col gap-12 items-center">
-        <div
-          class="flex flex-col gap-3 bg-blue-200 p-6 bg-opacity-80 rounded-xl h-auto max-w-96"
-        >
-          <div class="flex gap-3 items-center">
-            <h3 class="font-semibold text-lg text-zinc-900">
-              Getting Started: Your Path to Success
-            </h3>
-            <div
-              class="bg-blue-50/[.12] p-2.5 rounded-full flex ring-8 ring-blue-500/5 mb-5 items-center justify-center"
-            >
-              <GameControllerIcon
-                class="mr-2 size-7 stroke-[1.7] text-zinc-800"
-              />
-            </div>
-          </div>
-          <div class="flex bg-blue-50"></div>
-        </div>
-
         <div class="flex flex-col md:flex-row gap-12 items-center">
           <div
             class="flex flex-col gap-3 bg-blue-200 p-6 bg-opacity-80 rounded-xl h-auto max-w-96"

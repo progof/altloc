@@ -63,8 +63,13 @@ const onSubmit = handleSubmit((data) => {
 });
 </script>
 
+function getEmotionalStateIcon(emotionalState: string) { switch (emotionalState)
+{ case "VERY_BAD": return "😭"; case "BAD": return "😞"; case "NEUTRAL": return
+"😐"; case "GOOD": return "😊"; case "VERY_GOOD": return "😍"; default: return
+"😐"; } }
+
 <template>
-  <DialogTitle class="text-xl font-bold tracking-tight">
+  <DialogTitle class="text-xl font-bold tracking-tight text-blue-600">
     DayComment
   </DialogTitle>
   <DialogDescription class="mt-2 text-sm text-zinc-600">
@@ -91,14 +96,16 @@ const onSubmit = handleSubmit((data) => {
         @update:model-value="field['onUpdate:modelValue']"
       >
         <SelectTrigger :invalid="!!errorMessage">
-          <SelectValue placeholder="Rate from 1 to 10" />
+          <SelectValue placeholder="Rate from 😭 to 😍" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem :value="EMOTIONAL_STATE.BAD">Bad</SelectItem>
-          <SelectItem :value="EMOTIONAL_STATE.GOOD">Good</SelectItem>
-          <SelectItem :value="EMOTIONAL_STATE.NEUTRAL">Neutral</SelectItem>
-          <SelectItem :value="EMOTIONAL_STATE.VERY_BAD">Very bad</SelectItem>
-          <SelectItem :value="EMOTIONAL_STATE.VERY_GOOD">Very good</SelectItem>
+        <SelectContent class="text-zinc-700">
+          <SelectItem :value="EMOTIONAL_STATE.BAD"> Bad 😞 </SelectItem>
+          <SelectItem :value="EMOTIONAL_STATE.GOOD">Good 😊</SelectItem>
+          <SelectItem :value="EMOTIONAL_STATE.NEUTRAL">Neutral 😐</SelectItem>
+          <SelectItem :value="EMOTIONAL_STATE.VERY_BAD">Very bad 😭</SelectItem>
+          <SelectItem :value="EMOTIONAL_STATE.VERY_GOOD">
+            Very good 😍
+          </SelectItem>
         </SelectContent>
       </Select>
       <span v-if="errorMessage" class="text-xs font-medium text-red-600">
@@ -106,7 +113,7 @@ const onSubmit = handleSubmit((data) => {
       </span>
     </Field>
 
-    <div class="mt-4 flex justify-end pt-4">
+    <div class="mt-4 flex justify-center pt-4">
       <Button
         type="submit"
         :disabled="!meta.dirty || isPending"

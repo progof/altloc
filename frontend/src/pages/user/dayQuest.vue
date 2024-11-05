@@ -10,7 +10,8 @@ import { CreateTaskDialogContent } from "@/components/tasks-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import PlusIcon from "@/assets/icons/plus.svg?component";
 import InfoIcon from "@/assets/icons/info.svg?component";
-import ClipboardCheckIcon from "@/assets/icons/clipboard-check.svg?component";
+import RankingIcon from "@/assets/icons/ranking.svg?component";
+import DumbbellIcon from "@/assets/icons/dumbbell.svg?component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +27,11 @@ import {
 import DeleteIcon from "@/assets/icons/delete.svg?component";
 import { EditDayQuestForm } from "@/components/edit-dayquest-form";
 import { Badge } from "@/components/ui/badge";
+import {
+  getTaskPriorityColor,
+  getTaskDifficultyColor,
+} from "@/services/dayquest/taskState";
+import { cn } from "@/utils";
 
 const { data: categories } = useQuery({
   ...categoriesQuery,
@@ -34,8 +40,7 @@ const { data: categories } = useQuery({
 
 console.log(categories);
 
-const { mutate: deleteTask, isPending: IsDeleteTaskPeding } =
-  useDeleteTaskMutation();
+const { mutate: deleteTask } = useDeleteTaskMutation();
 
 const { mutate: completeTask } = useCompleteTaskMutation();
 const { mutate: unCompleteTask } = useUnCompleteTaskMutation();
@@ -59,6 +64,21 @@ function handleOpenModal(
     isOpenEditTaskDialog.value = true;
   }
 }
+
+// write function to detect the priority of the task and return the color of the badge based on the priority TASK_PRIORITY enum
+
+// function getTaskPriorityColor(priority: string) {
+//   switch (priority) {
+//     case TASK_PRIORITY.HIGH:
+//       return "red";
+//     case TASK_PRIORITY.MEDIUM:
+//       return "yellow";
+//     case TASK_PRIORITY.LOW:
+//       return "green";
+//     default:
+//       return "black";
+//   }
+// }
 </script>
 
 <template>
@@ -67,7 +87,7 @@ function handleOpenModal(
       <div class="container flex w-auto flex-col gap-1">
         <div class="flex flex-col gap-6">
           <div
-            class="flex justify-between items-center border-b border-zinc-700 py-3"
+            class="flex justify-between items-center border-b border-blue-600 py-3"
           >
             <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayQuest
@@ -102,7 +122,7 @@ function handleOpenModal(
             class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 mt-5"
           >
             <div
-              class="flex flex-col gap-6 bg-blue-200 p-3 rounded-xl flex-1"
+              class="flex flex-col gap-6 bg-blue-200 p-5 rounded-xl flex-1"
               v-for="category in categories"
               :key="category.id"
             >
@@ -135,21 +155,6 @@ function handleOpenModal(
                   <div
                     class="flex gap-10 items-center justify-center bg-blue-50 p-1.5 rounded-xl flex-1"
                   >
-                    <!-- <div
-                      class="text-zinc-500 text-xs font-semibold flex gap-1.5"
-                      v-if="category.tasks.length"
-                    >
-                      <ClipboardCheckIcon
-                        class="size-4 stroke-[1.5] text-zinc-700"
-                      />
-                      <span>
-                        {{
-                          category.tasks.filter((task) => task.isCompleted)
-                            .length
-                        }}
-                        / {{ category.tasks.length }}
-                      </span>
-                    </div> -->
                     <span
                       class="text-zinc-500 text-xs font-semibold"
                       v-if="category.tasks.length"
@@ -182,10 +187,10 @@ function handleOpenModal(
                 <li
                   v-for="task in category.tasks"
                   :key="task.id"
-                  class="flex items-center gap-2 justify-between bg-blue-50 p-3 rounded-xl mb-3 shadow-lg"
+                  class="flex bg-blue-50 p-3 rounded-xl mb-3 shadow-md transition transform hover:scale-105 hover:shadow-lg"
                   v-if="category.tasks"
                 >
-                  <div class="flex items-center gap-3">
+                  <div class="flex justify-between items-center gap-3 flex-1">
                     <Checkbox
                       :id="task.id"
                       :modelValue="task.isCompleted"
@@ -199,45 +204,62 @@ function handleOpenModal(
                         }
                       "
                     />
-                    <div class="flex flex-col gap-3">
-                      <!-- <span
-                        :for="task.id"
-                        class="text-zinc-500 data-[state=checked]:line-through"
-                      >
-                        {{ task.name }}
-                      </span> -->
+                    <div class="flex flex-col gap-3 w-full">
                       <span
                         :for="task.id"
-                        :class="{ 'line-through': task.isCompleted }"
-                        class="text-zinc-500"
+                        :class="
+                          cn([
+                            'text-zinc-700 rounded-md p-2 w-full',
+                            { 'line-through bg-blue-100': task.isCompleted },
+                            { 'bg-blue-200': !task.isCompleted },
+                          ])
+                        "
                       >
                         {{ task.name }}
                       </span>
 
-                      <div class="flex gap-3 items-center">
-                        <Badge size="sm" variant="blue">
-                          {{ task.priority }}
-                        </Badge>
-                        <Badge size="sm" variant="green">
-                          {{ task.difficulty }}
-                        </Badge>
+                      <div class="flex gap-6 items-center">
+                        <div class="flex gap-1.5 items-center">
+                          <RankingIcon
+                            class="size-6 text-zinc-500 stroke-[1.5]"
+                            title="Priority"
+                          />
+
+                          <Badge
+                            size="sm"
+                            :variant="getTaskPriorityColor(task.priority)"
+                          >
+                            {{ task.priority }}
+                          </Badge>
+                        </div>
+                        <div class="flex gap-1.5 items-center">
+                          <DumbbellIcon
+                            class="size-6 text-zinc-500 stroke-[1.5]"
+                            title="Difficulty"
+                          />
+                          <Badge
+                            size="sm"
+                            :variant="getTaskDifficultyColor(task.difficulty)"
+                          >
+                            {{ task.difficulty }}
+                          </Badge>
+                        </div>
                       </div>
                     </div>
+                    <div class="flex">
+                      <Button
+                        size="sm"
+                        @click="
+                          () => {
+                            deleteTask(task.id);
+                          }
+                        "
+                        class="bg-blue-100 hover:bg-blue-300 p-2 rounded-lg text-zinc-600 hover:text-red-500"
+                      >
+                        <DeleteIcon class="size-5 text-red-300" />
+                      </Button>
+                    </div>
                   </div>
-                  <Button
-                    size="sm"
-                    :desibled="IsDeleteTaskPeding"
-                    class="bg-transparent hover:bg-transparent p-1"
-                    @click="
-                      () => {
-                        deleteTask(task.id);
-                      }
-                    "
-                  >
-                    <DeleteIcon
-                      class="size-5 text-red-300 hover:text-red-500"
-                    />
-                  </Button>
                 </li>
                 <li v-if="category.tasks.length === 0" class="text-zinc-500">
                   <span

@@ -41,31 +41,56 @@ function handleOpenModal(
     isOpenEditCommentDialog.value = true;
   }
 }
+
+function getEmotionalStateIcon(emotionalState: string) {
+  switch (emotionalState) {
+    case "VERY_BAD":
+      return "😭";
+    case "BAD":
+      return "😞";
+    case "NEUTRAL":
+      return "😐";
+    case "GOOD":
+      return "😊";
+    case "VERY_GOOD":
+      return "😍";
+    default:
+      return "😐";
+  }
+}
 </script>
 
 <template>
   <AppLayout>
     <section class="relative mt-6 px-3 md:px-10">
       <div class="container flex w-auto flex-col gap-6">
-        <div class="flex flex-col gap-3">
-          <div class="flex justify-between">
+        <div class="flex flex-col gap-6">
+          <div
+            class="flex justify-between items-center border-b border-blue-600 py-3"
+          >
             <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayComment
             </h2>
 
             <Button
-              size="sm"
+              size="md"
               @click="
                 () => {
                   isOpenDayQuestDialog = true;
                 }
               "
+              class="bg-blue-400 hover:bg-blue-600 p-2 rounded-full"
+              title="Create new category"
+              alt="Create new category"
             >
-              <PlusIcon class="size-5 stroke-[1.9] text-zinc-50" />
+              <PlusIcon class="size-8 stroke-[3] text-white" />
             </Button>
           </div>
-          <div class="flex items-center gap-3 mt-2">
-            <InfoIcon class="size-6 stroke-[1.7] text-zinc-500" />
+
+          <div
+            class="flex items-center gap-3 bg-blue-100 p-3 rounded-2xl drop-shadow-lg"
+          >
+            <InfoIcon class="size-6 stroke-[2] text-zinc-500 shrink-0" />
             <span class="text-xs text-zinc-500 font-semibold">
               Write a short note about what you remembered today and evaluate
               your emotional well-being.
@@ -77,7 +102,7 @@ function handleOpenModal(
             class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 min-w-[300px] mt-5"
           >
             <div
-              class="flex flex-col gap-3 bg-blue-100 p-3 rounded-xl w-full flex-1"
+              class="flex flex-col gap-3 bg-blue-200 p-3 rounded-xl w-full flex-1"
               v-for="comment in comments"
               :key="comment.id"
             >
@@ -85,15 +110,20 @@ function handleOpenModal(
                 class="flex items-center gap-1 justify-between"
                 v-if="comment.id"
               >
-                <div class="flex gap-2 items-center">
-                  <CalendarIcon class="size-5 stroke-[1.7] text-zinc-500" />
-                  <span class="text-zinc-400 text-sm font-semibold">
-                    {{ formatDateToMonthDay(comment.createdAt) }}
+                <div
+                  class="flex gap-10 items-center bg-blue-50 p-1.5 rounded-xl px-3 justify-between w-full"
+                >
+                  <div class="flex gap-2 items-center">
+                    <CalendarIcon class="size-5 stroke-[1.7] text-zinc-700" />
+                    <span class="text-zinc-700 text-sm font-semibold">
+                      {{ formatDateToMonthDay(comment.createdAt) }}
+                    </span>
+                  </div>
+                  <span class="text-zinc-700 text-sm font-semibold">
+                    Your state:
+                    {{ getEmotionalStateIcon(comment.emotionalState) }}
                   </span>
                 </div>
-                <span class="text-zinc-400 text-sm font-semibold">
-                  Emotional state: {{ comment.emotionalState }}
-                </span>
                 <DropdownMenu :modal="false">
                   <DropdownMenuTrigger
                     class="flex items-center p-1 hover:bg-black/5 rounded data-[state=open]:bg-black/5"
@@ -110,8 +140,10 @@ function handleOpenModal(
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <div class="flex flex-col gap-3">
-                <span class="text-zinc-600 text-sm">
+              <div class="flex flex-col">
+                <span
+                  class="text-zinc-600 text-sm bg-blue-50 p-3 rounded-xl h-auto shadow-lg"
+                >
                   {{ comment.description }}
                 </span>
               </div>
@@ -119,7 +151,7 @@ function handleOpenModal(
           </div>
           <div v-else class="text-zinc-500 mt-5">
             <span
-              class="text-zinc-400 flex items-center justify-center font-semibold"
+              class="text-zinc-700 flex items-center justify-center font-semibold"
             >
               No comment yet
             </span>
