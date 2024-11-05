@@ -50,6 +50,17 @@ import AstronautIcon from "@/assets/icons/astronaut.svg?component";
           alt="Gamification poster"
           class="absolute inset-0 size-full object-cover opacity-65 blur-sm bg-blue-200"
         />
+        <div class="flex flex-col gap-6 items-center z-10">
+          <h2 class="text-2xl font-semibold text-zinc-100 text-center">
+            How to Gamify Your Goals
+          </h2>
+          <span class="text-zinc-200 text-center">
+            Follow these steps to gamify your goals and turn your daily tasks
+            into exciting quests. With each completed task, you'll earn
+            experience points, level up, and unlock new achievements. Start your
+            gamification journey today!
+          </span>
+        </div>
         <div
           class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 z-10"
         >
