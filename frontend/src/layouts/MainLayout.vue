@@ -5,6 +5,7 @@ import InstagramIcon from "@/assets/icons/instagram.svg?component";
 import FacebookIcon from "@/assets/icons/facebook.svg?component";
 import XIcon from "@/assets/icons/x.svg?component";
 import AstronautIcon from "@/assets/icons/astronaut.svg?component";
+import GithubIcon from "@/assets/icons/github.svg?component";
 import { buttonVariant } from "@/components/ui/button";
 import { getSoialMediaURL } from "@/utils";
 import MobileMenu from "./MobileMenu.vue";
@@ -65,9 +66,20 @@ onUnmounted(() => {
         <div
           class="flex w-full flex-col items-start justify-center gap-3 text-center md:flex-row md:items-center md:justify-between"
         >
-          <div class="flex gap-1 items-center">
-            <span class="font-semibold text-xl text-zinc-100">AltLoc</span>
-            <AstronautIcon class="size-10 stroke-[4] text-zinc-100" />
+          <div class="flex gap-6 justify-between">
+            <div class="flex gap-2 items-center">
+              <AstronautIcon class="size-10 stroke-[4] text-zinc-100" />
+              <span class="font-semibold text-xl text-zinc-100">ALTLOC</span>
+            </div>
+
+            <a
+              href="https://github.com/progof"
+              target="_blank"
+              class="font-semibold text-xs text-zinc-100/75 flex gap-1 items-center"
+            >
+              <GithubIcon class="size-5 stroke-[3] text-zinc-100/75" />
+              by PROGOF
+            </a>
           </div>
           <ul
             class="flex flex-wrap items-start justify-start gap-x-5 gap-y-2 md:justify-between"
@@ -95,24 +107,28 @@ onUnmounted(() => {
         <div class="flex flex-row justify-center gap-1 md:justify-end">
           <a
             :href="getSoialMediaURL('telegram')"
+            target="_blank"
             class="flex p-1 text-zinc-100/75 hover:text-zinc-100/90"
           >
             <TelegramIcon class="size-5" />
           </a>
           <a
             :href="getSoialMediaURL('instagram')"
+            target="_blank"
             class="flex p-1 text-zinc-100/75 hover:text-zinc-100/90"
           >
             <InstagramIcon class="size-5" />
           </a>
           <a
             :href="getSoialMediaURL('facebook')"
+            target="_blank"
             class="flex p-1 text-zinc-100/75 hover:text-zinc-100/90"
           >
             <FacebookIcon class="size-5" />
           </a>
           <a
             :href="getSoialMediaURL('twitter')"
+            target="_blank"
             class="flex p-1 text-zinc-100/75 hover:text-zinc-100/90"
           >
             <XIcon class="size-5" />

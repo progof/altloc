@@ -8,7 +8,7 @@ import GoogleIcon from "@/assets/icons/google.svg?component";
   <AuthLayout>
     <div class="flex w-full max-w-lg flex-col gap-y-6 xl:py-20">
       <div class="w-full">
-        <h1 class="text-2xl font-bold tracking-[-0.015em]">
+        <h1 class="text-2xl font-bold tracking-[-0.015em] text-blue-500">
           Create your personal account
         </h1>
         <p class="mt-2 text-sm font-medium text-zinc-600">

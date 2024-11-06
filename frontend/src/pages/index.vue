@@ -3,6 +3,11 @@ import MainLayout from "@/layouts/MainLayout.vue";
 import GameControllerIcon from "@/assets/icons/game-controller.svg?component";
 import CommentIcon from "@/assets/icons/comment.svg?component";
 import AstronautIcon from "@/assets/icons/astronaut.svg?component";
+import TargetIcon from "@/assets/icons/target.svg?component";
+import CategoriesIcon from "@/assets/icons/categories.svg?component";
+import ClipboardListIcon from "@/assets/icons/clipboard-list.svg?component";
+import RankingIcon from "@/assets/icons/ranking.svg?component";
+import SpaceStarIcon from "@/assets/icons/space-star.svg?component";
 </script>
 
 <template>
@@ -43,7 +48,7 @@ import AstronautIcon from "@/assets/icons/astronaut.svg?component";
       </div>
     </section>
 
-    <section class="relative group mt-6 p-12 px-6 md:px-10">
+    <!-- <section class="relative group mt-6 p-12 px-6 md:px-10">
       <div class="container flex flex-col gap-12 items-center">
         <img
           src="/images/abstract-space2.jpg"
@@ -138,6 +143,115 @@ import AstronautIcon from "@/assets/icons/astronaut.svg?component";
               difficulty as you progress. Celebrate your achievements as you
               reach new levels and milestones to stay inspired on your journey!
             </span>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <section class="relative group mt-6 p-12 px-6 md:px-10">
+      <div class="container flex flex-col gap-12 items-center">
+        <img
+          src="/images/blue-grid.webp"
+          alt="Gamification poster"
+          class="absolute inset-0 size-full object-cover opacity-65 blur-sm bg-blue-200"
+        />
+
+        <div class="flex flex-col gap-6 items-center z-10">
+          <h2 class="text-2xl font-semibold text-zinc-100 text-center">
+            How to Gamify Your Goals
+          </h2>
+          <span class="text-zinc-200 text-center">
+            Transform your goals into engaging quests with these simple steps.
+            Complete tasks, gain experience, and unlock achievements along the
+            way!
+          </span>
+        </div>
+
+        <div
+          class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 z-10"
+        >
+          <div
+            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
+          >
+            <div class="flex gap-3 items-center">
+              <h2 class="text-zinc-900 font-semibold">Step 1: Set a Goal</h2>
+              <TargetIcon class="size-5 stroke-[1.7] text-zinc-800" />
+            </div>
+            <span class="text-zinc-600 text-sm"
+              >Define a meaningful goal, like improving fitness or learning a
+              new skill.</span
+            >
+          </div>
+
+          <div
+            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
+          >
+            <div class="flex gap-3 items-center">
+              <h2 class="text-zinc-900 font-semibold">
+                Step 2: Organize by Category
+              </h2>
+              <CategoriesIcon class="size-5 stroke-[1.7] text-zinc-800" />
+            </div>
+            <span class="text-zinc-600 text-sm"
+              >Break down your goal into categories (e.g., "Cardio" or "Strength
+              Training").</span
+            >
+          </div>
+
+          <div
+            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
+          >
+            <div class="flex gap-3 items-center">
+              <h2 class="text-zinc-900 font-semibold">
+                Step 3: Add Specific Tasks
+              </h2>
+              <ClipboardListIcon class="size-5 stroke-[1.7] text-zinc-800" />
+            </div>
+            <span class="text-zinc-600 text-sm"
+              >Create tasks for each category, assigning difficulty and
+              priority.</span
+            >
+          </div>
+
+          <div
+            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
+          >
+            <div class="flex gap-3 items-center">
+              <h2 class="text-zinc-900 font-semibold">
+                Step 4: Track Progress
+              </h2>
+              <RankingIcon class="size-5 stroke-[1.7] text-zinc-800" />
+            </div>
+            <span class="text-zinc-600 text-sm"
+              >Mark tasks as complete to earn rewards and see your
+              progress.</span
+            >
+          </div>
+
+          <div
+            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
+          >
+            <div class="flex gap-3 items-center">
+              <h2 class="text-zinc-900 font-semibold">Step 5: Reflect Daily</h2>
+              <CommentIcon class="size-5 stroke-[1.7] text-zinc-800" />
+            </div>
+            <span class="text-zinc-600 text-sm"
+              >Leave a daily comment and track your mood to measure personal
+              impact.</span
+            >
+          </div>
+
+          <div
+            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
+          >
+            <div class="flex gap-3 items-center">
+              <h2 class="text-zinc-900 font-semibold">
+                Step 6: Adjust & Celebrate
+              </h2>
+              <SpaceStarIcon class="size-5 stroke-[1.7] text-zinc-800" />
+            </div>
+            <span class="text-zinc-600 text-sm"
+              >Revise goals as you grow and celebrate each new milestone!</span
+            >
           </div>
         </div>
       </div>
