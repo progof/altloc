@@ -14,6 +14,7 @@ import ScalesIcon from "@/assets/icons/scales.svg?component";
 import SettingsIcon from "@/assets/icons/settings.svg?component";
 import LogoutIcon from "@/assets/icons/logout.svg?component";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
+import PeopleIcon from "@/assets/icons/people.svg?component";
 import { getMeQueryOptions } from "@/services/user.service";
 import { computed } from "vue";
 import type { User } from "@shared/index";
@@ -82,6 +83,15 @@ const avatar = computed(() => {
           <span class="text-zinc-800">Balances</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
+      <template v-if="user.isAdmin">
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem as="a" href="/admin/users/">
+            <PeopleIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
+            <span class="text-zinc-800">Users</span>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </template>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <DropdownMenuItem as="a" href="/user/settings" disabled>

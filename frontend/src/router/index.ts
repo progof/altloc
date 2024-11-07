@@ -46,6 +46,21 @@ const router = createRouter({
 			path: "/user/settings",
 			component: () => import("../pages/user/settings.vue"),
 		},
+		{
+			path: '/admin',
+			children: [
+			{ 
+				path: 'dashboard',
+				name: 'AdminUsersPage', 
+				component: () => import("../pages/admin/AdminUsersPageContent.vue") 
+				}
+			],
+			meta: { requiresAdmin: true } // добавляем мета-тег для маршрутов администратора
+		  },
+		{
+			path: "/:pathMatch(.*)*",
+			component: () => import("../pages/PageNotFound.vue"),
+		},
 	],
 	history: createWebHistory(),
 });
@@ -55,6 +70,19 @@ router.beforeEach(async (to) => {
     if (!isAuthenticated && (to.path === "/auth/login" || to.path === "/auth/register")) {
         return true; 
     }
+
+
+	if (to.meta.requiresAdmin) {
+		try {
+			const user = await queryClient.ensureQueryData(getMeQueryOptions);
+			
+			if (!user.isAdmin) {
+				return { path: "/" };
+			}
+		} catch (error) {
+			return { path: "/auth/login" };
+		}
+	}
 
     if (to.meta.requiresAuth) {
         try {

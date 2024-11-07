@@ -10,6 +10,7 @@ export interface User {
 	level: number;
 	currency: number;
 	createdAt: number;
+	isAdmin: boolean;
 }
 
 // Task type

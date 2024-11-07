@@ -8,9 +8,10 @@ import {
 	userSessionsTable,
 	passwordAccountsTable,
 	PasswordAccount,
+	adminsTable,
 } from "../../../db/schema.js";
 import { eq } from "drizzle-orm";
-import { HTTPError, dateToUTCTimestamp } from "@/utils.js";
+import { Database, HTTPError, Transaction, dateToUTCTimestamp } from "@/utils.js";
 import { User } from "@shared/index.js";
 import { z, ZodType } from "zod";
 
@@ -26,6 +27,7 @@ export const userSchema = z.object({
     score: z.number(),
 	level: z.number(),
 	currency: z.number(),
+	isAdmin: z.boolean(),
 }) satisfies ZodType<User>;
 
 export class AuthPasswordService {
@@ -118,33 +120,39 @@ export class AuthPasswordService {
 			.where(eq(resetPasswordRequestsTable.userId, userId));
 	}
 
-	async getUserById(userId: string):Promise<User> {
+
+
+
+	async getUserById(userId: string): Promise<User> {
 		const user = (
 			await db
 				.select()
 				.from(usersTable)
+				.leftJoin(adminsTable, eq(usersTable.email, adminsTable.email))
 				.where(eq(usersTable.id, userId))
 		).at(0);
 
 		if (!user) {
 			throw new HTTPError({ status: 404, message: "User not found" });
 		}
-			
+
 		return userSchema.parse({
-			id: user.id,
-			username: user.username,
-			email: user.email,
-			emailVerified: user.emailVerified,
-			avatarKey: user.avatarKey,
-			createdAt: dateToUTCTimestamp(user.createdAt),
-			role: user.role,
-			score: user.score,
-			level: user.level,
-			currency: user.currency,
+			id: user.users.id,
+			username: user.users.username,
+			email: user.users.email,
+			emailVerified: user.users.emailVerified,
+			avatarKey: user.users.avatarKey,
+			createdAt: dateToUTCTimestamp(user.users.createdAt),
+			role: user.users.role,
+			score: user.users.score,
+			level: user.users.level,
+			currency: user.users.currency,
+			isAdmin: user.admins !== null,
+			
 		} satisfies User);
 	}
 
-	// async getUserById(db: Database | Transaction, userId: string): Promise<User> {
+	// async getUserById(userId: string):Promise<User> {
 	// 	const user = (
 	// 		await db
 	// 			.select()
@@ -155,7 +163,7 @@ export class AuthPasswordService {
 	// 	if (!user) {
 	// 		throw new HTTPError({ status: 404, message: "User not found" });
 	// 	}
-
+			
 	// 	return userSchema.parse({
 	// 		id: user.id,
 	// 		username: user.username,
@@ -165,8 +173,45 @@ export class AuthPasswordService {
 	// 		createdAt: dateToUTCTimestamp(user.createdAt),
 	// 		role: user.role,
 	// 		score: user.score,
+	// 		level: user.level,
+	// 		currency: user.currency,
 	// 	} satisfies User);
 	// }
+
+	
+
+	// function for get user by userId with checking if the user is an admin join with adminsTable
+
+
+	// async getUserById(userId: string): Promise<User> {
+	// 	const user = (
+	// 		await db
+	// 			.select()
+	// 			.from(usersTable)
+	// 			.leftJoin(adminsTable, eq(usersTable.email, adminsTable.email))
+	// 			.where(eq(usersTable.id, userId))
+	// 	).at(0);
+
+	// 	if (!user) {
+	// 		throw new HTTPError({ status: 404, message: "User not found" });
+	// 	}
+			
+	// 	return userSchema.parse({
+	// 		id: user.id,
+	// 		username: user.username,
+	// 		email: user.email,
+	// 		emailVerified: user.emailVerified,
+	// 		avatarKey: user.avatarKey,
+	// 		createdAt: dateToUTCTimestamp(user.createdAt),
+	// 		role: user.role,
+	// 		score: user.score,
+	// 		level: user.level,
+	// 		currency: user.currency,
+	// 		isAdmin: user.admins !== null,
+	// 	} satisfies User);
+	// }
+
+
 
 	async getUserRoleById(userId: string) {
 		const [user] = await db

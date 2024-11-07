@@ -18,7 +18,12 @@ import { CommentsService } from "@/dayquest/comment.service.js";
 
 import { AuthGoogleService } from "./auth/google/google.service.js";
 import { AuthGoogleController } from "./auth/google/google.controller.js";
+
+import { AdminService }  from "./admin/admin.service.js";
+import { AdminController } from "./admin/admin.controller.js";
+
 import { db } from "./db.js";
+
 
 const app = express();
 
@@ -71,6 +76,11 @@ const dayQuestController = new DayQuestController(
 	commentService
 );
 app.use(dayQuestController.router);
+
+
+export const adminService = new AdminService();
+const adminController = new AdminController(adminService);
+app.use(adminController.router);
 
 app.listen(config.APP_PORT, () => {
 	console.log(`Server running on port: ${config.APP_PORT}`);
