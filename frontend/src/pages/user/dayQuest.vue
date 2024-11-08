@@ -12,6 +12,7 @@ import PlusIcon from "@/assets/icons/plus.svg?component";
 import InfoIcon from "@/assets/icons/info.svg?component";
 import RankingIcon from "@/assets/icons/ranking.svg?component";
 import DumbbellIcon from "@/assets/icons/dumbbell.svg?component";
+import CategoriesIcon from "@/assets/icons/categories.svg?component";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,11 +33,15 @@ import {
   getTaskDifficultyColor,
 } from "@/services/dayquest/taskState";
 import { cn } from "@/utils";
+import { DayQuestProgressBar } from "@/components/dayquest-progress-bar";
+import { getMeQueryOptions } from "@/services/user.service";
 
 const { data: categories } = useQuery({
   ...categoriesQuery,
   enabled: true,
 });
+
+const { data: user } = useQuery(getMeQueryOptions);
 
 console.log(categories);
 
@@ -70,27 +75,41 @@ function handleOpenModal(
   <AppLayout>
     <section class="relative p-3 px-6 md:px-10">
       <div class="container flex w-auto flex-col gap-1">
-        <div class="flex flex-col gap-6">
+        <DayQuestProgressBar />
+        <div class="flex flex-col gap-6 mt-6">
           <div
-            class="flex justify-between items-center border-b border-blue-600 py-3"
+            class="flex justify-between items-center border-b-2 border-blue-400 py-3"
           >
             <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayQuest
             </h2>
 
-            <Button
-              size="md"
-              @click="
-                () => {
-                  isOpenDayQuestDialog = true;
-                }
-              "
-              class="bg-blue-400 hover:bg-blue-600 p-2 rounded-full"
-              title="Create new category"
-              alt="Create new category"
-            >
-              <PlusIcon class="size-8 stroke-[3] text-white" />
-            </Button>
+            <div class="flex gap-3">
+              <div
+                class="flex gap-1 bg-blue-100 p-2 rounded-xl items-center"
+                title="Categories"
+              >
+                <CategoriesIcon
+                  class="size-5 stroke-[1.7] text-zinc-700 text-sm"
+                />
+                <span class="text-zinc-700 text-sm" v-if="user">
+                  {{ categories ? categories.length : 0 }} / 5
+                </span>
+              </div>
+              <Button
+                size="md"
+                @click="
+                  () => {
+                    isOpenDayQuestDialog = true;
+                  }
+                "
+                class="bg-blue-400 hover:bg-blue-600 p-2 rounded-full"
+                title="Create new category"
+                alt="Create new category"
+              >
+                <PlusIcon class="size-8 stroke-[3] text-white" />
+              </Button>
+            </div>
           </div>
 
           <div

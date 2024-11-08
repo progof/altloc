@@ -67,7 +67,7 @@ function getEmotionalStateIcon(emotionalState: string) {
       <div class="container flex w-auto flex-col gap-1">
         <div class="flex flex-col gap-6">
           <div
-            class="flex justify-between items-center border-b border-blue-600 py-3"
+            class="flex justify-between items-center border-b-2 border-blue-400 py-3"
           >
             <h2 class="text-xl font-bold tracking-tight text-zinc-700">
               DayComment

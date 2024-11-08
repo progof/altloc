@@ -11,7 +11,7 @@ import {
 	adminsTable,
 } from "../../../db/schema.js";
 import { eq } from "drizzle-orm";
-import { Database, HTTPError, Transaction, dateToUTCTimestamp } from "@/utils.js";
+import { HTTPError, dateToUTCTimestamp } from "@/utils.js";
 import { User } from "@shared/index.js";
 import { z, ZodType } from "zod";
 
@@ -151,66 +151,6 @@ export class AuthPasswordService {
 			
 		} satisfies User);
 	}
-
-	// async getUserById(userId: string):Promise<User> {
-	// 	const user = (
-	// 		await db
-	// 			.select()
-	// 			.from(usersTable)
-	// 			.where(eq(usersTable.id, userId))
-	// 	).at(0);
-
-	// 	if (!user) {
-	// 		throw new HTTPError({ status: 404, message: "User not found" });
-	// 	}
-			
-	// 	return userSchema.parse({
-	// 		id: user.id,
-	// 		username: user.username,
-	// 		email: user.email,
-	// 		emailVerified: user.emailVerified,
-	// 		avatarKey: user.avatarKey,
-	// 		createdAt: dateToUTCTimestamp(user.createdAt),
-	// 		role: user.role,
-	// 		score: user.score,
-	// 		level: user.level,
-	// 		currency: user.currency,
-	// 	} satisfies User);
-	// }
-
-	
-
-	// function for get user by userId with checking if the user is an admin join with adminsTable
-
-
-	// async getUserById(userId: string): Promise<User> {
-	// 	const user = (
-	// 		await db
-	// 			.select()
-	// 			.from(usersTable)
-	// 			.leftJoin(adminsTable, eq(usersTable.email, adminsTable.email))
-	// 			.where(eq(usersTable.id, userId))
-	// 	).at(0);
-
-	// 	if (!user) {
-	// 		throw new HTTPError({ status: 404, message: "User not found" });
-	// 	}
-			
-	// 	return userSchema.parse({
-	// 		id: user.id,
-	// 		username: user.username,
-	// 		email: user.email,
-	// 		emailVerified: user.emailVerified,
-	// 		avatarKey: user.avatarKey,
-	// 		createdAt: dateToUTCTimestamp(user.createdAt),
-	// 		role: user.role,
-	// 		score: user.score,
-	// 		level: user.level,
-	// 		currency: user.currency,
-	// 		isAdmin: user.admins !== null,
-	// 	} satisfies User);
-	// }
-
 
 
 	async getUserRoleById(userId: string) {

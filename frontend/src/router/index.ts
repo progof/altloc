@@ -50,7 +50,7 @@ const router = createRouter({
 			path: '/admin',
 			children: [
 			{ 
-				path: 'dashboard',
+				path: 'users',
 				name: 'AdminUsersPage', 
 				component: () => import("../pages/admin/AdminUsersPageContent.vue") 
 				}
