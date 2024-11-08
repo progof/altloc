@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { getMeQueryOptions } from "@/services/user.service";
 import { useQuery } from "@tanstack/vue-query";
-import { categoriesQuery } from "@/services/dayquest/category.service";
-
 import DiamondIcon from "@/assets/icons/diamond.svg?component";
 import StarIcon from "@/assets/icons/star.svg?component";
 import { Progress } from "@/components/ui/progress";
 import { computed } from "vue";
 
 const { data: user } = useQuery(getMeQueryOptions);
-
-const { data: categories } = useQuery({
-  ...categoriesQuery,
-  enabled: true,
-});
 
 const baseLevelScore = 8;
 
