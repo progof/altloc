@@ -91,3 +91,12 @@ export const EMOTIONAL_STATE = {
 	GOOD: "GOOD",
 	VERY_GOOD: "VERY_GOOD",
 } as const;
+
+export interface PagingObject<T> {
+    items: T[];
+    totalItems: number;
+    currentPage: number;
+    lastPage: number;
+    pageSize: number;
+}
+

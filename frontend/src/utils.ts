@@ -15,3 +15,4 @@ export const getAppName = (): string => import.meta.env.VITE_APP_NAME;
 
 export const getSoialMediaURL = (platform: string): string => import.meta.env[`VITE_MEDIA_${platform.toUpperCase()}`];
 
+

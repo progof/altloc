@@ -6,6 +6,7 @@ import type {
 } from "drizzle-orm/postgres-js";
 import * as schema from "@db/schema.js";
 import { FormDataEntryValue } from "formdata-node";
+import { z, ZodType } from "zod";
 
 export class HTTPError extends Error {
 	name = "HTTPError";
@@ -98,4 +99,39 @@ export function objectToFromData(
 	}
 
 	return formData;
+}
+
+
+export interface PagingObject<T> {
+	items: T[];
+	totalItems: number;
+	currentPage: number;
+	lastPage: number;
+	pageSize: number;
+}
+
+export const pagingObjectSchema = <T>(
+	itemSchema: z.ZodType<T>,
+): ZodType<PagingObject<T>> =>
+	z.object({
+		items: z.array(itemSchema),
+		totalItems: z.number().positive(),
+		currentPage: z.number().positive(),
+		lastPage: z.number().positive(),
+		pageSize: z.number().positive(),
+	});
+
+export function createPagingObject<T>(options: {
+	items: T[];
+	totalItems: number;
+	page: number;
+	pageSize: number;
+}): PagingObject<T> {
+	return {
+		items: options.items,
+		totalItems: options.totalItems,
+		currentPage: options.page,
+		lastPage: Math.ceil(options.totalItems / options.pageSize),
+		pageSize: options.pageSize,
+	};
 }
