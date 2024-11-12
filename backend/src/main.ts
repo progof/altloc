@@ -23,6 +23,7 @@ import { AdminService }  from "./admin/admin.service.js";
 import { AdminController } from "./admin/admin.controller.js";
 
 import { db } from "./db.js";
+import "../db/seed.js";
 
 
 const app = express();
@@ -45,7 +46,6 @@ app.use(
 		cookie: { secure: false },
 	})
 );
-
 
 
 export const authPasswordService = new AuthPasswordService(config);
