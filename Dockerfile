@@ -30,7 +30,6 @@ COPY --from=build /prod/backend/dist /prod/backend/dist
 COPY --from=build /prod/backend/node_modules /prod/backend/node_modules
 COPY --from=build /prod/backend/package.json /prod/backend/package.json
 COPY --from=build /prod/backend/db/migrations /prod/backend/db/migrations
-COPY --from=build /prod/backend/db/seeds /prod/backend/db/seeds
 WORKDIR /prod/backend
 ENV APP_PORT=4000
 EXPOSE 4000

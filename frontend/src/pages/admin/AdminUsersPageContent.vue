@@ -1,11 +1,10 @@
 <script setup lang="ts">
-// import EyeIcon from "@/assets/icons/eye.svg?component";
 import NewReleasesIcon from "@/assets/icons/new-releases.svg?component";
 import RejectIcon from "@/assets/icons/reject.svg?component";
 import AppLayout from "@/layouts/AppLayout.vue";
 import { adminUsersPageQuery } from "@/services/admin.service";
 import { useQuery } from "@tanstack/vue-query";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { Button } from "@/components/ui/button/";
 import { AvatarRoot, AvatarImage, AvatarFallback } from "radix-vue";
 import {
@@ -24,26 +23,19 @@ import { formatFullDateTime } from "@/utils/dayjs";
 const pageSize = ref(10);
 const page = ref(1);
 
-const { data: userPage, error } = useQuery(
+const { data: userPage } = useQuery(
   computed(() =>
     adminUsersPageQuery({ pageSize: pageSize.value, page: page.value })
   )
 );
-
-watch([userPage, error], () => {
-  console.log(userPage.value?.items);
-  console.log(error.value);
-});
-
-console.log(userPage.value?.items);
 </script>
 <template>
   <AppLayout>
     <section class="relative mt-6 px-3 md:px-10">
       <div class="container flex w-auto flex-col gap-6">
-        <div class="flex items-center gap-3">
-          <h2 class="text-2xl font-semibold">Users</h2>
-          <span v-if="userPage" class="font-semibold text-zinc-500">
+        <div class="flex items-center gap-1.5">
+          <h2 class="text-2xl font-semibold text-zinc-500">Users</h2>
+          <span v-if="userPage" class="font-semibold text-zinc-500 text-xl">
             ({{ userPage?.totalItems }})</span
           >
         </div>
