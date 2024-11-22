@@ -8,6 +8,7 @@ import {
   blockNotAuthenticated,
   blockNotVerifiedUser,
 } from "../../middlewares/auth.middlewares.js";
+import { c } from "node_modules/formdata-node/lib/File-cfd9c54a.js";
 
 export class AuthPasswordController {
   public readonly router = Router();
@@ -126,12 +127,16 @@ export class AuthPasswordController {
         return res.status(400).send({ errors: body.error.issues });
       }
 
+      console.log(body.data);
+
       const { email, password } = body.data;
 
       const user = await this.authPasswordService.getUserByEmail(email);
       const passwordAPI = await this.authPasswordService.getPasswordByUserId(
         user?.id as string
       );
+      console.log(user, passwordAPI);
+
       if (!user) {
         return res.status(400).send({
           errors: [{ message: "User with this email does not exist" }],
