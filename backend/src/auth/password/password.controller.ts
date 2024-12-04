@@ -8,7 +8,6 @@ import {
   blockNotAuthenticated,
   blockNotVerifiedUser,
 } from "../../middlewares/auth.middlewares.js";
-import { c } from "node_modules/formdata-node/lib/File-cfd9c54a.js";
 
 export class AuthPasswordController {
   public readonly router = Router();
@@ -176,8 +175,22 @@ export class AuthPasswordController {
         httpOnly: true,
       });
 
+      // res.cookie("access_token", accessToken, {
+      //   httpOnly: true,
+      //   secure: false, // Для локальной разработки
+      //   sameSite: "none", // Для работы на разных доменах
+      // });
+
+      // res.cookie("refresh_token", refreshToken, {
+      //   httpOnly: true,
+      //   secure: false, // Для локальной разработки
+      //   sameSite: "none", // Для работы на разных доменах
+      // });
+
       req.session.user = user;
-      return res.status(200).send();
+      return res
+        .status(200)
+        .send({ access_token: accessToken, refresh_token: refreshToken });
     } catch (error) {
       console.error(error);
       return res
@@ -188,7 +201,9 @@ export class AuthPasswordController {
 
   async userLogout(req: Request, res: Response) {
     if (!req.session.user) {
-      return res.status(401).send();
+      return res
+        .status(401)
+        .send({ errors: [{ message: "User is not authenticated" }] });
     }
 
     try {

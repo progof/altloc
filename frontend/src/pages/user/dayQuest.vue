@@ -74,7 +74,7 @@ function handleOpenModal(
 <template>
   <AppLayout>
     <section class="relative mt-6 px-3 md:px-10">
-      <div class="container flex w-auto flex-col gap-6">
+      <div class="container flex w-auto flex-col gap-1">
         <DayQuestProgressBar />
         <div class="flex flex-col gap-6 mt-6">
           <div

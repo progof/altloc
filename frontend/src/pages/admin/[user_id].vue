@@ -65,6 +65,12 @@ const { data: user } = useQuery({
                     {{ user.email }}
                   </span>
                 </p>
+                <p class="text-sm font-medium text-zinc-400">
+                  AuthMethods:
+                  <span class="text-zinc-600">
+                    {{ user.authMethods.join(", ") }}
+                  </span>
+                </p>
                 <p
                   class="flex items-center gap-1 text-sm font-medium text-zinc-400"
                 >

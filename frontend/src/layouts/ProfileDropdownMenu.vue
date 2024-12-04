@@ -94,7 +94,7 @@ const avatar = computed(() => {
       </template>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <DropdownMenuItem as="a" href="/user/settings" disabled>
+        <DropdownMenuItem as="a" href="/user/settings">
           <SettingsIcon class="mr-2 size-4 stroke-[1.5] text-zinc-800" />
           <span class="text-zinc-800">Settings</span>
         </DropdownMenuItem>

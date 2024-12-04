@@ -75,21 +75,21 @@ export async function blockNotAuthenticated(
         role: session.userRole,
       });
       res.cookie("access_token", accessToken, { httpOnly: true });
-      
 
       const user = await authPasswordService.getUserById(session.userId);
       if (!user) {
-        return res.status(401).send();
+        return res
+          .status(401)
+          .send({ errors: [{ message: "User not found" }] });
       }
       req.session.user = user;
-      
+
       return next();
     } catch (error) {
       res.redirect("/login");
       return res
         .status(401)
         .send({ errors: [{ message: (error as Error).message }] });
-        
     }
   }
 }

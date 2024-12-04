@@ -23,6 +23,7 @@ import { AdminService } from "./admin/admin.service.js";
 import { AdminController } from "./admin/admin.controller.js";
 
 import { UserService } from "@/user/user.service.js";
+import { UserController } from "@/user/user.controller.js";
 
 import { db } from "./db.js";
 import "../db/seed.js";
@@ -33,7 +34,12 @@ app.use(
   cors({
     origin: config.CLIENT_URL,
     credentials: true,
-    // allowedHeaders: [ "Accept-Version", "Authorization", "Credentials", "Content-Type" ],
+    // allowedHeaders: [
+    //   "Accept-Version",
+    //   "Authorization",
+    //   "Credentials",
+    //   "Content-Type",
+    // ],
   })
 );
 app.use(cookieParser());
@@ -48,7 +54,9 @@ app.use(
   })
 );
 
-export const userService = new UserService();
+export const userService = new UserService(db);
+const userController = new UserController(userService);
+app.use(userController.router);
 
 export const authPasswordService = new AuthPasswordService(config);
 const authPasswordController = new AuthPasswordController(
@@ -57,7 +65,7 @@ const authPasswordController = new AuthPasswordController(
 );
 app.use(authPasswordController.router);
 
-const authController = new AuthController(authPasswordService);
+const authController = new AuthController(userService);
 app.use(authController.router);
 
 export const authGoogleService = new AuthGoogleService(
