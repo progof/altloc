@@ -5,7 +5,7 @@ import {
   passwordAccountsTable,
 } from "@db/schema.js";
 import { z, ZodType } from "zod";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { eq } from "drizzle-orm";
 import { HTTPError, dateToUTCTimestamp } from "@/utils.js";
 import { User } from "@shared/index.js";
@@ -14,7 +14,7 @@ import { Database } from "@/utils.js";
 import { config } from "@/config.js";
 import sharp from "sharp";
 import { s3 } from "@/s3.js";
-import multer from "multer";
+// import multer from "multer";
 
 export const userSchema = z.object({
   id: z.string(),
@@ -79,14 +79,14 @@ const uploadUserAvatar = async (key: string, avatar: File) => {
   );
 };
 
-const deleteUserAvatar = async (key: string) => {
-  await s3.send(
-    new DeleteObjectCommand({
-      Bucket: config.MINIO_BUCKET,
-      Key: key,
-    })
-  );
-};
+// const deleteUserAvatar = async (key: string) => {
+//   await s3.send(
+//     new DeleteObjectCommand({
+//       Bucket: config.MINIO_BUCKET,
+//       Key: key,
+//     })
+//   );
+// };
 
 export class UserService {
   constructor(private readonly db: Database | Transaction) {}
