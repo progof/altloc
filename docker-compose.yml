@@ -60,6 +60,18 @@ services:
     networks:
       - dev
 
+  landing:
+    build:
+      context: ./landing
+      dockerfile: Dockerfile
+      target: landing
+    ports:
+      - "8080:80"
+    volumes:
+      - .nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - dev
+
   postgres:
     image: postgis/postgis:14-3.4-alpine
     restart: always
