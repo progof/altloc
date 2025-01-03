@@ -62,13 +62,16 @@ services:
 
   landing:
     build:
-      context: ./landing
+      context: ../landing
       dockerfile: Dockerfile
       target: landing
     ports:
       - "8080:80"
+      - "8443:443"
     volumes:
       - .nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf/:/etc/letsencrypt
+      - ./certbot/www/:/var/www/certbot
     networks:
       - dev
 
@@ -117,7 +120,7 @@ services:
         "-c",
         "trap 'exit 0' TERM; while :; do sleep 6h & wait $!; certbot renew --non-interactive; done",
       ]
-    command: certonly --webroot -w /var/www/certbot --force-renewal       --non-interactive --email progof031@gmail.com -d altloc.com -d www.altloc.com --agree-tos
+    command: certonly --webroot -w /var/www/certbot --force-renewal       --non-interactive --email progof031@gmail.com -d altloc.com -d www.altloc.com -d mydarkhobby.com -d www.mydarkhobby.com --agree-tos
     networks:
       - dev
 
