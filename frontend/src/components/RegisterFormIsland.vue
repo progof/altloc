@@ -6,17 +6,16 @@ import { Button } from "@/components/ui/button";
 import { TextField, PasswordField } from "@/components/ui/input";
 import LoaderIcon from "@/assets/icons/loader.svg?component";
 
-const validationSchema = z
-  .object({
-    username: z.string().min(1).max(255),
-    email: z.string().email(),
-    password: z.string().min(6).max(255),
-    password_confirmation: z.string().min(6).max(255),
-  })
-  .refine(
-    (data) => data.password === data.password_confirmation,
-    "Passwords don't match"
-  );
+const validationSchema = z.object({
+  fullName: z.string().min(1).max(255),
+  email: z.string().email(),
+  password: z.string().min(6).max(255),
+  // password_confirmation: z.string().min(6).max(255),
+});
+// .refine(
+//   (data) => data.password === data.password_confirmation,
+//   "Passwords don't match"
+// );
 
 const validationErrors = ref<ZodIssue[]>([]);
 const successMessage = ref<string | null>(null);
@@ -57,11 +56,11 @@ const submitForm = async (event: Event) => {
   <form @submit="submitForm" class="w-full">
     <div class="flex flex-col gap-y-3 flex-1">
       <TextField
-        name="username"
-        label="Username"
+        name="fullName"
+        label="FullName"
         placeholder="John Doe"
         type="text"
-        autocomplete="username"
+        autocomplete="fullName"
         class="text-zinc-400"
       />
       <TextField
@@ -73,11 +72,11 @@ const submitForm = async (event: Event) => {
         class="text-zinc-400"
       />
       <PasswordField name="password" label="Password" class="text-zinc-400" />
-      <PasswordField
+      <!-- <PasswordField
         name="password_confirmation"
         label="Confirm password"
         class="text-zinc-400"
-      />
+      /> -->
     </div>
 
     <div>

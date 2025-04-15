@@ -17,11 +17,11 @@ const errorSchema = z.object({
 export const useRegisterMutation = () =>
   useMutation({
     mutationFn: async (data: {
-      username: string;
+      fullName: string;
       email: string;
       password: string;
     }) => {
-      const res = await fetch("/api/auth/password/register", {
+      const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           Accept: "application/json",

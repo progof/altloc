@@ -32,7 +32,7 @@ import SpaceStarIcon from "@/assets/icons/space-star.svg?component";
             <div class="mt-6 flex items-center">
               <a
                 class="inline-flex items-center rounded-full border transition-colors bg-blue-500 text-white px-6 py-2 hover:bg-blue-600"
-                href="/auth/register"
+                href="/api/auth/google"
               >
                 Get started
               </a>
@@ -47,106 +47,6 @@ import SpaceStarIcon from "@/assets/icons/space-star.svg?component";
         </div>
       </div>
     </section>
-
-    <!-- <section class="relative group mt-6 p-12 px-6 md:px-10">
-      <div class="container flex flex-col gap-12 items-center">
-        <img
-          src="/images/abstract-space2.jpg"
-          alt="Gamification poster"
-          class="absolute inset-0 size-full object-cover opacity-65 blur-sm bg-blue-200"
-        />
-        <div class="flex flex-col gap-6 items-center z-10">
-          <h2 class="text-2xl font-semibold text-zinc-100 text-center">
-            How to Gamify Your Goals
-          </h2>
-          <span class="text-zinc-200 text-center">
-            Follow these steps to gamify your goals and turn your daily tasks
-            into exciting quests. With each completed task, you'll earn
-            experience points, level up, and unlock new achievements. Start your
-            gamification journey today!
-          </span>
-        </div>
-        <div
-          class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:grid-rows-2 z-10"
-        >
-          <div
-            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
-          >
-            <h2 class="text-zinc-900 font-semibold">
-              Step 1: Define Your Goal
-            </h2>
-            <span class="text-zinc-600 text-sm">
-              Start by setting a clear, motivating goal that you want to
-              achieve. This could be anything, like improving physical fitness,
-              learning a new skill, or increasing productivity.
-            </span>
-          </div>
-          <div
-            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
-          >
-            <h2 class="text-zinc-900 font-semibold">
-              Step 2: Break Down Your Goal into Categories
-            </h2>
-            <span class="text-zinc-600 text-sm">
-              Divide your main goal into smaller, manageable categories that
-              will help you stay organized. For example, if your goal is
-              "getting fit," create categories like "Cardio Workouts," "Strength
-              Training," and "Stretching."
-            </span>
-          </div>
-          <div
-            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
-          >
-            <h2 class="text-zinc-900 font-semibold">
-              Step 3: Add Tasks to Each Category
-            </h2>
-            <span class="text-zinc-600 text-sm">
-              Now, add specific tasks to each category, assigning each a
-              priority and difficulty level. This will give structure to your
-              actions and help you track progress. For instance, in "Cardio
-              Workouts," you might add "Run 5 km" (Difficulty: Medium, Priority:
-              High).
-            </span>
-          </div>
-          <div
-            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
-          >
-            <h2 class="text-zinc-900 font-semibold">
-              Step 4: Complete Tasks and Track Progress
-            </h2>
-            <span class="text-zinc-600 text-sm">
-              As you complete tasks, mark them as done. You’ll earn virtual
-              currency, level up, and see your progress bar advance, making your
-              journey more rewarding and visible.
-            </span>
-          </div>
-          <div
-            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
-          >
-            <h2 class="text-zinc-900 font-semibold">
-              Step 5: Leave Daily Reflections and Track Your Emotions
-            </h2>
-            <span class="text-zinc-600 text-sm">
-              Add a daily comment about your experience and choose an emotional
-              state (e.g., "very bad" to "very good") to see how your actions
-              impact your mood and motivation over time.
-            </span>
-          </div>
-          <div
-            class="bg-white rounded-lg p-4 gap-3 flex-col flex transition transform hover:scale-105"
-          >
-            <h2 class="text-zinc-900 font-semibold">
-              Step 6: Adjust and Celebrate Achievements
-            </h2>
-            <span class="text-zinc-600 text-sm">
-              Regularly revisit and adjust your goals, milestones, or task
-              difficulty as you progress. Celebrate your achievements as you
-              reach new levels and milestones to stay inspired on your journey!
-            </span>
-          </div>
-        </div>
-      </div>
-    </section> -->
     <section class="relative group mt-6 p-12 px-6 md:px-10">
       <div class="container flex flex-col gap-12 items-center">
         <img
